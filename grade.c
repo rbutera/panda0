@@ -5,45 +5,46 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-// Check whether a mark is properly formatted.
-bool valid(const char *mark) {
-    bool result = true;
-    // TODO: check formatting of mark
+// Checks if a string contains exclusively numeric values
+bool containsNumbers (const char *mark){
+    printf("\nchecking if %s contains non-numeric values\n", mark);
 
-    // iterate over argument
+    bool result;
     int length = (int)strlen(mark);
-    // printf("you gave an argument of length %i\n\n", length);
-    for(int i = 0; i < length; i++)
+    int i;
+    printf("\n");
+    for(i = 0; i < length; i++)
     {
+        printf("i = %i, *mark = %i, mark[i] = %i, mark = %s \n",i, *mark, mark[i], mark);
         char testing = mark[i];
-        // printf("%c", mark[i]);
-        // check if undefined/null/non-numeric
+
         if(!isdigit(testing))
         {
             result = false;
-            // printf("non-integer detected: %c \n", testing);
         }
         else
         {
             result = true;
-            // printf("integer detected: %c \n", testing);
         }
-
     }
 
-    // printf("\n");
-
-    // check if within boundaries (1-100)
-    int converted = atoi(mark);
-    // printf("converted: %i", converted);
-    result = converted >= 1 && converted <= 100;
-
-    if (result){
-        // printf("result = true\n");
-    } else {
-        // printf("result = false\n");
-    }
     return result;
+    printf("\n\n");
+}
+
+// Check whether a mark is properly formatted.
+bool valid(const char *mark) {
+
+    int converted = atoi(mark);
+    bool withinBoundaries = converted >= 0 && converted <= 100;
+
+    if (containsNumbers(mark) && withinBoundaries){
+        printf("contains numbers?: %d, within boundaries?:%d \n", containsNumbers(mark), withinBoundaries);
+        return true;
+    } else {
+        printf("contains numbers?: %d, within boundaries?:%d \n", containsNumbers(mark), withinBoundaries);
+        return false;
+    }
 }
 
 // Convert the mark into a grade
@@ -104,7 +105,7 @@ void test() {
 
 // Deal with input and output, and call either test or grade.
 int main(int n, char *args[n]) {
-    // setbuf(stdout, NULL);
+    setbuf(stdout, NULL);
     if (n == 1) test();
     else if (n == 2) printf("%s\n", grade(args[1]));
     else {
