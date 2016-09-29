@@ -5,31 +5,25 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+
+// Checks if a string is 0 padded (test 15)
+bool zeroPadded (const char *mark){
+    int length = strlen(mark);
+    if (length > 1 && mark[0] == '0')
+    {
+        return true;
+    } else {
+        // cannot be zero padded if length = 1
+        return false;
+    }
+}
+
 // Checks if a string contains exclusively numeric values
 bool containsNumbers (const char *mark){
-    printf("\nchecking if %s contains non-numeric values\n", mark);
+    int length = strlen(mark);
+    int numberOfNumericCharacters = strspn(mark, "0123456789");
 
-    bool result;
-    int length = (int)strlen(mark);
-    int i;
-    printf("\n");
-    for(i = 0; i < length; i++)
-    {
-        printf("i = %i, *mark = %i, mark[i] = %i, mark = %s \n",i, *mark, mark[i], mark);
-        char testing = mark[i];
-
-        if(!isdigit(testing))
-        {
-            result = false;
-        }
-        else
-        {
-            result = true;
-        }
-    }
-
-    return result;
-    printf("\n\n");
+    return length == numberOfNumericCharacters;
 }
 
 // Check whether a mark is properly formatted.
@@ -38,11 +32,9 @@ bool valid(const char *mark) {
     int converted = atoi(mark);
     bool withinBoundaries = converted >= 0 && converted <= 100;
 
-    if (containsNumbers(mark) && withinBoundaries){
-        printf("contains numbers?: %d, within boundaries?:%d \n", containsNumbers(mark), withinBoundaries);
+    if (!zeroPadded(mark) && containsNumbers(mark) && withinBoundaries){
         return true;
     } else {
-        printf("contains numbers?: %d, within boundaries?:%d \n", containsNumbers(mark), withinBoundaries);
         return false;
     }
 }
