@@ -34,16 +34,40 @@ bool valid(const char *mark) {
     // printf("\n");
 
     // check if within boundaries (1-100)
+    int converted = atoi(mark);
+    // printf("converted: %i", converted);
+    result = converted >= 1 && converted <= 100;
 
+    if (result){
+        // printf("result = true\n");
+    } else {
+        // printf("result = false\n");
+    }
     return result;
 }
 
 // Convert the mark into a grade
 char *grade(const char *mark) {
     // TODO: convert mark -> grade
+
     // check if valid
-    valid(mark);
-    return "?";
+    if (valid(mark)){
+        int converted = atoi(mark);
+        // fail
+        if(converted < 40){
+            return "Fail";
+        } else if(converted < 50){
+            return "3";
+        } else if(converted < 60){
+            return "2.2";
+        } else if(converted < 70){
+            return "2.1";
+        } else {
+            return "1";
+        }
+    } else { // error
+        return "Error: invalid mark";
+    }
 }
 
 // Increment and return the test number and check that two strings are equal.
