@@ -5,7 +5,7 @@ int findMax(){
 	int max = 0;
 
 	while(max + 1 > max){
-		printf("%d\n", max);
+		// printf("%d\n", max);
 		max++;
 	}
 
@@ -15,6 +15,7 @@ int findMax(){
 int main() {
     setbuf(stdout, NULL);
     int n = findMax();
-    printf("max is %d\n", n);
+    printf("\n\nmax is %d\n", n);
+    printf("c thinks the next largest number would be %d\n", n + 1);
     return 0;
 }
