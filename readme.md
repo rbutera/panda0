@@ -4,3 +4,6 @@
 Rai's work/notes etc.
 
 Lots of C and Haskell.
+
+## C (C99)
+`gcc -std=c99 -Wall hello.c -o hello`
