@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB">
+<!-- Deliver as XHTML -->
+<head>
+<meta charset="UTF-8" />
+<meta name="author" content="ian" />
+<meta id="bristol" name="keywords" content="dummy" />
+<meta id="mybristol" name="keywords" content="dummy" />
+<meta id="contacts" name="keywords" content="dummy" />
+<meta id="gmailstaff" name="keywords" content="dummy" />
+<meta id="gmailstudents" name="keywords" content="dummy" />
+<title>Panda 1 C Functions</title>
+<link href="./2-functions_files/style.css" rel="stylesheet" type="text/css" />
+<link href="./2-functions_files/xcode.css" rel="stylesheet" type="text/css" />
+<script src="./2-functions_files/highlight.pack.js" />
+<script src="./2-functions_files/wrap.js" />
+<script src="./2-functions_files/type.js" />
+<style>
+  .exercises { background-color:#aaffaa; }
+  .exercises h2 { background-color:#66aa66; }
+</style>
+<script type="text/javascript" src="chrome-extension://aadgmnobpdmgmigaicncghmmoeflnamj/ng-inspector.js" /><meta name="chromesniffer" id="chromesniffer_meta" content="{}" /><script type="text/javascript" src="chrome-extension://homgcnaoacgigpkkljjjekpignblkeae/detector.js" /><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body>
+
+<template />
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h1>Functions</h1>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/" style="visibility: hidden;">&lt; </a>
+    <span class="here">1</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#2"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>What functions do</h2>
+<img class="middle" src="./2-functions_files/function.png" />
+<p>A function calculates a result</p>
+<p>In C, a function can also <em>do</em> things such as print output - C
+functions are not pure (unlike Haskell)</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#1">&lt; </a>
+    <span class="here">2</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#3"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Hello World</h2>
+<p>It is traditional to start with a Hello World program, though this version
+is a bit different:</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-comment">/* Say Hi to everyone. */</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello World!\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<p>Type it, copy-paste it, or download it, save it as <code>hello.c</code>, compile, and run</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#2">&lt; </a>
+    <span class="here">3</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#4"> &gt;</a>
+  </div></section>
+
+<section data-animate="type" style="position: relative; width: 1024px; height: 765px;">
+<h2>Compiling and running</h2>
+<p>To compile and run in a terminal window:</p>
+<pre class="hidden data" style="font-size: 32px;">$ gcc -std=c99 -Wall hello.c -o hello
+$ ./hello
+Hello World!
+$ 
+</pre>
+<!-- Same, with spaces -->
+<pre style="font-size: 32px;" class="target">                                     
+         
+            
+  
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#3">&lt; </a>
+    <span class="here">4</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#5"> &gt;</a>
+  </div><canvas width="1024" height="768" style="position: absolute; top: 0px; left: 0px; pointer-events: none;" /></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Comments</h2>
+<p>Let's dissect the Hello World program</p>
+<p>The first line is for human readers only, not the computer, to explain what
+the program does</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-comment">/* Say Hi to everyone. */</span>
+</pre>
+<p>A program without a comment to explain it is rubbish</p>
+<p>A <code>/*</code>...<code>*/</code> comment can run over many lines</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#4">&lt; </a>
+    <span class="here">5</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#6"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Library modules</h2>
+<p>The next line says "this program needs to use the <code>stdio</code>
+library module (standard input/output)" because it is going to print
+something</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+</pre>
+<p><code>stdio.h</code> is a 'header' file describing the library
+module, which is included into your program</p>
+<p>The angle brackets mean "look in the standard place" (in the labs,
+that's <code>/usr/include/stdio.h</code>)</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#5">&lt; </a>
+    <span class="here">6</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#7"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Functions</h2>
+<p>The rest of the program is a function</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello World!\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<p>Programs consist of functions which act on data</p>
+<p>C functions are really procedures, not pure functions, because they can "do
+things" as well as returning results</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#6">&lt; </a>
+    <span class="here">7</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#8"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px; display: block;">
+<h2>Main function</h2>
+<p>Every C program must have a function called <code>main</code></p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    ...
+}
+</pre>
+<p>The system calls <code>main</code> to start the program running</p>
+<p><code>main</code> is a <em>rubbish</em> name - it ought to be
+called <code>run</code> because you run programs, you don't main them,
+but it is too late to change the convention</p>
+<p><em>Every</em> useful language has lots of rubbish in it</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#7">&lt; </a>
+    <span class="here">8</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#9"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Defining a function</h2>
+<p>A function has a return type, a name, arguments, a body</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    ...
+}
+</pre>
+<p>The <code>int</code> type means "small-ish integers"</p>
+<p>The <code>main</code> function actually has two arguments:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> * args[n])</span> ...
+</span></pre>
+<p>In <code>main</code>, you are allowed to ignore them</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#8">&lt; </a>
+    <span class="here">9</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#10"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Buffered output</h2>
+<p>The name <code>stdout</code> refers to the stream of text which the program
+is going to produce when it runs</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a>setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+</pre>
+<p>Output is often <dfn>buffered</dfn> - the text is gathered up
+until there is a reasonable amount to send efficiently</p>
+<p>For <code>stdout</code>, that is exceedingly confusing</p>
+<p>Many systems detect that <code>stdout</code> is going directly to the
+screen, and switch buffering off, but not all (e.g. MSYS2), so this line
+explicitly switches off buffering</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#9">&lt; </a>
+    <span class="here">10</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#11"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Printing</h2>
+<p>The <code>printf</code> function is the commonest one for output</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a>...
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello World!\n"</span>);
+...
+</pre>
+<p>It prints a string, but can also print out values</p>
+<p>The <code>\n</code> at the end is a newline - always include it, otherwise
+lots of things can go wrong</p>
+<p>Add <code>printf</code>s to your program to debug it, if you can't work out
+what's wrong</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#10">&lt; </a>
+    <span class="here">11</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#12"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Returning</h2>
+<p>A function returns a value at the end (unless its return type
+is <code>void</code>)</p>
+<pre class="cpp c hljs" data-file="hello.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/hello.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">hello.c</a><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    ...
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<p><code>main</code> returns <code>0</code> to tell the system it succeeded, or
+an error value, usually <code>1</code>, if it failed</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#11">&lt; </a>
+    <span class="here">12</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#13"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>What if you forget to return?</h2>
+<p>What if you leave out the <code>return</code> at the end?</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello World!\n"</span>);
+}
+</pre>
+<p>The <a href="http://www.open-std.org/jtc1/sc22/WG14/www/docs/n1256.pdf">standard</a>
+says a function like that returns "undefined" (it returns whatever rubbish
+value happens to be in the return register)</p>
+<p>The <code>main</code> function is an exception (for backwards compatibility)
+- it returns 0 - so this is legal</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#12">&lt; </a>
+    <span class="here">13</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#14"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./2-functions_files/room.png" />
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#13">&lt; </a>
+    <span class="here">14</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#15"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Example: paint</h2>
+<pre class="cpp c hljs" data-file="paint.c" style="font-size: 31px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/paint.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">paint.c</a><span class="hljs-comment">/* Find the area of paint I need. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Calculate area of walls and ceiling</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">area</span><span class="hljs-params">(<span class="hljs-keyword">int</span> length, <span class="hljs-keyword">int</span> width, <span class="hljs-keyword">int</span> height)</span> </span>{     
+    <span class="hljs-keyword">int</span> sides = <span class="hljs-number">2</span> * length * height;
+    <span class="hljs-keyword">int</span> ends = <span class="hljs-number">2</span> * width * height;
+    <span class="hljs-keyword">int</span> ceiling = length * width;
+    <span class="hljs-keyword">return</span> sides + ends + ceiling;
+}
+
+<span class="hljs-comment">// Find area of paint for my room.</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">int</span> total = area(<span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"The paint area is %d\n"</span>, total);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#14">&lt; </a>
+    <span class="here">15</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#16"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Function order</h2>
+<p>The program has two functions</p>
+<pre class="cpp c hljs" data-file="paint.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/paint.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">paint.c</a>...
+<span class="hljs-comment">// Calculate area of walls and ceiling</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">area</span><span class="hljs-params">(<span class="hljs-keyword">int</span> length, <span class="hljs-keyword">int</span> width, <span class="hljs-keyword">int</span> height)</span> ...
+
+<span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> ...
+</span></pre>
+<p>It is important that <code>area</code> is defined first, so that the
+compiler knows about it when <code>main</code> calls it</p>
+<p><code>area</code> has three arguments</p>
+<p>A line starting <code>//</code> is a one-line comment</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#15">&lt; </a>
+    <span class="here">16</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#17"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Function calls</h2>
+<p>You call a function by passing it some values for its arguments, then
+catching the result that is returned</p>
+<pre class="cpp c hljs" data-file="paint.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/paint.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">paint.c</a><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    ...
+    <span class="hljs-keyword">int</span> total = area(<span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>);
+    ...
+}
+</pre>
+<p>The arguments must be in the right order, e.g. the height must be last in
+any call to <code>area</code> (think about it!)</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#16">&lt; </a>
+    <span class="here">17</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#18"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Statements</h2>
+<p>A function contains a sequence of statements, each ending
+in a semicolon <code>;</code></p>
+<pre class="cpp c hljs" data-file="paint.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/paint.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">paint.c</a>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">area</span><span class="hljs-params">(<span class="hljs-keyword">int</span> length, <span class="hljs-keyword">int</span> width, <span class="hljs-keyword">int</span> height)</span> </span>{
+    <span class="hljs-keyword">int</span> sides = <span class="hljs-number">2</span> * length * height;
+    <span class="hljs-keyword">int</span> ends = <span class="hljs-number">2</span> * width * height;
+    <span class="hljs-keyword">int</span> ceiling = length * width;
+    <span class="hljs-keyword">return</span> sides + ends + ceiling;
+}
+</pre>
+<p>Say "sides becomes ..." or "set sides equal to ..."</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#17">&lt; </a>
+    <span class="here">18</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#19"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Expressions</h2>
+<p>Calculations are done using expressions</p>
+<pre class="cpp c hljs" data-file="paint.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/paint.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">paint.c</a>... <span class="hljs-number">2</span> * length * height ...
+... <span class="hljs-number">2</span> * width * height ...
+... length * width ...
+... sides + ends + ceiling ...
+</pre>
+<p>It is up to you how you split things up: some people would write:</p>
+<pre class="cpp hljs" style="font-size: 24px;"><span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * length * height + <span class="hljs-number">2</span> * width * height + length * width;
+</pre>
+<p>This is less readable: it doesn't explain itself</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#18">&lt; </a>
+    <span class="here">19</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#20"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Double</h2>
+<p>The paint program uses <code>int</code>, but we may want non-integer
+lengths, producing a non-integer area</p>
+<p>Just replace <code>int</code> by <code>double</code> everywhere
+appropriate</p>
+<p>The <code>double</code> type is the type of "double precision floating
+point numbers", and it is the normal type to use for approximate real
+numbers</p>
+<p>In <code>printf</code>, use <code>%f</code> (floating point) instead
+of <code>%d</code> (decimal)</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#19">&lt; </a>
+    <span class="here">20</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#21"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Example: double paint</h2>
+<pre class="cpp c hljs" data-file="dpaint.c" style="font-size: 25px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/dpaint.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">dpaint.c</a><span class="hljs-comment">/* Find the area of paint I need. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Calculate area of walls and ceiling</span>
+<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">area</span><span class="hljs-params">(<span class="hljs-keyword">double</span> length, <span class="hljs-keyword">double</span> width, <span class="hljs-keyword">double</span> height)</span> </span>{     
+    <span class="hljs-keyword">double</span> sides = <span class="hljs-number">2</span> * length * height;
+    <span class="hljs-keyword">double</span> ends = <span class="hljs-number">2</span> * width * height;
+    <span class="hljs-keyword">double</span> ceiling = length * width;
+    <span class="hljs-keyword">return</span> sides + ends + ceiling;
+}
+
+<span class="hljs-comment">// Find area of paint for my room.</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">double</span> total = area(<span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"The paint area is %f\n"</span>, total);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<p>The <code>int</code> constants get converted to <code>double</code></p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#20">&lt; </a>
+    <span class="here">21</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#22"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./2-functions_files/design.png" />
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#21">&lt; </a>
+    <span class="here">22</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#23"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Design</h2>
+<p>The C language hasn't changed all that much over time</p>
+<p>The way C programmers design programs has changed</p>
+<p>To illustrate, on the next couple of slides, there is a before and after
+example of a prime number program in the old style and in the new style</p>
+<p>You don't need to understand it all</p>
+<p>The difference doesn't matter much for small programs, but becomes crucial
+for bigger ones</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#22">&lt; </a>
+    <span class="here">23</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#24"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Old primes</h2>
+<pre class="cpp c hljs" data-file="oldprimes.c" style="font-size: 25px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/oldprimes.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">oldprimes.c</a><span class="hljs-comment">/*
+ * This program generates prime numbers up to a user specified
+ * maximum. The algorithm used is the Sieve of Eratosthenes.
+ *
+ * Eratosthenes of Cyrene, b. c. 276 BC, Cyrene, Libya --
+ * d. c. 194, Alexandria. The first man to calculate the
+ * circumference of the Earth. Also known for working on
+ * calendars with leap years and ran the library at Alexandria.
+ *
+ * The algorithm is quite simple. Given an array of integers
+ * starting at 2. Cross out all multiples of 2. Find the next
+ * uncrossed integer, and cross out all of its multiples.
+ * Repeat untilyou have passed the square root of the maximum
+ * value.
+ *
+ * @author Alphonse
+ * @version 13 Feb 2002 atp
+ * From book "Clean Code", adapted from Java by Ian Holyer
+ * Compile with: gcc -o oldprimes oldprimes.c -lm
+ * Run with: ./oldprimes 10
+ */</span>
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#23">&lt; </a>
+    <span class="here">24</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#25"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Old primes 2</h2>
+<pre class="cpp c hljs" data-file="oldprimes.c" style="font-size: 22px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/oldprimes.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">oldprimes.c</a><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;math.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span> </span>{
+  <span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">2</span>) { <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Please give a maximum number\n"</span>); <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>); }
+  <span class="hljs-comment">// maxValue is the generation limit.</span>
+  <span class="hljs-keyword">int</span> maxValue = atoi(argv[<span class="hljs-number">1</span>]);
+  <span class="hljs-keyword">if</span> (maxValue &gt;= <span class="hljs-number">2</span>) { <span class="hljs-comment">// the only valid case</span>
+    <span class="hljs-comment">// declarations</span>
+    <span class="hljs-keyword">int</span> s = maxValue + <span class="hljs-number">1</span>; <span class="hljs-comment">// size of array</span>
+    <span class="hljs-keyword">int</span> f[s];
+    <span class="hljs-keyword">int</span> i;
+    <span class="hljs-comment">// initialize array to true.</span>
+    <span class="hljs-keyword">int</span> <span class="hljs-literal">false</span> = <span class="hljs-number">0</span>, <span class="hljs-literal">true</span> = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; s; i++)
+      f[i] = <span class="hljs-literal">true</span>;
+    <span class="hljs-comment">// get rid of known non-primes</span>
+    f[<span class="hljs-number">0</span>] = f[<span class="hljs-number">1</span>] = <span class="hljs-literal">false</span>;
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#24">&lt; </a>
+    <span class="here">25</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#26"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Old primes 3</h2>
+<pre class="cpp c hljs" data-file="oldprimes.c" style="font-size: 26px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/oldprimes.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">oldprimes.c</a>    <span class="hljs-comment">// sieve</span>
+    <span class="hljs-keyword">int</span> j;
+    <span class="hljs-keyword">int</span> root = (<span class="hljs-keyword">int</span>)<span class="hljs-built_in">sqrt</span>((<span class="hljs-keyword">double</span>)s);
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">2</span>; i &lt; root + <span class="hljs-number">1</span>; i++) {
+      <span class="hljs-keyword">if</span> (f[i]) { <span class="hljs-comment">// if i is uncrossed, cross its multiples.</span>
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">2</span> * i; j &lt; s; j += i)
+        f[j] = <span class="hljs-literal">false</span>; <span class="hljs-comment">// multiple is not prime</span>
+      }
+    }
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; s; i++) {
+      <span class="hljs-keyword">if</span> (f[i]) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>, i);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-keyword">else</span> <span class="hljs-comment">// maxValue &lt; 2</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; <span class="hljs-comment">// return program failure if bad input.</span>
+}
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#25">&lt; </a>
+    <span class="here">26</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#27"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>New primes</h2>
+<pre class="cpp c hljs" data-file="primes.c" style="font-size: 20px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/primes.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">primes.c</a><span class="hljs-comment">/* Generate primes up to a maximum using
+http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes.
+Compile with: gcc -std=c99 -Wall primes.c -lm -o primes
+Run with: ./primes 10
+*/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;math.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdbool.h&gt;</span></span>
+
+<span class="hljs-comment">// Declare the functions in advance, so they can be presented in a better order</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findMax</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> *args[n])</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">generatePrimes</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">uncrossAll</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">crossOutMultiples</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findIterationLimit</span><span class="hljs-params">(<span class="hljs-keyword">int</span> max)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">crossOutMultiplesOf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printPrimes</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span></span>;
+
+<span class="hljs-comment">// Run</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> *args[n])</span> </span>{
+  <span class="hljs-keyword">int</span> max = findMax(n, args);
+  <span class="hljs-keyword">bool</span> crossedOut[max+<span class="hljs-number">1</span>];
+  generatePrimes(crossedOut, max);
+  printPrimes(crossedOut, max);
+}
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#26">&lt; </a>
+    <span class="here">27</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#28"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>New primes 2</h2>
+<pre class="cpp c hljs" data-file="primes.c" style="font-size: 21px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/primes.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">primes.c</a><span class="hljs-comment">// Extract 'max' from the command line args</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findMax</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> *args[n])</span> </span>{
+  <span class="hljs-keyword">if</span> (n != <span class="hljs-number">2</span>) {
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Use: primes max\n"</span>);
+    <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+  }
+  <span class="hljs-keyword">return</span> atoi(args[<span class="hljs-number">1</span>]);
+}
+
+<span class="hljs-comment">// Follow the algorithm</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">generatePrimes</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span> </span>{         
+  uncrossAll(crossedOut, max);
+  crossOutMultiples(crossedOut, max);
+}
+
+<span class="hljs-comment">// Clear the array of booleans</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">uncrossAll</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span> </span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">2</span>; i&lt;=max; i++) crossedOut[i] = <span class="hljs-literal">false</span>;
+}
+
+<span class="hljs-comment">// Cross out all composite numbers</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">crossOutMultiples</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span> </span>{
+  <span class="hljs-keyword">int</span> limit = findIterationLimit(max);
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">2</span>; i&lt;=limit; i++) {
+    <span class="hljs-keyword">if</span> (! crossedOut[i]) crossOutMultiplesOf(i, crossedOut, max);        
+  }
+}
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#27">&lt; </a>
+    <span class="here">28</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#29"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>New primes 3</h2>
+<pre class="cpp c hljs" data-file="primes.c" style="font-size: 24px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/primes.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">primes.c</a>
+<span class="hljs-comment">// See wikipedia: every multiple has a prime factor &lt;= sqrt(max)</span>
+<span class="hljs-comment">// so we only need to cross out multiples up to sqrt(max)</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findIterationLimit</span><span class="hljs-params">(<span class="hljs-keyword">int</span> max)</span> </span>{
+  <span class="hljs-keyword">double</span> root = <span class="hljs-built_in">sqrt</span>((<span class="hljs-keyword">double</span>)max);
+  <span class="hljs-keyword">return</span> (<span class="hljs-keyword">int</span>) root;
+}
+
+<span class="hljs-comment">// Cross out multiples of one number</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">crossOutMultiplesOf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span> </span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> m = <span class="hljs-number">2</span>*i; m &lt;= max; m += i) {
+    crossedOut[m] = <span class="hljs-literal">true</span>;
+  }
+}
+
+<span class="hljs-comment">// Print the un-crossed-out numbers</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printPrimes</span><span class="hljs-params">(<span class="hljs-keyword">bool</span> crossedOut[], <span class="hljs-keyword">int</span> max)</span> </span>{
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">2</span>; i&lt;=max; i++) {
+    <span class="hljs-keyword">if</span> (! crossedOut[i]) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>, i);
+  }
+}
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#28">&lt; </a>
+    <span class="here">29</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#30"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Improvements</h2>
+<p>The functions are readable, in top-down order</p>
+<p>The functions are self-documenting at the 'how' level</p>
+<p>The comments are brief, external, adding the 'why'</p>
+<p>Commenting-out can be used during development</p>
+<p>Each function is short enough to <em>see</em> it is correct</p>
+<p>The functions can be developed one by one</p>
+<p>Automatic testing is much easier to add</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#29">&lt; </a>
+    <span class="here">30</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#31"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Commenting out</h2>
+<p>Suppose you change something radical, so all the functions in the program
+need to be changed</p>
+<p>You can surround them all with a <code>/*</code>...<code>*/</code>
+comment, then move them out of the comment one by one</p>
+<p>But <code>/*</code>...<code>*/</code> comments don't nest, so this doesn't
+work if you use <code>/*</code>...<code>*/</code> comments before function
+definitions</p>
+<p>So using one-line <code>//</code> comments before functions makes
+commenting-out easy</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#30">&lt; </a>
+    <span class="here">31</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#32"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Side Effects</h2>
+<p>A function can do these things</p>
+<ol>
+<li>return a result</li>
+<li>change data passed as arguments</li>
+<li>input or output</li>
+<li>change global variables</li>
+</ol>
+<p>A function that only does 1 is <em>pure</em>, see Haskell</p>
+<p>Functions that do 2, 3 or 4 are said to have side effects</p>
+<p>In C, 2 is normal, but it is best to separate out 3 and avoid 4, because 1
+and 2 can be auto-tested</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#31">&lt; </a>
+    <span class="here">32</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#33"> &gt;</a>
+  </div></section>
+
+<section class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Exercise 1</h2>
+<p>Write a program <code>square.c</code> containing:</p>
+<ul>
+<li>a function <code>square</code> which squares an integer</li>
+<li>a main function which demonstrates it by finding and printing the square
+of <code>42</code></li>
+</ul>
+<p class="indent"><a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#1a">hint 1</a><br />
+<a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#1b">hint 2</a><br />
+<a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#1c">hint 3</a><br />
+<a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#1d">answer</a>
+</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#32">&lt; </a>
+    <span class="here">33</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#38"> &gt;</a>
+  </div></section>
+
+<aside id="1a" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Hint 1</h2>
+<p>Find the <code>hello.c</code> program, make a copy in a file
+called <code>square.c</code>, and use it as a starting point </p>
+<p>In C, multiplication is done with the <code>*</code> operator, so "x times
+y" is written <code>x * y</code></p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#33">&lt; </a>
+    <span class="here">33a</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#35"> &gt;</a>
+  </div></aside>
+
+<aside id="1b" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Hint 2</h2>
+<p>Overall, your program should look like this</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">/* Demonstrate a squaring function. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+... square(...) {
+    ...
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    ...
+}
+</pre>
+<p>All you have to do is fill in the <code>...</code> parts</p>
+<p>Try sorting out the <code>main</code> function from here</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#34">&lt; </a>
+    <span class="here">33b</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#36"> &gt;</a>
+  </div></aside>
+
+<aside id="1c" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Hint 3</h2>
+<p>Your <code>main</code> function should look something like this</p>
+<pre class="cpp hljs" style="font-size: 30px;"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+... square(...) {
+    ...
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">int</span> n = square(<span class="hljs-number">42</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"42 squared is %d\n"</span>, n);                
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<p>The important thing is that the call to <code>square</code> should just
+be <code>square(42)</code> (or equivalent)</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#35">&lt; </a>
+    <span class="here">33c</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#37"> &gt;</a>
+  </div></aside>
+
+<aside id="1d" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Answer</h2>
+<p>Here's a complete answer:</p>
+<pre class="cpp c hljs" data-file="square.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/square.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">square.c</a><span class="hljs-comment">/* Demonstrate a squaring function. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">square</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>{
+    <span class="hljs-keyword">return</span> n * n;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">int</span> n = square(<span class="hljs-number">42</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"42 squared is %d\n"</span>, n);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#36">&lt; </a>
+    <span class="here">33d</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#38"> &gt;</a>
+  </div></aside>
+
+<section class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Exercise 2</h2>
+<p>Use the program <code>square.c</code> to find the square
+of <code>50000</code></p>
+<p>It should be clear to you that it hasn't worked</p>
+<p>Can you work out why?</p>
+<p class="indent"><a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#2a">hint</a><br />
+<a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#2b">answer</a>
+</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#33">&lt; </a>
+    <span class="here">34</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#41"> &gt;</a>
+  </div></section>
+
+<aside id="2a" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Hint</h2>
+<p>Edit the file <code>square.c</code></p>
+<p>Replace <code>42</code> by <code>50000</code></p>
+<p>Recompile it, and then rerun it</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#38">&lt; </a>
+    <span class="here">34a</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#40"> &gt;</a>
+  </div></aside>
+
+<aside id="2b" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Answer</h2>
+<p>Squaring <code>50000</code> gives a negative answer</p>
+<p>That's because the <code>int</code> type has a limit to the numbers it can
+store, and 2500000000 goes beyond that limit</p>
+<p>That's called an overflow</p>
+<p>The C language, for efficiency, like almost all other languages, doesn't
+detect and report overflows, it just accepts whatever the processor produces,
+which is 2500000000 modulo the limit (a signed modulo)</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#39">&lt; </a>
+    <span class="here">34b</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#41"> &gt;</a>
+  </div></aside>
+
+<section class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Exercise 3</h2>
+<p>Write a program <code>interest.c</code> which uses <code>double</code> to
+calculate interest on savings and contains</p>
+<ul>
+<li>a function <code>add</code> which takes an amount of money, and a
+percentage rate of interest, and works out the total after adding the
+interest</li>
+<li>a function <code>main</code> which finds the total after
+adding <code>2.7</code> percent interest to <code>1000.0</code> pounds</li>
+</ul>
+<p class="indent"><a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#3a">hint</a><br />
+<a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#3b">answer</a>
+</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#38">&lt; </a>
+    <span class="here">35</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#44"> &gt;</a>
+  </div></section>
+
+<aside id="3a" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Hint</h2>
+<p>Your program should look something like this</p>
+<pre class="cpp hljs" style="font-size: 24px;"><span class="hljs-comment">/* Calculate interest. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount, <span class="hljs-keyword">double</span> interest)</span> </span>{
+    ...
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">double</span> a = <span class="hljs-number">1000.0</span>, i = <span class="hljs-number">2.7</span>;
+    <span class="hljs-keyword">double</span> total = add(a, i);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Adding %f%% interest to %f gives %f\n"</span>, i, a, total);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<p>In <code>printf</code>, <code>%%</code> prints out a percent character</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#41">&lt; </a>
+    <span class="here">35a</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#43"> &gt;</a>
+  </div></aside>
+
+<aside id="3b" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Answer</h2>
+<p>Your <code>add</code> function should look something like this</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount, <span class="hljs-keyword">double</span> interest)</span> </span>{
+    amount = amount + amount * interest / <span class="hljs-number">100</span>;
+    <span class="hljs-keyword">return</span> amount;
+}
+</pre>
+<p>The integer constant <code>100</code> gets converted to <code>double</code>,
+or you can write <code>100.0</code> if you prefer</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#42">&lt; </a>
+    <span class="here">35b</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#44"> &gt;</a>
+  </div></aside>
+
+<section class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Exercise 4</h2>
+<p>If you wanted to work out <code>5%</code> interest without using
+the <code>add</code> function, you might write:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">double</span> total = amount + amount * (<span class="hljs-number">5</span> / <span class="hljs-number">100</span>);
+</pre>
+<p>If you try this, it doesn't work - why?</p>
+<p>How can you fix it?</p>
+<p class="indent"><a class="jump" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#4a">answer</a>
+</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#41">&lt; </a>
+    <span class="here">36</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/" style="visibility: hidden;"> &gt;</a>
+  </div></section>
+
+<aside id="4a" class="exercises" style="position: relative; width: 1024px; height: 765px;">
+<h2>Answer</h2>
+<p>When <code>5 / 100</code> is calculated, the integer constants don't get
+converted to <code>double</code></p>
+<p>An integer division is done, throwing away any remainder, so the result
+is <code>0</code> (which then gets converted to <code>double</code>,
+i.e. <code>0.0</code>, when multipled by <code>amount</code>)</p>
+<p>Conversions only happen where an <code>int</code> and a <code>double</code>
+are combined</p>
+<p>Writing <code>5.0</code> or <code>100.0</code> or both solves the
+problem</p>
+<div class="icon" style="display: block;">
+<!--    <img alt="spider web" src="spider.gif" />-->
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/#44">&lt; </a>
+    <span class="here">36a</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/functions/" style="visibility: hidden;"> &gt;</a>
+  </div></aside>
+
+</body>
+</html>

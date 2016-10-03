@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB">
+<!-- Deliver as XHTML -->
+<head>
+<meta charset="UTF-8" />
+<meta name="author" content="ian" />
+<meta id="bristol" name="keywords" content="dummy" />
+<meta id="mybristol" name="keywords" content="dummy" />
+<meta id="contacts" name="keywords" content="dummy" />
+<meta id="gmailstaff" name="keywords" content="dummy" />
+<meta id="gmailstudents" name="keywords" content="dummy" />
+<title>Panda 1 C Statements</title>
+<link href="./3-statements_files/style.css" rel="stylesheet" type="text/css" />
+<link href="./3-statements_files/xcode.css" rel="stylesheet" type="text/css" />
+<script src="./3-statements_files/highlight.pack.js" />
+<script src="./3-statements_files/wrap.js" />
+<script src="./3-statements_files/type.js" />
+<script type="text/javascript" src="chrome-extension://aadgmnobpdmgmigaicncghmmoeflnamj/ng-inspector.js" /><meta name="chromesniffer" id="chromesniffer_meta" content="{}" /><script type="text/javascript" src="chrome-extension://homgcnaoacgigpkkljjjekpignblkeae/detector.js" /><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body>
+
+<template />
+
+<section style="position: relative; width: 1024px; height: 765px; display: block;">
+<h1>Statements</h1>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/" style="visibility: hidden;">&lt; </a>
+    <span class="here">1</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#2"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./3-statements_files/robots.png" />
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#1">&lt; </a>
+    <span class="here">2</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#3"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>The four laws of programs</h2>
+<p>These are like Asimov's 4 laws of robotics:</p>
+<ul>
+<li><code>0:</code> programs must work properly</li>
+<li><code>1:</code> programs must be readable, provided this does not conflict
+with the previous law</li>
+<li><code>2:</code> programs must be compact, provided this does not conflict
+with the previous laws</li>
+<li><code>3:</code> programs must be efficient, provided this does not conflict
+with the previous laws</li>
+</ul>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#2">&lt; </a>
+    <span class="here">3</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#4"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>What statements do</h2>
+<img style="margin-top:2em;" class="middle" src="./3-statements_files/statement.png" />
+<p>A statement in a function tells the computer to do something</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#3">&lt; </a>
+    <span class="here">4</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#5"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Example: grade</h2>
+<pre class="cpp c hljs" data-file="grade.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/grade.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">grade.c</a><span class="hljs-comment">/* Find the grade for a mark. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">grade</span><span class="hljs-params">(<span class="hljs-keyword">int</span> mark)</span> </span>{
+    <span class="hljs-keyword">int</span> grade;
+    <span class="hljs-keyword">if</span> (mark &gt;= <span class="hljs-number">70</span>) grade = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mark &gt;= <span class="hljs-number">50</span>) grade = <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mark &gt;= <span class="hljs-number">40</span>) grade = <span class="hljs-number">3</span>;
+    <span class="hljs-keyword">else</span> grade = <span class="hljs-number">4</span>;
+    <span class="hljs-keyword">return</span> grade;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"My grade is %d\n"</span>, grade(<span class="hljs-number">66</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#4">&lt; </a>
+    <span class="here">5</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#6"> &gt;</a>
+  </div></section>
+
+<section data-animate="type" style="position: relative; width: 1024px; height: 765px;">
+<h2>Compiling and running</h2>
+<p>To compile and run in a terminal window:</p>
+<pre class="hidden data" style="font-size: 32px;">$ gcc -std=c99 -Wall grade.c -o grade
+$ ./grade
+2
+$ 
+</pre>
+<!-- Same, with spaces -->
+<pre style="font-size: 32px;" class="target">                                     
+         
+ 
+  
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#5">&lt; </a>
+    <span class="here">6</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#7"> &gt;</a>
+  </div><canvas width="1024" height="768" style="position: absolute; top: 0px; left: 0px; pointer-events: none;" /></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Scope</h2>
+<p>Each name has a limited scope</p>
+<pre class="small cpp c hljs" data-file="grade.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/grade.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">grade.c</a><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">grade</span><span class="hljs-params">(<span class="hljs-keyword">int</span> mark)</span> </span>{
+   <span class="hljs-keyword">int</span> grade;
+   ...
+}
+</pre>
+<p>The scope of the local integer variable <code>grade</code> is the function
+body, between the curly brackets</p>
+<p>It temporarily hides the global <code>grade</code> function</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#6">&lt; </a>
+    <span class="here">7</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#8"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Declarations and definitions</h2>
+<p>Things can be declared first, then defined later</p>
+<pre class="small cpp c hljs" data-file="grade.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/grade.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">grade.c</a><span class="hljs-keyword">int</span> grade;
+...
+grade = <span class="hljs-number">1</span>;
+</pre>
+<p>The statement <code>int grade;</code> declares the variable without defining
+it</p>
+<p>The assignment <code>grade = 1;</code> defines it later</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#7">&lt; </a>
+    <span class="here">8</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#9"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Function declarations</h2>
+<p>You can also declare functions before defining them</p>
+<pre class="small cpp hljs" style="font-size: 32px;"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">grade</span><span class="hljs-params">(<span class="hljs-keyword">int</span> mark)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    ...
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">grade</span><span class="hljs-params">(<span class="hljs-keyword">int</span> mark)</span> </span>{
+    ...
+}
+</pre>
+
+<p>This is to tell the compiler about functions defined (a) later or (b) in
+other modules (often via header files)</p>
+<p>These declarations are called <em>signatures</em> or <em>prototypes</em></p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#8">&lt; </a>
+    <span class="here">9</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#10"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Decisions</h2>
+<p>Simple decisions can be made using <code>if</code> and <code>else</code></p>
+<pre class="small cpp c hljs" data-file="grade.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/grade.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">grade.c</a><span class="hljs-keyword">if</span> (mark &gt;= <span class="hljs-number">70</span>) grade = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mark &gt;= <span class="hljs-number">50</span>) grade = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mark &gt;= <span class="hljs-number">40</span>) grade = <span class="hljs-number">3</span>;
+<span class="hljs-keyword">else</span> grade = <span class="hljs-number">4</span>;
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#9">&lt; </a>
+    <span class="here">10</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#11"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./3-statements_files/sort.png" />
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#10">&lt; </a>
+    <span class="here">11</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#12"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Example: Sort</h2>
+<pre class="small cpp c hljs" data-file="max.c" style="font-size: 31px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/max.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">max.c</a><span class="hljs-comment">/* Sort two numbers. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// Sort two numbers into ascending order and print</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">int</span> a = <span class="hljs-number">42</span>, b = <span class="hljs-number">21</span>;
+    <span class="hljs-keyword">if</span> (a &gt; b) {
+        <span class="hljs-keyword">int</span> old = a;
+        a = b;
+        b = old;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d %d\n"</span>, a, b);
+}
+</pre>
+<p>With no arrays yet, it is difficult to sort lots of things, or separate the
+calculation from the input/output</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#11">&lt; </a>
+    <span class="here">12</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#13"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>printf</h2>
+<p>Use <code>%d</code> in <code>printf</code> to print out ints</p>
+<pre class="small cpp c hljs" data-file="max.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/max.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">max.c</a> <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d %d\n"</span>, a, b);
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#12">&lt; </a>
+    <span class="here">13</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#14"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Variables</h2>
+<p>An <code>int</code> variable in C is a 'box' with an integer in it</p>
+<pre class="small cpp c hljs" data-file="max.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/max.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">max.c</a><span class="hljs-keyword">int</span> a = <span class="hljs-number">42</span>;
+...
+a = b;
+</pre>
+<p>A variable can be re-used by putting different numbers in the box</p>
+<p>Swapping needs a third variable because after <code>a = b</code> the old
+number in <code>a</code> has been forgotten</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#13">&lt; </a>
+    <span class="here">14</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#15"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Tracing</h2>
+<p>An important skill is to be able to trace execution in your head, or on
+paper, or with a tool like <kbd>gdb</kbd></p>
+<pre style="font-size: 32px;">                    a   b  old
+                   42  21  ?
+  int old = a;
+                   42  21  42
+  a = b;
+                   21  21  42
+  b = old;
+                   21  42  42
+</pre>
+<p>Use gdb only in emergencies, otherwise it soaks up too much time - judicious
+printfs are better</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#14">&lt; </a>
+    <span class="here">15</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#16"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Constants</h2>
+<p>If you are writing a chess program, the constant 8 is likely to appear all
+over the place in your program</p>
+<pre class="cpp hljs" style="font-size: 32px;">... <span class="hljs-keyword">for</span> (i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">8</span>; i++) ...
+</pre>
+<p>Even though you will probably never want to change it, it makes programs
+more readable to give it a name</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> size = <span class="hljs-number">8</span>;
+... <span class="hljs-keyword">for</span> (i=<span class="hljs-number">0</span>; i&lt;size; i++) ...
+</pre>
+<p><code>const</code> doesn't mean constant, just "check that the variable is
+never explicitly updated"</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#15">&lt; </a>
+    <span class="here">16</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#17"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Blocks</h2>
+<p>An <code>if</code> statement can be followed by a block</p>
+<pre class="small cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">if</span> (a &gt; b) {
+    <span class="hljs-keyword">int</span> old = a;
+    a = b;
+    b = old;
+}
+</pre>
+<p><code>else</code> is optional - the default is 'else do nothing'</p>
+<p>A block is a sequence of statements between curly brackets, the same as a
+function body</p>
+<p>The scope of <code>old</code> is the block - it doesn't exist outside</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#16">&lt; </a>
+    <span class="here">17</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#18"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Example: Sort words</h2>
+<pre class="small cpp c hljs" data-file="sort.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/sort.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">sort.c</a><span class="hljs-comment">/* Sort two words. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-comment">// Sort two words into ascending order and print</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">char</span> *a = <span class="hljs-string">"cat"</span>, *b = <span class="hljs-string">"bat"</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(a,b) &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">char</span> *old = a;
+        a = b;
+        b = old;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s %s\n"</span>, a, b);
+}
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#17">&lt; </a>
+    <span class="here">18</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#19"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>String library and printing</h2>
+<p>There is a <code>string</code> library module</p>
+<pre class="cpp c hljs" data-file="sort.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/sort.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">sort.c</a><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+</pre>
+<p>Use <code>%s</code> in <code>printf</code> formats to print out strings</p>
+<pre class="cpp c hljs" data-file="sort.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/sort.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">sort.c</a><span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s %s\n"</span>, a, b);
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#18">&lt; </a>
+    <span class="here">19</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#20"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Strings</h2>
+<p>In C, strings have type <code>char *</code></p>
+<pre class="small cpp c hljs" data-file="sort.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/sort.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">sort.c</a><span class="hljs-keyword">char</span> *a = <span class="hljs-string">"cat"</span>, *b = <span class="hljs-string">"bat"</span>;
+</pre>
+<p>The type is <code>char *</code> and the variable names are <code>a</code> and <code>b</code></p>
+<p>It is common to put the <code>*</code> next to the variable,
+because <code>char* a, b;</code> means <code>char* a; char b;</code></p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#19">&lt; </a>
+    <span class="here">20</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#21"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Typedefs</h2>
+<p>For greater readability, you could add this at the top:</p>
+<pre class="small cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">char</span>* <span class="hljs-built_in">string</span>;
+</pre>
+<p>This defines <code>string</code> as a synonym for <code>char*</code>, but
+not many programmers do this, because:</p>
+<ul>
+
+<li>it is not possible to be uniform about it - confusion sets in
+eventually</li>
+
+<li>it is generally thought better not to 'hide' the pointers in C - if you
+want to avoid them, use a different language</li>
+</ul>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#20">&lt; </a>
+    <span class="here">21</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#22"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Arrays</h2>
+<p>When you declare <code>char *a</code>, the variable <code>a</code> is a string, referring to some characters <em>stored somewhere else</em></p>
+<p>When you want to reserve some space for the characters, you can
+declare <code>a</code> as an array instead:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">char</span> a[<span class="hljs-number">100</span>];
+</pre>
+<p>After this, you can fill in the characters (e.g. using <code>strcpy</code>
+or <code>strcat</code> or <code>sprintf</code>) and use <code>a</code> as a
+string in exactly the same way as before</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#21">&lt; </a>
+    <span class="here">22</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#23"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>String functions</h2>
+<p>The <code>*</code> in <code>char*</code> is a warning that strings are not
+primitive (they are arrays of characters)</p>
+<p>So they must be compared using a function <code>strcmp</code> and
+not <code>==</code></p>
+<p>C has a 'policy' that all the primitive operations provided take essentially
+one instruction (no loops)</p>
+<p><code>strcmp</code> has a rubbish name because, originally, only the first 6 characters of a name 'counted' (now it's 31)</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#22">&lt; </a>
+    <span class="here">23</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#24"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Pointer comparisons</h2>
+<p>A string test <code>s1 == s2</code> checks whether the strings are
+identical, i.e. stored at the same place in memory</p>
+<p>It is a 'pointer' comparison (we'll do pointers later)</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">char</span> *s1 = <span class="hljs-string">"cat"</span>;
+<span class="hljs-keyword">char</span> *s2 = <span class="hljs-string">"cat"</span>;
+<span class="hljs-keyword">if</span> (s1 == s2) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"same\n"</span>);
+<span class="hljs-keyword">else</span> <span class="hljs-built_in">printf</span>(<span class="hljs-string">"different\n"</span>);
+</pre>
+<p>What would these statements print out?</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#23">&lt; </a>
+    <span class="here">24</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#25"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Pointer comparisons</h2>
+<p>A string test <code>s1 == s2</code> checks whether the strings are
+identical, i.e. stored at the same place in memory</p>
+<p>It is a 'pointer' comparison (we'll do pointers later)</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">char</span> *s1 = <span class="hljs-string">"cat"</span>;
+<span class="hljs-keyword">char</span> *s2 = <span class="hljs-string">"cat"</span>;
+<span class="hljs-keyword">if</span> (s1 == s2) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"same\n"</span>);
+<span class="hljs-keyword">else</span> <span class="hljs-built_in">printf</span>(<span class="hljs-string">"different\n"</span>);
+</pre>
+<p>What would these statements print out?</p>
+<p><strong>Answer:</strong> it depends on how well the C compiler optimizes the
+code</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#24">&lt; </a>
+    <span class="here">25</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#26"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>strcmp</h2>
+<p>The <code>strcmp</code> function is one of many string functions in
+the <code>string</code> library module</p>
+<p><code>strcmp(s1,s2)</code> returns a negative, zero, or positive result,
+so <code>strcmp(s1,s2) &lt; 0</code> means "<code>s1 &lt; s2</code>"</p>
+<p>Why doesn't it return -1, 0, 1?</p>
+<p>Because it uses subtraction, it would cost an instruction or two to convert,
+C tries to guarantee to be efficient, and the programmer only ever needs to
+test the sign anyway (programmer beware)</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#25">&lt; </a>
+    <span class="here">26</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#27"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./3-statements_files/countdown.png" />
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#26">&lt; </a>
+    <span class="here">27</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#28"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>While loops</h2>
+<p>A while loop allows code to be repeated: it is basically a conditional
+backward jump in the code</p>
+<pre class="small cpp c hljs" data-file="countdown.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/countdown.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">countdown.c</a><span class="hljs-comment">/* Print a countdown. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> _POSIX_C_SOURCE 200809L</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    setbuf(<span class="hljs-built_in">stdout</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">int</span> t = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">while</span> (t &gt;= <span class="hljs-number">0</span>) {
+        sleep(<span class="hljs-number">1</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>, t);
+        t = t - <span class="hljs-number">1</span>;
+    }
+}
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#27">&lt; </a>
+    <span class="here">28</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#29"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Portability</h2>
+<p>C claims to be portable, not platform independent</p>
+<p>To go beyond the minimal standard libraries, you need to find libraries
+which are available across platforms</p>
+<p>For coursework, <strong>don't</strong> use platform specific libraries,
+e.g. <code>#include &lt;windows.h&gt;</code></p>
+<p>Just use SDL and the common POSIX extensions, e.g. <code>#define
+_POSIX_C_SOURCE 200809L<br />#include &lt;unistd.h&gt;</code>
+</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#28">&lt; </a>
+    <span class="here">29</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#30"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Abbreviations</h2>
+<p>There are increment and decrement abbreviations:</p>
+<pre class="cpp hljs" style="font-size: 32px;">n++;        means   n = n + <span class="hljs-number">1</span>;
+++n;        means   n = n + <span class="hljs-number">1</span>;
+n--;        means   n = n - <span class="hljs-number">1</span>;
+--n;        means   n = n - <span class="hljs-number">1</span>;
+
+m = n++;    means   m = n; n++;
+m = ++n;    means   n++; m = n;
+
+<span style="color:red">n = n++;    is a bug</span>
+</pre>
+<p>Use <code>++</code> sparingly, and avoid the bug <code>n = n++;</code></p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#29">&lt; </a>
+    <span class="here">30</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#31"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./3-statements_files/sums.png" />
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#30">&lt; </a>
+    <span class="here">31</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#32"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Example: square root</h2>
+<p>Here's a square root function</p>
+<pre class="small cpp c hljs" data-file="root.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/root.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">root.c</a><span class="hljs-comment">// Find square roots (like sqrt).</span>
+
+<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">root</span><span class="hljs-params">(<span class="hljs-keyword">double</span> x)</span> </span>{
+    <span class="hljs-keyword">double</span> r = x / <span class="hljs-number">2.0</span>;
+    <span class="hljs-keyword">double</span> eps = <span class="hljs-number">1e-15</span>;
+    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">fabs</span>(r - x/r) &gt; eps) {
+        r = (r + x/r) / <span class="hljs-number">2</span>;
+    }
+    <span class="hljs-keyword">return</span> r;
+}
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#31">&lt; </a>
+    <span class="here">32</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#33"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>double</h2>
+<p>The <code>double</code> type is usually used for floating point</p>
+<p>It is stored in 8 bytes, has about 15 decimal significant digits of
+precision, and has a range of about ±10<sup>±308</sup></p>
+<p>When compactness is needed and precision/range requirements are low,
+e.g. graphics, you can use <code>float</code></p>
+<p>A <code>double</code> is not exact, even 0.1 can't be stored exactly -
+try <code>printf("%.18f\n", 0.1);</code></p>
+<p>Errors accumulate at an average rate of <code>sqrt(n)</code>
+for <code>n</code> operations, when there is no bias (rounding alternates)</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#32">&lt; </a>
+    <span class="here">33</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#34"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Newton's algorithm</h2>
+<p>The algorithm is
+essentially <a href="https://en.wikipedia.org/wiki/Newton&apos;s_method">Newton's</a>:</p>
+<pre class="cpp c hljs" data-file="root.c" style="font-size: 32px;"><a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/root.c" style="float: right; margin: 0px; color: green; background-color: rgb(187, 238, 238);">root.c</a>r = (r + x/r) / <span class="hljs-number">2</span>;
+</pre>
+<p>If <code>r</code> is less than the real root, then <code>x/r</code> is
+greater, and vice versa, so the average is a better approximation, and the gap
+tells you how close you are</p>
+<p>It is easy to understand, convergence is rapid (<em>faster</em> than halving the gap) but libraries use even faster special-purpose techniques</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#33">&lt; </a>
+    <span class="here">34</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#35"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Edge cases</h2>
+<p>One edge case is when <code>x = 4.0</code></p>
+<p>Then the initial guess is exactly correct</p>
+<p>A while loop is repeated 0 times if the test starts false:</p>
+<pre class="cpp hljs" style="font-size: 32px;">r = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">while</span> (r != <span class="hljs-number">2</span>) {
+    ...
+}
+</pre>
+<p>This is almost always what you want, and minimizes edge cases</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#34">&lt; </a>
+    <span class="here">35</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#36"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>For loops</h2>
+<p>The countdown loop could be rewritten like this:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">int</span> t;
+<span class="hljs-keyword">for</span> (t = <span class="hljs-number">10</span>; t &gt;= <span class="hljs-number">0</span>; t--) {
+    ...
+}
+</pre>
+<p>It is completely equivalent to</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">int</span> t = <span class="hljs-number">10</span>;
+<span class="hljs-keyword">while</span> (t &gt;= <span class="hljs-number">0</span>) {
+    ...
+    t--;
+}
+</pre>
+<p>It gathers the three pieces into one place</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#35">&lt; </a>
+    <span class="here">36</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#37"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Another for loop</h2>
+<p>Here is another variation, and its equivalent:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> t = <span class="hljs-number">10</span>; t &gt;= <span class="hljs-number">0</span>; t--) {
+    ...
+}
+</pre>
+<pre class="cpp hljs" style="font-size: 32px;">{
+  <span class="hljs-keyword">int</span> t = <span class="hljs-number">10</span>;
+  <span class="hljs-keyword">while</span> (t &gt;= <span class="hljs-number">0</span>) {
+      ...
+      t--;
+  }
+}
+</pre>
+<p>The outer block limits the scope of <code>t</code></p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#36">&lt; </a>
+    <span class="here">37</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#38"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Stylised for loops</h2>
+<p>Because of their logical complexity, you should only use for loops in
+a few familiar stylised special cases:</p>
+<pre class="small cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) ...
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n<span class="hljs-number">-1</span>; i &gt;= <span class="hljs-number">0</span>; i--) ...
+
+<span class="hljs-keyword">for</span> (item *p = <span class="hljs-built_in">list</span>; p != <span class="hljs-literal">NULL</span>; p = p-&gt;next) ...
+</pre>
+<p>The last example, scanning a linked list, we'll see later</p>
+<p>If your situation isn't a simple one like these, it is probably better to
+use a while loop</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#37">&lt; </a>
+    <span class="here">38</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#39"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Switch</h2>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-keyword">switch</span> (opcode) {
+<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>: ... ; <span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: ... ; <span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>: ... <span class="hljs-keyword">break</span>;
+...
+<span class="hljs-keyword">default</span>: ... ; <span class="hljs-keyword">break</span>;
+}
+</pre>
+<p>It is a jump, more efficient than sequential tests</p>
+<p><strong>Beware:</strong> (a) forgetting the <code>break</code> ('fall
+through') (b) no agreement on indenting (c) can make functions big: consider
+one line per case, maybe a function call</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#38">&lt; </a>
+    <span class="here">39</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#40"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Expression statements</h2>
+<p>Sometimes you want to evaluate an expression (with side effects) and there
+is no result or you don't need it:</p>
+<pre class="cpp hljs" style="font-size: 32px;">n++;
+printResults();
+</pre>
+<p>The first is an increment, where you don't need the value of <code>n</code> for anything</p>
+<p>The second is a function call, where nothing is returned, or you don't need the returned value</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#39">&lt; </a>
+    <span class="here">40</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#41"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Do and goto statements</h2>
+<p>There is a <code>do..while</code> loop, with the test at the end, where the
+loop is always executed at least once</p>
+<p>It's visually and semantically confusing - don't use it</p>
+<p>There is a <code>goto</code> statement (left over from the Basic
+language, maybe) - don't use it</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#40">&lt; </a>
+    <span class="here">41</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#42"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Clever functions</h2>
+<p>It has been said that 'debugging is twice as hard as writing the code in the
+first place - therefore, if you write the code as cleverly as possible, you are
+not smart enough to debug it'</p>
+<p>So it is important to avoid writing functions which are 'too clever'</p>
+<p>A good strategy is to write a function <strong>as if</strong> you are going to have to
+prove that it is correct</p>
+<p>Functions which are <em>logically</em> simpler are usually also
+<em>intuitively</em> simpler, and more likely to be correct</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#41">&lt; </a>
+    <span class="here">42</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#43"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<img class="middle" src="./3-statements_files/jump.png" />
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#42">&lt; </a>
+    <span class="here">43</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#44"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Controlled jumps</h2>
+<p>The more your code jumps about, the harder it is to debug</p>
+<p>So it pays to make the jumps as controlled as possible</p>
+<p>Function calls, if statements, and loops are the most controlled statements</p>
+<p>The statements in the next few slides should be used 'sparingly', i.e. not at
+all, or restricted to a few familiar stylised special cases</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#43">&lt; </a>
+    <span class="here">44</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#45"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Early return</h2>
+<p>The <code>return</code> statement doesn't have to be at the end</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">abs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>{
+    <span class="hljs-keyword">if</span> (n &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> n;
+    <span class="hljs-keyword">return</span> -n;
+}
+</pre>
+<p>No <code>else</code> needed here - if <code>n&gt;=0</code>, execution
+returns from the function before reaching the second line</p>
+<p>One stylised use is to dispose of an exceptional case, and
+avoid an extra indent for the general case</p>
+<p>The disadvantage is it may be unclear what property holds on return,
+or how to add extra end-code</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#44">&lt; </a>
+    <span class="here">45</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#46"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Early loop exit</h2>
+<p>The <code>break</code> statement exits from a loop early:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">// Search for first prime in a range</span>
+<span class="hljs-keyword">while</span> (i &lt; last) {
+   <span class="hljs-keyword">if</span> (isprime(i)) <span class="hljs-keyword">break</span>;
+   i++;
+}
+</pre>
+<p>Again, it can help to separate special cases from
+the general case, without mangling the general case</p>
+<p>Searching is the most common use</p>
+<p>One disadvantage is that the loop can end while the test expression is still true</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#45">&lt; </a>
+    <span class="here">46</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#47"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Searching</h2>
+<p>Programmers often say they <strong>must</strong> use <code>break</code> for efficient searching,
+to avoid unnecessary work</p>
+<p>But, arguably, it is logically clearer and cleaner to write</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">// Search for first prime in a range</span>
+<span class="hljs-keyword">while</span> (i &lt; last &amp;&amp; ! isprime(i)) {
+   i++;
+}
+</pre>
+<p>Now the test tells you exactly what must be true each time round the loop, and
+false when it ends<br />
+(it is the 'loop invariant' needed to prove correctness)</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#46">&lt; </a>
+    <span class="here">47</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#48"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Early loop restart</h2>
+<p>The <code>continue</code> statement restarts a loop early:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">// print s, n times with commas</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s"</span>, s);
+    <span class="hljs-keyword">if</span> (i == n<span class="hljs-number">-1</span>) <span class="hljs-keyword">continue</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">", "</span>);
+}
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+</pre>
+<p>As it happens, this example can be done with <code>break</code> or just <code>else</code></p>
+<p>Some people would say that using an <code>if</code>..<code>else</code> inside a loop is always better than using <code>continue</code></p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#47">&lt; </a>
+    <span class="here">48</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#49"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Commas</h2>
+<p>There are lots of ways of solving the comma problem</p>
+<p>My favourite is:</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">// print s, n times with commas</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+    <span class="hljs-keyword">if</span> (i &gt; <span class="hljs-number">0</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">", "</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s"</span>, s);
+}
+<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#48">&lt; </a>
+    <span class="here">49</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#50"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Double loop search</h2>
+<p>What if you have a search involving a double loop?</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">// Search for table entry</span>
+<span class="hljs-keyword">for</span> (r = <span class="hljs-number">0</span>; r &lt; m; r++) {
+    <span class="hljs-keyword">for</span> (c = <span class="hljs-number">0</span>; c &lt; n; c++) {
+       <span class="hljs-keyword">if</span> (table[r][c] ...) ...
+    }
+}
+</pre>
+<p>You can't use <code>break</code>, because it only breaks out of the inner
+loop, not the outer one</p>
+<p>Some programmers say this is the sort of exception where you must use <code>goto</code>, but don't do it!</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#49">&lt; </a>
+    <span class="here">50</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#51"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Extra loop variable</h2>
+<p>A good readable approach to the problem is to use an extra variable</p>
+<pre class="cpp hljs" style="font-size: 32px;"><span class="hljs-comment">// Search for table entry</span>
+<span class="hljs-keyword">bool</span> found = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">for</span> (r = <span class="hljs-number">0</span>; r &lt; m &amp;&amp; !found; r++) {
+    <span class="hljs-keyword">for</span> (c = <span class="hljs-number">0</span>; c &lt; n &amp;&amp; !found; c++) {
+       <span class="hljs-keyword">if</span> (table[r][c] ...) found = <span class="hljs-literal">true</span>;
+    }
+}
+</pre>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#50">&lt; </a>
+    <span class="here">51</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#52"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>The ternary operator</h2>
+<p>There is one operator in C which has three arguments instead of the usual
+one or two</p>
+<p>It has the form <code>t ? x : y</code> and is equal to <code>x</code>
+or <code>y</code> according to the test <code>t</code>:</p>
+<pre style="font-size: 32px;">int max = m &gt; n ? m : n;
+int abs = n &gt;= 0 ? n : -n;
+</pre>
+<p>It is the same as the Haskell feature <code>if..then..else..</code>, but it
+should be used more 'sparingly' than in Haskell</p>
+<p>See <a href="https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B">list of operators</a></p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#51">&lt; </a>
+    <span class="here">52</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#53"> &gt;</a>
+  </div></section>
+
+<section style="position: relative; width: 1024px; height: 765px;">
+<h2>Feature creep</h2>
+<p>Examples where the advice is "don't use" or "use sparingly" illustrate that adding features to a language is not necessarily a good idea</p>
+<p>But inevitably features do get added (C has resisted more than most)</p>
+<p>This tendency is called feature creep, and partly explains why languages go out of fashion</p>
+<div class="icon" style="display: block;">
+  </div><div class="navigation" style="display: block;">
+    <a class="jump prev" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/#52">&lt; </a>
+    <span class="here">53</span>
+    <a class="jump next" href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS10002/c/statements/" style="visibility: hidden;"> &gt;</a>
+  </div></section>
+
+</body>
+</html>
