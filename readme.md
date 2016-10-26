@@ -12,4 +12,7 @@ Lots of C and Haskell.
 
 ## ESSENTIALS FROM LECTURES:
 
-The 'need-to-know' parts of the lectures are contained in the `need-to-know` directory.
+The 'need-to-know' parts of the lectures are contained in the `need-to-know` directory:
+
+- [C](./need-to-know/c.md)
+- [Haskell](./need-to-know/haskell.md)
