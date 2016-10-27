@@ -21,10 +21,10 @@ int main (){
   add(VECTOR_DIMENSIONS, first, second, result);
 
   if (result[0] == 3 && result[1] == 6 && result[2] == 9) {
-    printf("added as expected");
+    printf("added as expected yay 2");
     return 0;
   } else {
-    printf("didn't work");
+    printf("didn't work lol");
     return 1;
   }
 }
