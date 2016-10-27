@@ -1,0 +1,10 @@
+[
+  {
+    "files": "**/*.c",
+    "command": "lazygcc ${destFileWithoutExtension}"
+  },
+  {
+    "files": "*.c",
+    "command": "lazygcc ${destFileWithoutExtension}"
+  }
+]

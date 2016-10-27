@@ -1,6 +1,0 @@
-{
-  "commands": [
-    "**/*.c : gcc -std=c99 -O3 -Wall -o {absPath}{name} {absPath}{filename}",
-    "**/*.c : {absPath}{name}"
-  ]
-}
