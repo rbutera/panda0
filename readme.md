@@ -14,5 +14,5 @@ Lots of C and Haskell.
 
 The 'need-to-know' parts of the lectures are contained in the `need-to-know` directory:
 
-- [C](./need-to-know/c.md)
-- [Haskell](./need-to-know/haskell.md)
+  - [C](./need-to-know/c.md)
+  - [Haskell](./need-to-know/haskell.md)
