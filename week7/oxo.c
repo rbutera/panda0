@@ -109,12 +109,32 @@ bool position(Board *b, char *text, Position *p) {
     return valid;
 }
 
+char switchPlayer (Board *b){
+  char current = b->player;
+  char new;
+  switch(current){
+    case X:
+      new = O;
+      break;
+    case O:
+      new = X;
+      break;
+    default:
+      printf("switchPlayer: failed to switch player, currently set to %c", current);
+      break;
+  }
+  b->player = new;
+  return new;
+}
+
 // TODO: finish this function
 // Make a move at the given position, assuming that it is valid.
 void move(Board *b, Position *p) {
-  if(position(b,p)){
-    
-  }
+  char player = b->player;
+  int row = p->row;
+  int col = p->col;
+  setAndDisplay(b, row, col, player);
+
 }
 
 // TODO: finish this function
