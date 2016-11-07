@@ -7,9 +7,9 @@
 // #define DEBUG
 // #endif
 
-#ifndef FANCY_DISPLAY
-#define FANCY_DISPLAY
-#endif
+// #ifndef FANCY_DISPLAY
+// #define FANCY_DISPLAY
+// #endif
 
 //-----------------------------------------------------------------------------
 // Setting up types and constants.  This section doesn't need to be changed.
