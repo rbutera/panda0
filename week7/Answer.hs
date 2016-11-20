@@ -24,7 +24,7 @@ square = Fd 1 :> Rt 90
 
 -- TODO #1.1
 triangle :: Command
-triangle = undefined
+triangle = Fd 1 :> Rt 120 :> Fd 1 :> Rt 120 :> Fd 1
 
 -- TODO #1.2
 polygon :: Int -> Command
@@ -62,8 +62,8 @@ daisy xs = Lt 90 :> foldr cons empty (map (Go . Fd) xs)
         empty    = Fd 0
         arc = 180 / fromIntegral (length xs - 1)
 
-data Tree a 
-  = Tip 
+data Tree a
+  = Tip
   | Node (Tree a) a (Tree a)
   deriving Show
 
@@ -120,7 +120,7 @@ ix c = ord c - ord '0'
 -----------------------------------------------------------
 -- Jeremy Gibbons' amazing spigot implementation:
 pis = g(1,0,1,1,3,3) where
-  g (q,r,t,k,n,l) = 
+  g (q,r,t,k,n,l) =
    if 4*q+r-t < n*t
     then n : g (10*q, 10*(r-n*t), t, k, div (10*(3*q+r)) t - 10*n, l)
     else g (q*k, (2*q+r)*l, t*l, k+1, div (q*(7*k+2)+r*l) (t*l), l+2)
