@@ -13,7 +13,7 @@ void run(char *filename, char *test[]) {
         fprintf(stderr, "Can't open %s\n", filename);
         exit(1);
     }
-    display *d = newDisplay(filename, 200, 200, test);
+    display *d = newDisplay(filename, 1024, 1024, test);
     end(d);
     fclose(in);
 }
