@@ -115,7 +115,8 @@ void printPosNeg (Byte testing){
   printf("0x%02hhx is %c\n", testing, positiveOrNegative(testing));
 }
 
-char *stringifyOpcode (int code, char *destination) {
+// char *stringifyOpcode (int code, char *destination) {
+char *stringifyOpcode (int code) {
   char *result;
 
   switch (code) {
@@ -131,7 +132,7 @@ char *stringifyOpcode (int code, char *destination) {
       result = "ERROR";
   }
 
-  strcpy(destination, result);
+  // strcpy(destination, result);
   return result;
 }
 
@@ -147,7 +148,7 @@ void run(char *filename, char *test[]) {
     };
 
     char parsedOpcode[4];
-    stringifyOpcode(exampleInstruction.opcode, parsedOpcode);
+    strcpy(parsedOpcode, stringifyOpcode(exampleInstruction.opcode));
 
     printf("the example instruction (0x%02hhx) translates to %s %i.\n", example, parsedOpcode, exampleInstruction.operand);
     printf("binary:");
