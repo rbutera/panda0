@@ -18,15 +18,31 @@ typedef unsigned char Byte;
 // TODO: try fix enumerated type representing an opcode
 // typedef enum {DX, DY, DT, PEN} OpCode;
 
-// .sketch file instruction byte
-typedef struct InstructionByte InstructionByte;
-struct InstructionByte {
+// .sketch file move instruction byte
+typedef struct MoveInstruction MoveInstruction;
+struct MoveInstruction {
   Byte raw; // store a copy of the uninterpreted raw instruction
   // OpCode opcode; // instruction opcode (first 2 bits)
   int opcode; // instruction opcode (first 2 bits) TODO: change to enumerated type
   signed int operand; // instruction operand (last 6 bits)
 };
 
+typedef struct PauseInstruction PauseInstruction;
+struct PauseInstruction {
+  Byte raw; // store a copy of the uninterpreted raw instruction
+  // OpCode opcode; // instruction opcode (first 2 bits)
+  int opcode; // instruction opcode (first 2 bits) TODO: change to enumerated type
+  unsigned int operand; // instruction operand (last 6 bits)
+};
+
+typedef struct PenToggleInstruction PenToggleInstruction;
+struct PenToggleInstruction {
+  Byte raw;
+  int opcode;
+  //unsigned int operand; // TODO: check operand is always ignored/insignificant
+};
+
+// TODO: remove before submission
 void printBits(size_t const size, void const * const ptr)
 {
     unsigned char *b = (unsigned char*) ptr;
@@ -44,40 +60,25 @@ void printBits(size_t const size, void const * const ptr)
     puts("");
 }
 
-int printBitsNL (Byte wtf){
+void printBitsNL (Byte wtf){
   printBits(1, &wtf);
-  // printf("\n");
-  return 0;
-}
-
-int testWTF(Byte wtf){
-  printBitsNL(wtf);
-  wtf = wtf<<2;
-  printBitsNL(wtf);
-  wtf = ~wtf;
-  printBitsNL(wtf);
-  wtf += 1;
-  printBitsNL(wtf);
-  wtf = wtf>>2;
-  printf("%d\n", wtf);
-  printBitsNL(wtf);
-  return 0;
+  printf("\n");
 }
 
 _Bool operandIsPositive (Byte wtf){
-  // printf("is operand of %d positive or negative?\nbinary: ", wtf);
+  // printf("is operand of %d positive or negative?\n", wtf);
   // printBitsNL(wtf);
   // printf("shift2L\nbinary: ");
-  wtf = wtf<<2;
+  // wtf = wtf<<2;
   // printBitsNL(wtf);
   // printf("shift2R\nbinary: ");
-  wtf = wtf>>2;
+  // wtf = wtf>>2;
   // printBitsNL(wtf);
   // printf("result: %i\n", wtf);
   if (wtf>>2 & 1) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 
@@ -86,10 +87,14 @@ char positiveOrNegative (Byte x){
 }
 
 signed int extractOperand (Byte input){
-  _Bool needsFlipping = !operandIsPositive(input);
-  if (needsFlipping) {
-    Byte masked = input & 0x3f;
-    return ~masked + 1;
+  _Bool needsFlipping = !operandIsPositive(input); // need to flip negatives from two's complement form
+  if (needsFlipping == true) {
+    // printf("operand needs flipping because it is %c\n", positiveOrNegative(input));
+    input = input<<2;
+    input = ~input;
+    input += 1;
+    input = input>>2;
+    return -input;
   } else {
     return input & 0x3f;
   }
@@ -111,9 +116,10 @@ int interpret(FILE *in, display *d) {
   return 0;
 }
 
-void printPosNeg (Byte testing){
-  printf("0x%02hhx is %c\n", testing, positiveOrNegative(testing));
-}
+// TODO: remove before submission
+// void printPosNeg (Byte testing){
+//   printf("0x%02hhx is %c\n", testing, positiveOrNegative(testing));
+// }
 
 // char *stringifyOpcode (int code, char *destination) {
 char *stringifyOpcode (int code) {
@@ -122,18 +128,32 @@ char *stringifyOpcode (int code) {
   switch (code) {
     case 0:
       result = "DX";
+      break;
     case 1:
       result = "DY";
+      break;
     case 2:
       result = "DT";
+      break;
     case 3:
       result = "PEN";
+      break;
     default:
       result = "ERROR";
+      break;
   }
 
-  // strcpy(destination, result);
   return result;
+}
+
+int debugInstructionProperties(MoveInstruction instruction){
+  char parsedOpcode[6];
+  strcpy(parsedOpcode, stringifyOpcode(instruction.opcode));
+  printf("opcode: %s\n", parsedOpcode);
+  printf("operand: %i\n", instruction.operand);
+  printf("binary:");
+  printBitsNL(instruction.raw);
+  return 0;
 }
 
 // Read sketch instructions from the given file.  If test is NULL, display the
@@ -141,30 +161,22 @@ char *stringifyOpcode (int code) {
 void run(char *filename, char *test[]) {
     Byte example = 0x7D;
 
-    InstructionByte exampleInstruction = {
+    MoveInstruction exampleInstruction = {
       .raw = example,
       .opcode = extractOpcode(example),
       .operand = extractOperand(example)
     };
 
-    char parsedOpcode[4];
-    strcpy(parsedOpcode, stringifyOpcode(exampleInstruction.opcode));
+    // debugInstructionProperties(exampleInstruction);
 
-    printf("the example instruction (0x%02hhx) translates to %s %i.\n", example, parsedOpcode, exampleInstruction.operand);
-    printf("binary:");
-    printBitsNL(exampleInstruction.raw);
-
-    // printf("lol examples of signed ints: [%i,%i]", minusOne, minusNine);
-    // printf("")
-
-    // FILE *in = fopen(filename, "rb");
-    // if (in == NULL) {
-    //     fprintf(stderr, "Can't open %s\n", filename);
-    //     exit(1);
-    // }
-    // display *d = newDisplay(filename, 1024, 1024, test);
-    // end(d);
-    // fclose(in);
+    FILE *in = fopen(filename, "rb");
+    if (in == NULL) {
+        fprintf(stderr, "Can't open %s\n", filename);
+        exit(1);
+    }
+    display *d = newDisplay(filename, 1024, 1024, test);
+    end(d);
+    fclose(in);
 }
 
 // ----------------------------------------------------------------------------
