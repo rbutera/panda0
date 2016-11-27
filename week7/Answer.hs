@@ -55,7 +55,8 @@ scale s command = command
 
 -- TODO #1.4
 repscale :: Int -> Double -> Command -> Command
-repscale = undefined
+repscale 1 _ c = c
+repscale n s c = c :> scale s (repscale (n-1) s c)
 
 hexagons :: Int -> Command
 hexagons n = repscale n 0.8 hexagon
