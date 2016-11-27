@@ -19,3 +19,6 @@ numLongCollatzChains = length longCollatzChainsToHundred
 numLongCollatzChains' = length lengthsOfLongCollatzChains
 
 didRaiSmashIt = numLongCollatzChains == numLongCollatzChains'
+
+
+numLongChains = length (filter (\y -> length y > 15) (map (\x -> createCollatzChain x) [1..100]))
