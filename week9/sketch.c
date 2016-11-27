@@ -112,7 +112,8 @@ int extractOpcode (Byte input){
  * @return    [description]
  */
 int interpret(FILE *in, display *d) {
-  /* code */
+  int fgetc(FILE * fp);
+  char
   return 0;
 }
 
@@ -159,15 +160,8 @@ int debugInstructionProperties(MoveInstruction instruction){
 // Read sketch instructions from the given file.  If test is NULL, display the
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
-    Byte example = 0x7D;
 
-    MoveInstruction exampleInstruction = {
-      .raw = example,
-      .opcode = extractOpcode(example),
-      .operand = extractOperand(example)
-    };
 
-    // debugInstructionProperties(exampleInstruction);
 
     FILE *in = fopen(filename, "rb");
     if (in == NULL) {
@@ -175,6 +169,7 @@ void run(char *filename, char *test[]) {
         exit(1);
     }
     display *d = newDisplay(filename, 1024, 1024, test);
+    interpret(d, );
     end(d);
     fclose(in);
 }
