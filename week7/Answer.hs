@@ -26,9 +26,17 @@ square = Fd 1 :> Rt 90
 triangle :: Command
 triangle = Fd 1 :> Rt 120 :> Fd 1 :> Rt 120 :> Fd 1
 
--- TODO #1.2
+-- TODO #1.0 Repeat Function
+rep :: Int -> Command -> Command
+rep n x
+  | n > 1     = x :> rep (n-1) x
+  | otherwise = x
+
+turnAmount :: Int -> Double
+turnAmount x = 360 / fromIntegral x
+
 polygon :: Int -> Command
-polygon n = undefined
+polygon n = rep n (Fd 1 :> Rt (turnAmount n))
 
 hexagon :: Command
 hexagon = polygon 6
@@ -37,7 +45,7 @@ hexagon = polygon 6
 squares :: Int -> Command
 squares 2 = square :> scale 0.9 square
 squares 3 = square :> scale 0.9 (square :> scale 0.9 square)
-squares n = undefined
+squares n = square :> scale 0.9 (squares (n-1))
 
 scale :: Double -> Command -> Command
 scale s (Fd z) = Fd (s * z)
