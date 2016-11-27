@@ -1,0 +1,10 @@
+[
+  {
+    "files": "**/*.c",
+    "command": "make"
+  },
+  {
+    "files": "*.c",
+    "command": "make"
+  }
+]
