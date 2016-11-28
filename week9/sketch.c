@@ -5,14 +5,19 @@
 #include <string.h> // TODO: check if this is OK
 
 #ifndef DEBUG
-#define DEBUG 1
+  #define DEBUG 2
 #endif
 
 #ifndef IMPORT_MAX_INSTRUCTIONS
-#define IMPORT_MAX_INSTRUCTIONS 1024
+  #define IMPORT_MAX_INSTRUCTIONS 1024
 #endif
 // TODO: upgrade the run function, adding functions to support it.
 
+#ifdef DEBUG
+#define DEBUG_PRINT printf
+#else
+#define DEBUG_PRINT(...)
+#endif
 
 // constants representing possible opcodes (the first two bits of an instruction byte)
 const int DX = 0;
@@ -117,9 +122,8 @@ char operandPolarity (Byte x){
 signed int operandExtract (Byte input, _Bool signedOperand){
   _Bool needsFlipping = signedOperand && !operandByteHasPositive(input); // need to flip negatives from two's complement form
   if (needsFlipping == true) {
-    #ifdef DEBUG
-    printf("operand needs flipping because it is %c\n", operandPolarity(input));
-    #endif
+    DEBUG_PRINT("operand needs flipping because it is %c\n", operandPolarity(input));
+
     input = input<<2;
     input = ~input;
     input += 1;
@@ -165,39 +169,6 @@ char *opcodeStringify (int code) {
   return result;
 }
 
-int debugInstructionProperties(MoveInstruction instruction){
-  char parsedOpcode[6];
-  strcpy(parsedOpcode, opcodeStringify(instruction.opcode));
-  printf("opcode: %s\n", parsedOpcode);
-  printf("operand: %i\n", instruction.operand);
-  printf("binary:");
-  printBitsNL(instruction.raw);
-  return 0;
-}
-
-MoveInstruction *createMoveInstruction(Byte raw){
-  MoveInstruction *created = (MoveInstruction *) malloc(sizeof(MoveInstruction));
-  created->opcode = opcodeExtract(raw); // todo
-  created->operand = operandExtract(raw, true); // todo
-  created->raw = raw; // todo
-  return created;
-}
-
-PauseInstruction *createPauseInstruction(Byte raw){
-  PauseInstruction *created = (PauseInstruction *) malloc(sizeof(PauseInstruction));
-  created->opcode = opcodeExtract(raw); // todo
-  created->operand = operandExtract(raw, false); // todo
-  created->raw = raw; // todo
-  return created;
-}
-
-PenInstruction *createPenInstruction(Byte raw){
-  PenInstruction *created = (PenInstruction *) malloc(sizeof(PenInstruction));
-  created->opcode = opcodeExtract(raw); // todo
-  created->raw = raw; // todo
-  return created;
-}
-
 /**
 * read bytes from (already opened) in file, unpack each byte into an opcode and operand, and use those to make suitable calls to display functions
 * @param  *in file to read
@@ -208,20 +179,15 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   int input = fgetc(in);
   int numInstructions = 0;
 
-  #ifdef DEBUG
-  printf("Loading:\n\n");
-  #endif
+  DEBUG_PRINT("Loading:\n\n");
 
   while (input != EOF && input != '\0' && numInstructions < IMPORT_MAX_INSTRUCTIONS) {
     buffer[numInstructions++] = input;
-    #ifdef DEBUG
-    printf("%c ", input);
-    #endif
+    DEBUG_PRINT("0x%02hhx ", (Byte) input);
     input = fgetc(in);
   }
 
-  printf("\n\n%i instructions loaded.", numInstructions);
-
+  DEBUG_PRINT("\n\n%i instructions loaded.\n", numInstructions);
   return 0;
 }
 
@@ -231,28 +197,9 @@ int *transformInstructions (int *inputStream, int *outputStream) {
     int input = inputStream[i];
 
     if (input != '\0' && input != EOF) {
-      // determine what type of instruction
-      char instructionType = opcodeExtract(input);
-      printf("%d", instructionType);
-      // target memory in outputStream
-      switch(instructionType){
-        case 'm':
-          outputStream[i] = (int) createMoveInstruction(input);
-          break;
-        case 'p':
-          outputStream[i] = (int) createPauseInstruction(input);
-          break;
-        case 'q':
-          outputStream[i] = (int) createPenInstruction(input);
-          break;
-        default:
-          printf("TRANSFORM INSTRUCTIONS FAILED MISERABLY");
-          break;
-      }
-      // fill with struct with initialized values
-      // print debug info
+      outputStream[i] = input;
     } else {
-      printf("reached end of inputStream");
+      DEBUG_PRINT("reached end of inputStream\n");
       break;
     }
   }
@@ -264,9 +211,8 @@ int *transformInstructions (int *inputStream, int *outputStream) {
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
   int instructionMemorySize = calcInstructionSize();
-  #if DEBUG
-    printf("instruction block size: %i\n", instructionMemorySize);
-  #endif
+  DEBUG_PRINT("instruction block size: %i\n", instructionMemorySize);
+
   int buffer[IMPORT_MAX_INSTRUCTIONS];
   int instructions[IMPORT_MAX_INSTRUCTIONS];
   // int totalInstructionMemory = instructionMemorySize * IMPORT_MAX_INSTRUCTIONS;
