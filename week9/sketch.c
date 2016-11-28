@@ -224,7 +224,6 @@ int getInstructions(FILE *in, display *d, int *buffer) {
 
 int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
   DEBUG_PRINT("Transforming...");
-  int numInstructions = 0;
   // traverse inputStream whilst there is data
   for (size_t i = 0; i <= IMPORT_MAX_INSTRUCTIONS; i++) {
     int input = inputStream[i];
@@ -235,20 +234,20 @@ int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte output
         DEBUG_PRINT("\nblank instruction found: transform halted\n");
         break;
       }
-      numInstructions++;
     } else {
       DEBUG_PRINT(" done.\n\n");
       break;
     }
   }
 
-  return numInstructions;
+  return 0;
 }
 
-void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Converting %i bytes into instruction objects... \n\n", n);
+int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
+  DEBUG_PRINT("Converting into instruction objects... \n\n");
+  int numInstructions = 0;
   int i = 0;
-  while(i < n && i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0' && instructions[i] != 0){
+  while(i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0' && instructions[i] != 0){
     // determine instruction type
     Byte current = instructions[i];
     int opcode = opcodeExtract(current);
@@ -278,9 +277,11 @@ void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Ins
       DEBUG_PRINT("ERROR! ");
     }
     output[i] = converted;
+    numInstructions++;
     i++;
   }
-  DEBUG_PRINT("END\n\n%i bytes converted.\n\n", n);
+  DEBUG_PRINT("END\n\n%i bytes converted.\n\n", numInstructions);
+  return numInstructions;
 }
 
 int drawLine (State *state){
@@ -419,10 +420,10 @@ void run(char *filename, char *test[]) {
   display *d = newDisplay(filename, 200, 200, test);
 
   getInstructions(in, d, buffer);
-  numInstructions = transformInstructions(buffer, instructionBytes);
+  transformInstructions(buffer, instructionBytes);
 
   Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
-  bytesToInstructions(numInstructions, instructionBytes, instructions);
+  numInstructions = bytesToInstructions(instructionBytes, instructions);
   interpretInstructions(numInstructions, instructions, d);
 
   end(d);
