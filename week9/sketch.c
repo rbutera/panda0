@@ -182,14 +182,19 @@ int getInstructions(FILE *in, display *d, int *buffer) {
 }
 
 Byte *transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
-  DEBUG_PRINT("Transforming Instructions\n");
+  DEBUG_PRINT("Transforming...\n");
   // traverse inputStream whilst there is data
   for (size_t i = 0; i <= IMPORT_MAX_INSTRUCTIONS; i++) {
     int input = inputStream[i];
     if (input != '\0' && input != EOF) {
-      outputStream[i] = (Byte) input;
+      if (input != 0) {
+        outputStream[i] = (Byte) input;
+      } else {
+        DEBUG_PRINT("\nblank instruction found: transform halted\n");
+        break;
+      }
     } else {
-      DEBUG_PRINT("Instructions Transformed\n");
+      DEBUG_PRINT(" done.\n\n");
       break;
     }
   }
@@ -198,18 +203,26 @@ Byte *transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outp
 }
 
 int performInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Performing:\n");
+  DEBUG_PRINT("Performing...");
   for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
     Byte instruction = instructions[i];
 
     if(instruction != '\0' && instruction != 0){
       DEBUG_PRINT(HEXIDECIMAL_FORMAT, instruction);
-      DEBUG_PRINT(",");
+      DEBUG_PRINT(" ");
     } else {
-      DEBUG_PRINT("null");
+      break;
     }
   }
+
+  DEBUG_PRINT("\n ...done.\n");
   return 0;
+}
+
+void initializeBuffer(int buffer[IMPORT_MAX_INSTRUCTIONS]){
+  for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+    buffer[i] = 0;
+  }
 }
 
 void initializeInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
@@ -223,6 +236,9 @@ void initializeInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
 void run(char *filename, char *test[]) {
   int buffer[IMPORT_MAX_INSTRUCTIONS];
   Byte instructions[IMPORT_MAX_INSTRUCTIONS];
+
+  initializeBuffer(buffer);
+  initializeInstructions(instructions);
 
   FILE *in = fopen(filename, "rb");
   if (in == NULL) {
