@@ -222,8 +222,9 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   return numInstructions;
 }
 
-Byte *transformInstructions (int n, int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
+int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
   DEBUG_PRINT("Transforming...");
+  int numInstructions = 0;
   // traverse inputStream whilst there is data
   for (size_t i = 0; i <= IMPORT_MAX_INSTRUCTIONS; i++) {
     int input = inputStream[i];
@@ -234,13 +235,14 @@ Byte *transformInstructions (int n, int inputStream[IMPORT_MAX_INSTRUCTIONS], By
         DEBUG_PRINT("\nblank instruction found: transform halted\n");
         break;
       }
+      numInstructions++;
     } else {
       DEBUG_PRINT(" done.\n\n");
       break;
     }
   }
 
-  return outputStream;
+  return numInstructions;
 }
 
 void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
@@ -416,8 +418,8 @@ void run(char *filename, char *test[]) {
   }
   display *d = newDisplay(filename, 200, 200, test);
 
-  numInstructions = getInstructions(in, d, buffer);
-  transformInstructions(numInstructions, buffer, instructionBytes);
+  getInstructions(in, d, buffer);
+  numInstructions = transformInstructions(buffer, instructionBytes);
 
   Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
   bytesToInstructions(numInstructions, instructionBytes, instructions);
