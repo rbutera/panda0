@@ -4,7 +4,12 @@
 #include "display.h"
 #include <string.h> // TODO: check if this is OK
 
+
+#ifndef IMPORT_MAX_INSTRUCTIONS
+#define IMPORT_MAX_INSTRUCTIONS 1024
+#endif
 // TODO: upgrade the run function, adding functions to support it.
+
 
 // constants representing possible opcodes (the first two bits of an instruction byte)
 const int DX = 0;
@@ -43,9 +48,10 @@ struct PenToggleInstruction {
 };
 
 // TODO: remove before submission
-void printBits(size_t const size, void const * const ptr)
+void printBits(size_t const size, void const * const toPrint)
 {
-    unsigned char *b = (unsigned char*) ptr;
+
+    unsigned char *b = (unsigned char*) toPrint;
     unsigned char byte;
     int i, j;
 
@@ -60,36 +66,32 @@ void printBits(size_t const size, void const * const ptr)
     puts("");
 }
 
-void printBitsNL (Byte wtf){
-  printBits(1, &wtf);
+void printBitsNL (Byte toPrint){
+  printBits(1, &toPrint);
   printf("\n");
 }
 
-_Bool operandIsPositive (Byte wtf){
-  // printf("is operand of %d positive or negative?\n", wtf);
-  // printBitsNL(wtf);
-  // printf("shift2L\nbinary: ");
-  // wtf = wtf<<2;
-  // printBitsNL(wtf);
-  // printf("shift2R\nbinary: ");
-  // wtf = wtf>>2;
-  // printBitsNL(wtf);
-  // printf("result: %i\n", wtf);
-  if (wtf>>2 & 1) {
+/**
+ * checks if a byte's operand is positive
+ * @param  instruction the full instruction byte
+ * @return             [description]
+ */
+_Bool operandByteHasPositive (Byte instruction){
+  if (instruction>>2 & 1) {
     return false;
   } else {
     return true;
   }
 }
 
-char positiveOrNegative (Byte x){
-  return (operandIsPositive(x) ? 'p' : 'n');
+char operandPolarity (Byte x){
+  return (operandByteHasPositive(x) ? '+' : '-');
 }
 
-signed int extractOperand (Byte input){
-  _Bool needsFlipping = !operandIsPositive(input); // need to flip negatives from two's complement form
+signed int operandExtract (Byte input){
+  _Bool needsFlipping = !operandByteHasPositive(input); // need to flip negatives from two's complement form
   if (needsFlipping == true) {
-    // printf("operand needs flipping because it is %c\n", positiveOrNegative(input));
+    // printf("operand needs flipping because it is %c\n", operandPolarity(input));
     input = input<<2;
     input = ~input;
     input += 1;
@@ -100,30 +102,18 @@ signed int extractOperand (Byte input){
   }
 }
 
-int extractOpcode (Byte input){
+int opcodeExtract (Byte input){
   Byte masked = input & 0xC0;
   return masked >> 6;
 }
 
-/**
- * read bytes from (already opened) in file, unpack each byte into an opcode and operand, and use those to make suitable calls to display functions
- * @param  *in file to read
- * @param  d  display to call functions to
- * @return    [description]
- */
-int interpret(FILE *in, display *d) {
-  int fgetc(FILE * fp);
-  char
-  return 0;
-}
-
 // TODO: remove before submission
 // void printPosNeg (Byte testing){
-//   printf("0x%02hhx is %c\n", testing, positiveOrNegative(testing));
+//   printf("0x%02hhx is %c\n", testing, operandPolarity(testing));
 // }
 
-// char *stringifyOpcode (int code, char *destination) {
-char *stringifyOpcode (int code) {
+// char *opcodeStringify (int code, char *destination) {
+char *opcodeStringify (int code) {
   char *result;
 
   switch (code) {
@@ -149,7 +139,7 @@ char *stringifyOpcode (int code) {
 
 int debugInstructionProperties(MoveInstruction instruction){
   char parsedOpcode[6];
-  strcpy(parsedOpcode, stringifyOpcode(instruction.opcode));
+  strcpy(parsedOpcode, opcodeStringify(instruction.opcode));
   printf("opcode: %s\n", parsedOpcode);
   printf("operand: %i\n", instruction.operand);
   printf("binary:");
@@ -157,11 +147,38 @@ int debugInstructionProperties(MoveInstruction instruction){
   return 0;
 }
 
+
+/**
+ * read bytes from (already opened) in file, unpack each byte into an opcode and operand, and use those to make suitable calls to display functions
+ * @param  *in file to read
+ * @param  d  display to call functions to
+ * @return    [description]
+ */
+int getInstructions(FILE *in, display *d, int *buffer) {
+  int input = fgetc(in);
+  int numInstructions = 0;
+
+  #ifdef DEBUG
+  printf("Loading:\n\n");
+  #endif
+
+  while (input != EOF && input != '\0' && numInstructions < IMPORT_MAX_INSTRUCTIONS) {
+    buffer[numInstructions++] = input;
+    #ifdef DEBUG
+      printf("%c ", input);
+    #endif
+    input = fgetc(in);
+  }
+
+  printf("\n\n%i instructions loaded.", numInstructions);
+
+  return 0;
+}
+
 // Read sketch instructions from the given file.  If test is NULL, display the
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
-
-
+    int buffer[IMPORT_MAX_INSTRUCTIONS];
 
     FILE *in = fopen(filename, "rb");
     if (in == NULL) {
@@ -169,7 +186,7 @@ void run(char *filename, char *test[]) {
         exit(1);
     }
     display *d = newDisplay(filename, 1024, 1024, test);
-    interpret(d, );
+    getInstructions(in, d, buffer);
     end(d);
     fclose(in);
 }
