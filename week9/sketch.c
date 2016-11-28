@@ -197,7 +197,7 @@ int *transformInstructions (int *inputStream, int *outputStream) {
     int input = inputStream[i];
 
     if (input != '\0' && input != EOF) {
-      outputStream[i] = input;
+      outputStream[i] = (Byte) input;
     } else {
       DEBUG_PRINT("reached end of inputStream\n");
       break;
@@ -214,8 +214,7 @@ void run(char *filename, char *test[]) {
   DEBUG_PRINT("instruction block size: %i\n", instructionMemorySize);
 
   int buffer[IMPORT_MAX_INSTRUCTIONS];
-  int instructions[IMPORT_MAX_INSTRUCTIONS];
-  // int totalInstructionMemory = instructionMemorySize * IMPORT_MAX_INSTRUCTIONS;
+  Byte instructions[IMPORT_MAX_INSTRUCTIONS];
 
 
   FILE *in = fopen(filename, "rb");
