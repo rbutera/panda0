@@ -22,10 +22,10 @@
 #define HEXIDECIMAL_FORMAT "0x%02hhx"
 
 // constants representing possible opcodes (the first two bits of an instruction byte)
-const int DX = 0;
-const int DY = 1;
-const int DT = 2;
-const int PEN = 3;
+#define DX 0
+#define DY 1
+#define DT 2
+#define PEN 3
 
 // storing bytes as unsigned chars
 typedef unsigned char Byte;
@@ -191,18 +191,58 @@ Byte *transformInstructions (int n, int inputStream[IMPORT_MAX_INSTRUCTIONS], By
 
   return outputStream;
 }
+/**
+char *instructionStringify(Instruction instruction){
+  int opcode = instruction.opcode;
+  char *result = "";
+  char *opcodeStr = opcodeStringify(opcode);
+  DEBUG_PRINT("%s", opcodeStr);
+  char *operandStr = "";
 
-int performInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Performing...\n");
-  for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
-    Byte instruction = instructions[i];
-
-    if(instruction != '\0' && instruction != 0){
-      DEBUG_PRINT(HEXIDECIMAL_FORMAT, instruction);
-      DEBUG_PRINT(" ");
-    } else {
+  switch(opcode){
+    case 0:
+    case 1:
+      sprintf(operandStr, "%i", instruction.operand.move);
       break;
+    case 2:
+      sprintf(operandStr, "%i", instruction.operand.pause);
+      break;
+    case 3:
+      sprintf(operandStr, "%i", instruction.operand.pen);
+      break;
+  }
+
+  sprintf(result, "%s %s", operandStr, opcodeStr);
+
+  DEBUG_PRINT("stringified: %s", result);
+  return result;
+}
+**/
+
+int performInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS]){
+  DEBUG_PRINT("Performing %i instructions...\n", n);
+  int i = 0;
+  while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
+    Instruction instruction = instructions[i];
+    char operandStr[10];
+    switch(instruction.opcode){
+      case DX:
+      case DY:
+        sprintf(operandStr, "%i", instruction.operand.move);
+        break;
+      case DT:
+        sprintf(operandStr, "%i", instruction.operand.pause);
+        break;
+      case PEN:
+        sprintf(operandStr, "%i", instruction.operand.pen);
+        break;
+      default:
+        printf("ERROR");
+        break;
     }
+
+    DEBUG_PRINT("%s %s\n", opcodeStringify(instruction.opcode), operandStr);
+    i++;
   }
 
   DEBUG_PRINT("\n ...done.\n");
@@ -253,7 +293,6 @@ void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Ins
     } else {
       DEBUG_PRINT("ERROR! ");
     }
-
     output[i] = converted;
     i++;
   }
@@ -282,8 +321,7 @@ void run(char *filename, char *test[]) {
 
   Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
   bytesToInstructions(numInstructions, instructionBytes, instructions);
-  performInstructions(numInstructions, instructionBytes); // TODO: change to new type
-  // performInstructions(numInstructions, instructions);
+  performInstructions(numInstructions, instructions);
 
   end(d);
   fclose(in);
