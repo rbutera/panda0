@@ -101,17 +101,39 @@ char operandPolarity (Byte x){
 
 signed int moveOperandExtract (Byte input){
   _Bool needsFlipping = !operandByteHasPositive(input); // need to flip negatives from two's complement form
-  if (needsFlipping == true) {
-    // DEBUG_PRINT("operand needs flipping because it is %c\n", operandPolarity(input));
+  /**
+    DEBUG_PRINT(HEXIDECIMAL_FORMAT, input);
+    DEBUG_PRINT("\n");
+    printBits(1, &input);
+  **/
 
-    input = input<<2;
+  if (needsFlipping == true) {
+    /**
+    // DEBUG_PRINT(" operand needs flipping because it is %c\n", operandPolarity(input));
+    input <<= 2;
+    printBits(1, &input);
     input = ~input;
+    printBits(1, &input);
     input += 1;
-    input = input>>2;
-    return -input;
+    printBits(1, &input);
+    input >>= 2;
+    printBits(1, &input);
+    // input = -input;
+    **/
+    input = input & 0x3f;
   } else {
-    return input & 0x3f;
+    input = input & 0x3f;
   }
+
+  signed int converted = (signed int) input;
+  // printBits(1, &input);
+  // DEBUG_PRINT(" -> %d\n", converted);
+
+  if(converted < -32 || converted > 32){
+    // DEBUG_PRINT("bad operand! %d\n", input);
+  }
+
+  return converted;
 }
 
 unsigned int operandExtract(Byte input){
