@@ -175,6 +175,10 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   return 0;
 }
 
+struct *instructionsTransform () {
+
+}
+
 // Read sketch instructions from the given file.  If test is NULL, display the
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
