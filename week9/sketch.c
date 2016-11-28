@@ -213,40 +213,13 @@ Byte *transformInstructions (int n, int inputStream[IMPORT_MAX_INSTRUCTIONS], By
 
   return outputStream;
 }
-/**
-char *instructionStringify(Instruction instruction){
-  int opcode = instruction.opcode;
-  char *result = "";
-  char *opcodeStr = opcodeStringify(opcode);
-  DEBUG_PRINT("%s", opcodeStr);
-  char *operandStr = "";
 
-  switch(opcode){
-    case 0:
-    case 1:
-      sprintf(operandStr, "%i", instruction.operand.move);
-      break;
-    case 2:
-      sprintf(operandStr, "%i", instruction.operand.pause);
-      break;
-    case 3:
-      sprintf(operandStr, "%i", instruction.operand.pen);
-      break;
-  }
-
-  sprintf(result, "%s %s", operandStr, opcodeStr);
-
-  DEBUG_PRINT("stringified: %s", result);
-  return result;
-}
-**/
-
-int performInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Performing %i instructions...\n", n);
+int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS]){
+  DEBUG_PRINT("Interpreting %i instructions...\n", n);
   int i = 0;
   while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
     Instruction instruction = instructions[i];
-    char operandStr[10];
+    char operandStr[5];
     switch(instruction.opcode){
       case DX:
       case DY:
@@ -343,7 +316,7 @@ void run(char *filename, char *test[]) {
 
   Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
   bytesToInstructions(numInstructions, instructionBytes, instructions);
-  performInstructions(numInstructions, instructions);
+  interpretInstructions(numInstructions, instructions);
 
   end(d);
   fclose(in);
