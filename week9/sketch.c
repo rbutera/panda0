@@ -47,23 +47,21 @@ int largest (int a, int b, int c){
   return largest;
 }
 
-union iOperand {
-  signed int move;
-  unsigned int pause;
-  unsigned int pen;
-};
-
 // .sketch file move instruction byte
-typedef struct MoveInstruction MoveInstruction;
-struct MoveInstruction {
+typedef struct Instruction Instruction;
+struct Instruction {
   Byte raw; // store a copy of the uninterpreted raw instruction
   // OpCode opcode; // instruction opcode (first 2 bits)
   int opcode; // instruction opcode (first 2 bits) TODO: change to enumerated type
-  union iOperand operand; // instruction operand (last 6 bits)
+  union {
+    signed int move;
+    unsigned int pause;
+    unsigned int pen;
+  }  operand; // instruction operand (last 6 bits)
 };
 
 int calcInstructionSize () {
-  int moveSize = sizeof(MoveInstruction) + 1;
+  int moveSize = sizeof(Instruction) + 1;
   return moveSize;
 }
 
@@ -203,7 +201,7 @@ Byte *transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outp
 }
 
 int performInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Performing...");
+  DEBUG_PRINT("Performing...\n");
   for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
     Byte instruction = instructions[i];
 
@@ -215,7 +213,7 @@ int performInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
     }
   }
 
-  DEBUG_PRINT("\n ...done.\n");
+  DEBUG_PRINT("\n ...done.\n");g
   return 0;
 }
 
