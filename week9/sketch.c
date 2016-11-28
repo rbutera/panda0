@@ -66,6 +66,8 @@ struct State {
   int x;
   int y;
   _Bool p;
+  int downX;
+  int downY;
 };
 
 int printState(State *state){
@@ -272,12 +274,20 @@ void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Ins
   DEBUG_PRINT("END\n\n%i bytes converted.\n\n", n);
 }
 
+int drawLine (State *state){
+  line(state->d, state->downX, state->downY, state->x, state->y);
+  return 0;
+}
+
 int performDX (Instruction input, State *state){
   if (input.opcode != DX) {
     DEBUG_PRINT("performDX FAIL: opcode is %i\n", input.opcode);
   } else {
     // DEBUG_PRINT("performDX\n");
-    
+    state->x += input.operand.move;
+    if(state->p){
+      drawLine(state);
+    }
   }
   return 0;
 }
@@ -286,7 +296,11 @@ int performDY (Instruction input, State *state){
   if (input.opcode != DY) {
     DEBUG_PRINT("performDY FAIL: opcode is %i\n", input.opcode);
   } else {
+    state->y += input.operand.move;
     // DEBUG_PRINT("performDY\n");
+    if(state->p){
+      drawLine(state);
+    }
   }
   return 0;
 }
@@ -296,6 +310,7 @@ int performDT (Instruction input, State *state){
     DEBUG_PRINT("performDT FAIL: opcode is %i\n", input.opcode);
   } else {
     // DEBUG_PRINT("performDT\n");
+    pause(state->d, input.operand.pause);
   }
   return 0;
 }
@@ -305,6 +320,12 @@ int performPEN (Instruction input, State *state){
     DEBUG_PRINT("performPEN FAIL: opcode is %i\n", input.opcode);
   } else {
     // DEBUG_PRINT("performPEN\n");
+    _Bool initial = state->p;
+    state->p = !initial;
+    if(state->p == true){
+      state->downX = state->x;
+      state->downY = state->y;
+    }
   }
   return 0;
 }
@@ -321,6 +342,7 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
   };
   State *statePtr = &state;
 
+  DEBUG_PRINT("START");
   printState(statePtr);
 
   while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
@@ -347,8 +369,9 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
         printf("ERROR");
         break;
     }
+    DEBUG_PRINT("%s %s ", opcodeStringify(instruction.opcode), operandStr);
+    printState(statePtr);
 
-    // DEBUG_PRINT("%s %s\n", opcodeStringify(instruction.opcode), operandStr);
     i++;
   }
 
