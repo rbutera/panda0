@@ -64,11 +64,11 @@ struct PenInstruction {
   //unsigned int operand; // TODO: check operand is always ignored/insignificant
 };
 
-int calcInstructionSize (MoveInstruction a, PauseInstruction b, PenInstruction c) {
+int calcInstructionSize () {
   int result = 0;
-  int moveSize = sizeof(a) + 1;
-  int pauseSize = sizeof(b) + 1;
-  int penSize = sizeof(c) + 1;
+  int moveSize = sizeof(MoveInstruction) + 1;
+  int pauseSize = sizeof(PauseInstruction) + 1;
+  int penSize = sizeof(PenInstruction) + 1;
   result = largest(moveSize, pauseSize, penSize);
   return result;
 }
@@ -114,8 +114,8 @@ char operandPolarity (Byte x){
   return (operandByteHasPositive(x) ? '+' : '-');
 }
 
-signed int operandExtract (Byte input){
-  _Bool needsFlipping = !operandByteHasPositive(input); // need to flip negatives from two's complement form
+signed int operandExtract (Byte input, _Bool signedOperand){
+  _Bool needsFlipping = signedOperand && !operandByteHasPositive(input); // need to flip negatives from two's complement form
   if (needsFlipping == true) {
     #ifdef DEBUG
     printf("operand needs flipping because it is %c\n", operandPolarity(input));
@@ -175,7 +175,28 @@ int debugInstructionProperties(MoveInstruction instruction){
   return 0;
 }
 
+MoveInstruction *createMoveInstruction(Byte raw){
+  MoveInstruction *created = (MoveInstruction *) malloc(sizeof(MoveInstruction));
+  created->opcode = opcodeExtract(raw); // todo
+  created->operand = operandExtract(raw, true); // todo
+  created->raw = raw; // todo
+  return created;
+}
 
+PauseInstruction *createPauseInstruction(Byte raw){
+  PauseInstruction *created = (PauseInstruction *) malloc(sizeof(PauseInstruction));
+  created->opcode = opcodeExtract(raw); // todo
+  created->operand = operandExtract(raw, false); // todo
+  created->raw = raw; // todo
+  return created;
+}
+
+PenInstruction *createPenInstruction(Byte raw){
+  PenInstruction *created = (PenInstruction *) malloc(sizeof(PenInstruction));
+  created->opcode = opcodeExtract(raw); // todo
+  created->raw = raw; // todo
+  return created;
+}
 
 /**
 * read bytes from (already opened) in file, unpack each byte into an opcode and operand, and use those to make suitable calls to display functions
@@ -204,7 +225,7 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   return 0;
 }
 
-struct transformInstructions (int *inputStream, int *outputStream) {
+int *transformInstructions (int *inputStream, int *outputStream) {
   // traverse inputStream whilst there is data
   for (size_t i = 0; i <= sizeof(inputStream); i++) {
     int input = inputStream[i];
@@ -216,12 +237,17 @@ struct transformInstructions (int *inputStream, int *outputStream) {
       // target memory in outputStream
       switch(instructionType){
         case 'm':
-          MoveInstruction * outputStream[i]
+          outputStream[i] = (int) createMoveInstruction(input);
           break;
-        case 'p'
-          // code
+        case 'p':
+          outputStream[i] = (int) createPauseInstruction(input);
           break;
-        case 'q'
+        case 'q':
+          outputStream[i] = (int) createPenInstruction(input);
+          break;
+        default:
+          printf("TRANSFORM INSTRUCTIONS FAILED MISERABLY");
+          break;
       }
       // fill with struct with initialized values
       // print debug info
@@ -231,6 +257,7 @@ struct transformInstructions (int *inputStream, int *outputStream) {
     }
   }
 
+  return outputStream;
 }
 
 // Read sketch instructions from the given file.  If test is NULL, display the
@@ -241,9 +268,8 @@ void run(char *filename, char *test[]) {
     printf("instruction block size: %i\n", instructionMemorySize);
   #endif
   int buffer[IMPORT_MAX_INSTRUCTIONS];
-  int totalInstructionMemory = instructionMemorySize * IMPORT_MAX_INSTRUCTIONS;
-
-  struct *instructions = malloc(totalInstructionMemory);
+  int instructions[IMPORT_MAX_INSTRUCTIONS];
+  // int totalInstructionMemory = instructionMemorySize * IMPORT_MAX_INSTRUCTIONS;
 
 
   FILE *in = fopen(filename, "rb");
