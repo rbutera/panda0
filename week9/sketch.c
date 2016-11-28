@@ -111,7 +111,14 @@ void printBitsNL (Byte toPrint){
 * @return             [description]
 */
 _Bool operandByteHasPositive (Byte instruction){
-  if (instruction>>2 & 1) {
+  Byte copyInstruction = instruction;
+  // printBitsNL(copyInstruction);
+  copyInstruction <<= 2;
+  // printBitsNL(copyInstruction);
+  copyInstruction >>= 7;
+  // printBitsNL(copyInstruction);
+
+  if (copyInstruction == 1) {
     return false;
   } else {
     return true;
@@ -130,30 +137,30 @@ signed int moveOperandExtract (Byte input){
     printBits(1, &input);
   **/
 
+  signed int converted;
+
   if (needsFlipping == true) {
-    /**
+    //DEBUG_PRINT("\n ###### flip! #####\n");
+
     // DEBUG_PRINT(" operand needs flipping because it is %c\n", operandPolarity(input));
     input <<= 2;
-    printBits(1, &input);
     input = ~input;
-    printBits(1, &input);
-    input += 1;
-    printBits(1, &input);
     input >>= 2;
-    printBits(1, &input);
-    // input = -input;
-    **/
-    input = input & 0x3f;
+
+    converted = (signed int) input;
+    converted += 1;
+    converted = -converted;
   } else {
     input = input & 0x3f;
+    converted = (signed int) input;
   }
 
-  signed int converted = (signed int) input;
+
   // printBits(1, &input);
   // DEBUG_PRINT(" -> %d\n", converted);
 
   if(converted < -32 || converted > 32){
-    // DEBUG_PRINT("bad operand! %d\n", input);
+    DEBUG_PRINT("bad operand! %d\n", input);
   }
 
   return converted;
@@ -275,7 +282,10 @@ void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Ins
 }
 
 int drawLine (State *state){
+  DEBUG_PRINT("line call: %d %d %d %d\n", state->downX, state->downY, state->x, state->y);
   line(state->d, state->downX, state->downY, state->x, state->y);
+  state->downX = state->x;
+  state->downY = state->y;
   return 0;
 }
 
@@ -285,9 +295,6 @@ int performDX (Instruction input, State *state){
   } else {
     // DEBUG_PRINT("performDX\n");
     state->x += input.operand.move;
-    if(state->p){
-      drawLine(state);
-    }
   }
   return 0;
 }
@@ -407,7 +414,7 @@ void run(char *filename, char *test[]) {
     fprintf(stderr, "Can't open %s\n", filename);
     exit(1);
   }
-  display *d = newDisplay(filename, 1024, 1024, test);
+  display *d = newDisplay(filename, 200, 200, test);
 
   numInstructions = getInstructions(in, d, buffer);
   transformInstructions(numInstructions, buffer, instructionBytes);
