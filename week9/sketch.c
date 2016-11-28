@@ -167,7 +167,7 @@ int getInstructions(FILE *in, display *d, int *buffer) {
     input = fgetc(in);
   }
 
-  DEBUG_PRINT("\n\n%i instructions loaded.\n", numInstructions);
+  DEBUG_PRINT("\n\n%i instructions loaded.\n\n", numInstructions);
   return numInstructions;
 }
 
