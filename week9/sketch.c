@@ -60,13 +60,6 @@ struct Instruction {
   }  operand; // instruction operand (last 6 bits)
 };
 
-int calcInstructionSize () {
-  int moveSize = sizeof(Instruction) + 1;
-  return moveSize;
-}
-
-
-
 void printBits(size_t const size, void const* const toPrint){
   //TODO: remove before submission
   unsigned char *b = (unsigned char*) toPrint;
@@ -106,10 +99,10 @@ char operandPolarity (Byte x){
   return (operandByteHasPositive(x) ? '+' : '-');
 }
 
-signed int operandExtract (Byte input, _Bool signedOperand){
-  _Bool needsFlipping = signedOperand && !operandByteHasPositive(input); // need to flip negatives from two's complement form
+signed int moveOperandExtract (Byte input){
+  _Bool needsFlipping = !operandByteHasPositive(input); // need to flip negatives from two's complement form
   if (needsFlipping == true) {
-    DEBUG_PRINT("operand needs flipping because it is %c\n", operandPolarity(input));
+    // DEBUG_PRINT("operand needs flipping because it is %c\n", operandPolarity(input));
 
     input = input<<2;
     input = ~input;
@@ -121,15 +114,14 @@ signed int operandExtract (Byte input, _Bool signedOperand){
   }
 }
 
+unsigned int operandExtract(Byte input){
+  return input & 0x3f;
+}
+
 int opcodeExtract (Byte input){
   Byte masked = input & 0xC0;
   return masked >> 6;
 }
-
-// TODO: remove before submission
-// void printPosNeg (Byte testing){
-//   printf("0x%02hhx is %c\n", testing, operandPolarity(testing));
-// }
 
 // char *opcodeStringify (int code, char *destination) {
 char *opcodeStringify (int code) {
@@ -166,7 +158,7 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   int input = fgetc(in);
   int numInstructions = 0;
 
-  DEBUG_PRINT("Loading:\n\n");
+  DEBUG_PRINT("\nReading...\n\n");
 
   while (input != EOF && input != '\0' && numInstructions < IMPORT_MAX_INSTRUCTIONS) {
     buffer[numInstructions++] = input;
@@ -176,11 +168,11 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   }
 
   DEBUG_PRINT("\n\n%i instructions loaded.\n", numInstructions);
-  return 0;
+  return numInstructions;
 }
 
-Byte *transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
-  DEBUG_PRINT("Transforming...\n");
+Byte *transformInstructions (int n, int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
+  DEBUG_PRINT("Transforming...");
   // traverse inputStream whilst there is data
   for (size_t i = 0; i <= IMPORT_MAX_INSTRUCTIONS; i++) {
     int input = inputStream[i];
@@ -200,7 +192,7 @@ Byte *transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outp
   return outputStream;
 }
 
-int performInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
+int performInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
   DEBUG_PRINT("Performing...\n");
   for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
     Byte instruction = instructions[i];
@@ -213,7 +205,7 @@ int performInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
     }
   }
 
-  DEBUG_PRINT("\n ...done.\n");g
+  DEBUG_PRINT("\n ...done.\n");
   return 0;
 }
 
@@ -223,20 +215,60 @@ void initializeBuffer(int buffer[IMPORT_MAX_INSTRUCTIONS]){
   }
 }
 
-void initializeInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
+void initializeInstructionBytes (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
     for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
       instructions[i] = 0;
     }
 }
 
+void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
+  DEBUG_PRINT("Converting %i bytes into instruction objects... \n\n", n);
+  int i = 0;
+  while(i < n && i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0' && instructions[i] != 0){
+    // determine instruction type
+    Byte current = instructions[i];
+    int opcode = opcodeExtract(current);
+    DEBUG_PRINT("%s ", opcodeStringify(opcode));
+
+    Instruction converted;
+    converted.raw = current;
+    converted.opcode = opcode;
+
+    if(opcode == DX || opcode == DY || opcode == DT || opcode == PEN){
+      if(opcode == DX || opcode == DY){
+        signed int operand;
+        operand = moveOperandExtract(current);
+        DEBUG_PRINT("%i :> ", operand);
+        converted.operand.move = operand;
+      } else if (opcode == DT || opcode == PEN){
+        unsigned int operand;
+        operand = operandExtract(current);
+        DEBUG_PRINT("%i :> ", operand);
+        if (opcode == DT){
+          converted.operand.pause = operand;
+        } else if (opcode == PEN) {
+          converted.operand.pen = operand;
+        }
+      }
+    } else {
+      DEBUG_PRINT("ERROR! ");
+    }
+
+    output[i] = converted;
+    i++;
+  }
+  DEBUG_PRINT("END\n\n%i bytes converted.\n\n", n);
+}
+
 // Read sketch instructions from the given file.  If test is NULL, display the
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
+  int numInstructions = 0;
   int buffer[IMPORT_MAX_INSTRUCTIONS];
-  Byte instructions[IMPORT_MAX_INSTRUCTIONS];
+  Byte instructionBytes[IMPORT_MAX_INSTRUCTIONS];
 
   initializeBuffer(buffer);
-  initializeInstructions(instructions);
+  initializeInstructionBytes(instructionBytes);
 
   FILE *in = fopen(filename, "rb");
   if (in == NULL) {
@@ -245,9 +277,13 @@ void run(char *filename, char *test[]) {
   }
   display *d = newDisplay(filename, 1024, 1024, test);
 
-  getInstructions(in, d, buffer);
-  transformInstructions(buffer, instructions);
-  performInstructions(instructions);
+  numInstructions = getInstructions(in, d, buffer);
+  transformInstructions(numInstructions, buffer, instructionBytes);
+
+  Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
+  bytesToInstructions(numInstructions, instructionBytes, instructions);
+  performInstructions(numInstructions, instructionBytes); // TODO: change to new type
+  // performInstructions(numInstructions, instructions);
 
   end(d);
   fclose(in);
