@@ -30,8 +30,7 @@
 // storing bytes as unsigned chars
 typedef unsigned char Byte;
 
-// TODO: try fix enumerated type representing an opcode
-// typedef enum {DX, DY, DT, PEN} OpCode;
+// typedef enum {DX, DY, DT, PEN} OpCode; // TODO:  enumerated type representing an opcode
 int largest (int a, int b, int c){
   int largest = 0;
 
@@ -59,6 +58,28 @@ struct Instruction {
     unsigned int pen;
   }  operand; // instruction operand (last 6 bits)
 };
+
+// represents drawing state
+typedef struct State State;
+struct State {
+  display * d;
+  int x;
+  int y;
+  _Bool p;
+};
+
+int printState(State *state){
+  char *penState;
+  if (state->p == true) {
+    penState = "down";
+  } else {
+    penState = "up";
+  }
+
+  DEBUG_PRINT("(%i,%i) P: %s\n", state->x, state->y, penState);
+
+  return 0;
+}
 
 void printBits(size_t const size, void const* const toPrint){
   //TODO: remove before submission
@@ -145,7 +166,6 @@ int opcodeExtract (Byte input){
   return masked >> 6;
 }
 
-// char *opcodeStringify (int code, char *destination) {
 char *opcodeStringify (int code) {
   char *result;
 
@@ -214,48 +234,6 @@ Byte *transformInstructions (int n, int inputStream[IMPORT_MAX_INSTRUCTIONS], By
   return outputStream;
 }
 
-int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Interpreting %i instructions...\n", n);
-  int i = 0;
-  while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
-    Instruction instruction = instructions[i];
-    char operandStr[5];
-    switch(instruction.opcode){
-      case DX:
-      case DY:
-        sprintf(operandStr, "%i", instruction.operand.move);
-        break;
-      case DT:
-        sprintf(operandStr, "%i", instruction.operand.pause);
-        break;
-      case PEN:
-        sprintf(operandStr, "%i", instruction.operand.pen);
-        break;
-      default:
-        printf("ERROR");
-        break;
-    }
-
-    DEBUG_PRINT("%s %s\n", opcodeStringify(instruction.opcode), operandStr);
-    i++;
-  }
-
-  DEBUG_PRINT("\n ...done.\n");
-  return 0;
-}
-
-void initializeBuffer(int buffer[IMPORT_MAX_INSTRUCTIONS]){
-  for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
-    buffer[i] = 0;
-  }
-}
-
-void initializeInstructionBytes (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
-    for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
-      instructions[i] = 0;
-    }
-}
-
 void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
   DEBUG_PRINT("Converting %i bytes into instruction objects... \n\n", n);
   int i = 0;
@@ -294,6 +272,103 @@ void bytesToInstructions (int n, Byte instructions[IMPORT_MAX_INSTRUCTIONS], Ins
   DEBUG_PRINT("END\n\n%i bytes converted.\n\n", n);
 }
 
+int performDX (Instruction input, State *state){
+  if (input.opcode != DX) {
+    DEBUG_PRINT("performDX FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performDX\n");
+    
+  }
+  return 0;
+}
+
+int performDY (Instruction input, State *state){
+  if (input.opcode != DY) {
+    DEBUG_PRINT("performDY FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performDY\n");
+  }
+  return 0;
+}
+
+int performDT (Instruction input, State *state){
+  if (input.opcode != DT) {
+    DEBUG_PRINT("performDT FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performDT\n");
+  }
+  return 0;
+}
+
+int performPEN (Instruction input, State *state){
+  if (input.opcode != PEN) {
+    DEBUG_PRINT("performPEN FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performPEN\n");
+  }
+  return 0;
+}
+
+int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS], display *d){
+  DEBUG_PRINT("Interpreting %i instructions...\n", n);
+  int i = 0;
+
+  State state = {
+    .x = 0,
+    .y = 0,
+    .p = false,
+    .d = d
+  };
+  State *statePtr = &state;
+
+  printState(statePtr);
+
+  while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
+    Instruction instruction = instructions[i];
+    char operandStr[5];
+    switch(instruction.opcode){
+      case DX:
+        sprintf(operandStr, "%i", instruction.operand.move);
+        performDX(instruction, statePtr);
+        break;
+      case DY:
+        sprintf(operandStr, "%i", instruction.operand.move);
+        performDY(instruction, statePtr);
+        break;
+      case DT:
+        sprintf(operandStr, "%i", instruction.operand.pause);
+        performDT(instruction, statePtr);
+        break;
+      case PEN:
+        sprintf(operandStr, "%i", instruction.operand.pen);
+        performPEN(instruction, statePtr);
+        break;
+      default:
+        printf("ERROR");
+        break;
+    }
+
+    // DEBUG_PRINT("%s %s\n", opcodeStringify(instruction.opcode), operandStr);
+    i++;
+  }
+
+  DEBUG_PRINT("\n ...done.\n");
+  return 0;
+}
+
+void initializeBuffer(int buffer[IMPORT_MAX_INSTRUCTIONS]){
+  for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+    buffer[i] = 0;
+  }
+}
+
+void initializeInstructionBytes (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
+    for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+      instructions[i] = 0;
+    }
+}
+
+
 // Read sketch instructions from the given file.  If test is NULL, display the
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
@@ -316,7 +391,7 @@ void run(char *filename, char *test[]) {
 
   Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
   bytesToInstructions(numInstructions, instructionBytes, instructions);
-  interpretInstructions(numInstructions, instructions);
+  interpretInstructions(numInstructions, instructions, d);
 
   end(d);
   fclose(in);
