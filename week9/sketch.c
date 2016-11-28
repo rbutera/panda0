@@ -19,6 +19,8 @@
 #define DEBUG_PRINT(...)
 #endif
 
+#define HEXIDECIMAL_FORMAT "0x%02hhx"
+
 // constants representing possible opcodes (the first two bits of an instruction byte)
 const int DX = 0;
 const int DY = 1;
@@ -45,37 +47,24 @@ int largest (int a, int b, int c){
   return largest;
 }
 
+union iOperand {
+  signed int move;
+  unsigned int pause;
+  unsigned int pen;
+};
+
 // .sketch file move instruction byte
 typedef struct MoveInstruction MoveInstruction;
 struct MoveInstruction {
   Byte raw; // store a copy of the uninterpreted raw instruction
   // OpCode opcode; // instruction opcode (first 2 bits)
   int opcode; // instruction opcode (first 2 bits) TODO: change to enumerated type
-  signed int operand; // instruction operand (last 6 bits)
-};
-
-typedef struct PauseInstruction PauseInstruction;
-struct PauseInstruction {
-  Byte raw; // store a copy of the uninterpreted raw instruction
-  // OpCode opcode; // instruction opcode (first 2 bits)
-  int opcode; // instruction opcode (first 2 bits) TODO: change to enumerated type
-  unsigned int operand; // instruction operand (last 6 bits)
-};
-
-typedef struct PenInstruction PenInstruction;
-struct PenInstruction {
-  Byte raw;
-  int opcode;
-  //unsigned int operand; // TODO: check operand is always ignored/insignificant
+  union iOperand operand; // instruction operand (last 6 bits)
 };
 
 int calcInstructionSize () {
-  int result = 0;
   int moveSize = sizeof(MoveInstruction) + 1;
-  int pauseSize = sizeof(PauseInstruction) + 1;
-  int penSize = sizeof(PenInstruction) + 1;
-  result = largest(moveSize, pauseSize, penSize);
-  return result;
+  return moveSize;
 }
 
 
@@ -183,7 +172,8 @@ int getInstructions(FILE *in, display *d, int *buffer) {
 
   while (input != EOF && input != '\0' && numInstructions < IMPORT_MAX_INSTRUCTIONS) {
     buffer[numInstructions++] = input;
-    DEBUG_PRINT("0x%02hhx ", (Byte) input);
+    DEBUG_PRINT(HEXIDECIMAL_FORMAT, (Byte) input);
+    DEBUG_PRINT(" ");
     input = fgetc(in);
   }
 
@@ -191,15 +181,15 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   return 0;
 }
 
-int *transformInstructions (int *inputStream, int *outputStream) {
+Byte *transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
+  DEBUG_PRINT("Transforming Instructions\n");
   // traverse inputStream whilst there is data
-  for (size_t i = 0; i <= sizeof(inputStream); i++) {
+  for (size_t i = 0; i <= IMPORT_MAX_INSTRUCTIONS; i++) {
     int input = inputStream[i];
-
     if (input != '\0' && input != EOF) {
       outputStream[i] = (Byte) input;
     } else {
-      DEBUG_PRINT("reached end of inputStream\n");
+      DEBUG_PRINT("Instructions Transformed\n");
       break;
     }
   }
@@ -207,15 +197,32 @@ int *transformInstructions (int *inputStream, int *outputStream) {
   return outputStream;
 }
 
+int performInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
+  DEBUG_PRINT("Performing:\n");
+  for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+    Byte instruction = instructions[i];
+
+    if(instruction != '\0' && instruction != 0){
+      DEBUG_PRINT(HEXIDECIMAL_FORMAT, instruction);
+      DEBUG_PRINT(",");
+    } else {
+      DEBUG_PRINT("null");
+    }
+  }
+  return 0;
+}
+
+void initializeInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
+    for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+      instructions[i] = 0;
+    }
+}
+
 // Read sketch instructions from the given file.  If test is NULL, display the
 // result in a graphics window, else check the graphics calls made.
 void run(char *filename, char *test[]) {
-  int instructionMemorySize = calcInstructionSize();
-  DEBUG_PRINT("instruction block size: %i\n", instructionMemorySize);
-
   int buffer[IMPORT_MAX_INSTRUCTIONS];
   Byte instructions[IMPORT_MAX_INSTRUCTIONS];
-
 
   FILE *in = fopen(filename, "rb");
   if (in == NULL) {
@@ -226,6 +233,8 @@ void run(char *filename, char *test[]) {
 
   getInstructions(in, d, buffer);
   transformInstructions(buffer, instructions);
+  performInstructions(instructions);
+
   end(d);
   fclose(in);
 }
