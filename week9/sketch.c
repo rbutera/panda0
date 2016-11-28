@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "display.h"
+#include "./display.h"
 #include <string.h> // TODO: check if this is OK
 
 
@@ -22,6 +22,20 @@ typedef unsigned char Byte;
 
 // TODO: try fix enumerated type representing an opcode
 // typedef enum {DX, DY, DT, PEN} OpCode;
+int largestSize (int a, int b, int c){
+  int largestSize = 0;
+
+  int sizes[3];
+    sizes[0] = a;
+    sizes[1] = b;
+    sizes[2] = c;
+
+  for (size_t i = 0; i < sizes.length; i++) {
+    largestSize = (largestSize > sizes[i]) ? largestSize : sizes[i];
+  }
+
+  return largestSize;
+}
 
 // .sketch file move instruction byte
 typedef struct MoveInstruction MoveInstruction;
@@ -47,9 +61,12 @@ struct PenToggleInstruction {
   //unsigned int operand; // TODO: check operand is always ignored/insignificant
 };
 
-// TODO: remove before submission
-void printBits(size_t const size, void const * const toPrint)
-{
+const INSTRUCTION_MEMORY_SIZE = largestSize(sizeof MoveInstruction, sizeof PauseInstruction, sizeof PenToggleInstruction);
+
+ifdef DEBUG
+  printf("instruction block size: %i\n", INSTRUCTION_MEMORY_SIZE);
+#endif
+//TODO: remove before submissionprintBits(size_t const size, void const * const toPrint{
 
     unsigned char *b = (unsigned char*) toPrint;
     unsigned char byte;
@@ -91,7 +108,9 @@ char operandPolarity (Byte x){
 signed int operandExtract (Byte input){
   _Bool needsFlipping = !operandByteHasPositive(input); // need to flip negatives from two's complement form
   if (needsFlipping == true) {
-    // printf("operand needs flipping because it is %c\n", operandPolarity(input));
+    #ifdef DEBUG
+      printf("operand needs flipping because it is %c\n", operandPolarity(input));
+    #endif
     input = input<<2;
     input = ~input;
     input += 1;
@@ -148,6 +167,7 @@ int debugInstructionProperties(MoveInstruction instruction){
 }
 
 
+
 /**
  * read bytes from (already opened) in file, unpack each byte into an opcode and operand, and use those to make suitable calls to display functions
  * @param  *in file to read
@@ -175,7 +195,7 @@ int getInstructions(FILE *in, display *d, int *buffer) {
   return 0;
 }
 
-struct *instructionsTransform () {
+struct instructionsTransform (int *inputStream, int *outputStream) {
 
 }
 
