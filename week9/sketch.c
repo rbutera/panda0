@@ -172,7 +172,14 @@ unsigned int operandExtract(Byte input){
 
 int opcodeExtract (Byte input){
   Byte masked = input & 0xC0;
-  return masked >> 6;
+  Byte firstTwoBits = masked >> 6;
+  if (firstTwoBits != 3){
+    return firstTwoBits;
+  } else { // extended
+    Byte lastFourBits = input & 0x0f;
+    // printBitsNL(lastFourBits);
+    return lastFourBits;
+  }
 }
 
 char *opcodeStringify (int code) {
@@ -190,6 +197,15 @@ char *opcodeStringify (int code) {
     break;
     case 3:
     result = "PEN";
+    break;
+    case 4:
+    result = "CLEAR";
+    break;
+    case 5:
+    result = "KEY";
+    break;
+    case 6:
+    result = "COL";
     break;
     default:
     result = "ERROR";
