@@ -26,6 +26,9 @@
 #define DY 1
 #define DT 2
 #define PEN 3
+#define CLEAR 4
+#define KEY 5
+#define COL 6
 
 // storing bytes as unsigned chars
 typedef unsigned char Byte;
@@ -56,6 +59,9 @@ struct Instruction {
     signed int move;
     unsigned int pause;
     unsigned int pen;
+    unsigned int clear;
+    unsigned int key;
+    unsigned int col;
   }  operand; // instruction operand (last 6 bits)
 };
 
@@ -182,6 +188,19 @@ int opcodeExtract (Byte input){
   }
 }
 
+Byte extractSizeBits (Byte input){
+  Byte output;
+  output = input & 0x30;
+  output >>= 4;
+  return output;
+}
+
+Byte extractLastFourBits (Byte input){
+  Byte output;
+  output = input & 0x0F;
+  return output;
+}
+
 char *opcodeStringify (int code) {
   char *result;
 
@@ -259,45 +278,67 @@ int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte output
   return 0;
 }
 
+unsigned int operandExtractFromExtended (Byte extendedInstruction[]){
+  int instructionSize = sizeof(extendedInstruction);
+  DEBUG_PRINT("operandExtractFromExtended: extendedInstruction is of size %i\n", instructionSize);
+  return 420;
+}
+
 int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
   DEBUG_PRINT("Converting into instruction objects... \n\n");
   int numInstructions = 0;
   int i = 0;
+  _Bool extendedProcessing = false; // currently processing extended instruction data
+  int instructionBytesRemaining = 0; // how many bytes we need to fetch
+  Byte extendedInstructionBuffer = []; // to store the extended instruction bytes
+
   while(i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0' && instructions[i] != 0){
-    // determine instruction type
-    Byte current = instructions[i];
-    int opcode = opcodeExtract(current);
-    DEBUG_PRINT("%s ", opcodeStringify(opcode));
+      Byte current = instructions[i];
 
-    Instruction converted;
-    converted.raw = current;
-    converted.opcode = opcode;
-
-    if(opcode == DX || opcode == DY || opcode == DT || opcode == PEN){
-      if(opcode == DX || opcode == DY){
-        signed int operand;
-        operand = moveOperandExtract(current);
-        DEBUG_PRINT("%i :> ", operand);
-        converted.operand.move = operand;
-      } else if (opcode == DT || opcode == PEN){
-        unsigned int operand;
-        operand = operandExtract(current);
-        DEBUG_PRINT("%i :> ", operand);
-        if (opcode == DT){
-          converted.operand.pause = operand;
-        } else if (opcode == PEN) {
-          converted.operand.pen = operand;
-        }
       }
-    } else {
-      DEBUG_PRINT("ERROR! ");
+
+
+    if (extendedProcessing == false) { // we are processing a new instruction
+      // determine instruction type
+      int opcode = opcodeExtract(current);
+      DEBUG_PRINT("%s ", opcodeStringify(opcode));
+
+      if(opcode >= 3){
+        DEBUG_PRINT("EXTENDED: opcode %i size %i\n", extractLastFourBits(current), extractSizeBits(current));
+        // TODO: set instructionBytesRemaining
+      }
+    } else { // we are still processing an extended instruction
+
+      Instruction converted;
+      converted.raw = current;
+      converted.opcode = opcode;
+
+      if(opcode == DX || opcode == DY || opcode == DT || opcode == PEN || opcode == CLEAR || opcode == KEY || opcode == COL){
+        if(opcode == DX || opcode == DY){
+          signed int operand;
+          operand = moveOperandExtract(current);
+          DEBUG_PRINT("%i :> ", operand);
+          converted.operand.move = operand;
+        } else if (opcode == DT || opcode == PEN){
+          unsigned int operand;
+          operand = operandExtract(current);
+          DEBUG_PRINT("%i :> ", operand);
+          if (opcode == DT){
+            converted.operand.pause = operand;
+          } else if (opcode == PEN) {
+            converted.operand.pen = operand;
+          }
+        }
+      } else {
+        DEBUG_PRINT("ERROR! ");
+      }
+      output[i] = converted;
+      numInstructions++;
+      i++;
     }
-    output[i] = converted;
-    numInstructions++;
-    i++;
-  }
-  DEBUG_PRINT("END\n\n%i bytes converted.\n\n", numInstructions);
-  return numInstructions;
+    DEBUG_PRINT("END\n\n%i bytes converted.\n\n", numInstructions);
+    return numInstructions;
+    }
 }
 
 int drawLine (State *state){
@@ -356,6 +397,36 @@ int performPEN (Instruction input, State *state){
   return 0;
 }
 
+int performCLEAR (Instruction input, State *state){
+  if (input.opcode != DT) {
+    DEBUG_PRINT("performCLEAR FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performCLEAR\n");
+    pause(state->d, input.operand.pause);
+  }
+  return 0;
+}
+
+int performKEY (Instruction input, State *state){
+  if (input.opcode != DT) {
+    DEBUG_PRINT("performKEY FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performKEY\n");
+    pause(state->d, input.operand.pause);
+  }
+  return 0;
+}
+
+int performCOL (Instruction input, State *state){
+  if (input.opcode != DT) {
+    DEBUG_PRINT("performCOL FAIL: opcode is %i\n", input.opcode);
+  } else {
+    // DEBUG_PRINT("performCOL\n");
+    pause(state->d, input.operand.pause);
+  }
+  return 0;
+}
+
 int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS], display *d){
   DEBUG_PRINT("Interpreting %i instructions...\n", n);
   int i = 0;
@@ -391,8 +462,20 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
         sprintf(operandStr, "%i", instruction.operand.pen);
         performPEN(instruction, statePtr);
         break;
+      case CLEAR:
+        sprintf(operandStr, "%i", instruction.operand.clear);
+        performPEN(instruction, statePtr);
+        break;
+      case KEY:
+        sprintf(operandStr, "%i", instruction.operand.key);
+        performPEN(instruction, statePtr);
+        break;
+      case COL:
+        sprintf(operandStr, "%i", instruction.operand.col);
+        performPEN(instruction, statePtr);
+      break;
       default:
-        printf("ERROR");
+        printf("interpretInstructions ERROR\n");
         break;
     }
     DEBUG_PRINT("%s %s ", opcodeStringify(instruction.opcode), operandStr);
