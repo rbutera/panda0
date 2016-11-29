@@ -213,13 +213,7 @@ unsigned int operandExtract(Byte input){
 int opcodeExtract (Byte input){
   Byte masked = input & 0xC0;
   Byte firstTwoBits = masked >> 6;
-  if (firstTwoBits != 3){
-    return firstTwoBits;
-  } else { // extended
-    Byte lastFourBits = input & 0x0f;
-    // printBitsNL(lastFourBits);
-    return lastFourBits;
-  }
+  return firstTwoBits;
 }
 
 Byte extractSizeBits (Byte input){
@@ -471,11 +465,19 @@ int drawLine (State *state){
   return 0;
 }
 
+#ifndef PERFORM_DEBUG
+#define PERFORM_DEBUG 1
+#endif
+
 int performDX (Instruction input, State *state){
   if (input.opcode != DX) {
+    #if PERFORM_DEBUG == 1
     DEBUG_PRINT("performDX FAIL: opcode is %i\n", input.opcode);
+    #endif
   } else {
-    // DEBUG_PRINT("performDX\n");
+    #if PERFORM_DEBUG == 1
+    DEBUG_PRINT("performDX\n");
+    #endif
     state->x += input.operand.move;
   }
   return 0;
@@ -483,10 +485,14 @@ int performDX (Instruction input, State *state){
 
 int performDY (Instruction input, State *state){
   if (input.opcode != DY) {
+    #if PERFORM_DEBUG == 1
     DEBUG_PRINT("performDY FAIL: opcode is %i\n", input.opcode);
+    #endif
   } else {
     state->y += input.operand.move;
-    // DEBUG_PRINT("performDY\n");
+    #if PERFORM_DEBUG == 1
+    DEBUG_PRINT("performDY\n");
+    #endif
     if(state->p){
       drawLine(state);
     }
@@ -496,19 +502,31 @@ int performDY (Instruction input, State *state){
 
 int performDT (Instruction input, State *state){
   if (input.opcode != DT) {
+    #if PERFORM_DEBUG == 1
     DEBUG_PRINT("performDT FAIL: opcode is %i\n", input.opcode);
+    #endif
   } else {
-    DEBUG_PRINT("performDT %i\n");
-    pause(state->d, input.operand.pause);
+    int pauseFor = 0;
+    if(input.operand.pause != 0){
+      pauseFor = input.operand.pause;
+    }
+    #if PERFORM_DEBUG == 1
+    DEBUG_PRINT("performDT %i\n", pauseFor);
+    #endif
+    pause(state->d, pauseFor);
   }
   return 0;
 }
 
 int performPEN (Instruction input, State *state){
   if (input.opcode != PEN) {
+    #if PERFORM_DEBUG == 1
     DEBUG_PRINT("performPEN FAIL: opcode is %i\n", input.opcode);
+    #endif
   } else {
-    // DEBUG_PRINT("performPEN\n");
+    #if PERFORM_DEBUG == 1
+    DEBUG_PRINT("performPEN\n");
+    #endif
     _Bool initial = state->p;
     state->p = !initial;
     if(state->p == true){
