@@ -202,6 +202,11 @@ signed int moveOperandExtract (Byte input){
 }
 
 unsigned int operandExtract(Byte input){
+  DEBUG_PRINT("operandExtract:\n11000000 &\n");
+  printBits(1, &input);
+  Byte outputByte = input & 0x3f;
+  DEBUG_PRINT("========\n");
+  printBits(1, &outputByte);
   return input & 0x3f;
 }
 
@@ -287,20 +292,18 @@ int getInstructions(FILE *in, display *d, int *buffer) {
 }
 
 int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte outputStream[IMPORT_MAX_INSTRUCTIONS]) {
-  DEBUG_PRINT("Transforming...");
+  DEBUG_PRINT("Transforming...\n");
+  int iCopy = 0;
   // traverse inputStream whilst there is data
-  for (size_t i = 0; i <= IMPORT_MAX_INSTRUCTIONS; i++) {
+  for (int i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+    iCopy = i;
     int input = inputStream[i];
-    if (input != '\0' && input != EOF) {
-      if (input != 0) {
-        outputStream[i] = (Byte) input;
-      } else {
-        DEBUG_PRINT("\nblank instruction found: transform halted\n");
-        break;
-      }
-    } else {
-      DEBUG_PRINT(" done.\n\n");
-      break;
+    if (input != '\0' && input != EOF && input != 0) {
+      DEBUG_PRINT("%i", i);
+      DEBUG_PRINT(":");
+      DEBUG_PRINT(HEXIDECIMAL_FORMAT, (Byte) input);
+      DEBUG_PRINT(" ");
+      outputStream[i] = (Byte) input;
     }
   }
 
@@ -333,7 +336,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
   int instructionBytesRemaining = 0; // how many bytes we need to fetch
   Byte extendedInstructionBuffer[5]; // to store the extended instruction bytes
 
-  while(i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0' && instructions[i] != 0){
+  while(i < IMPORT_MAX_INSTRUCTIONS){
     Byte current = instructions[i];
     if (extendedProcessing == false) { // we are processing a new instruction
       // determine instruction type
@@ -351,15 +354,12 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
               operand = moveOperandExtract(current);
               DEBUG_PRINT("%i :> ", operand);
               converted.operand.move = operand;
-            } else if (opcode == DT || opcode == PEN){
+            } else if (opcode == DT){
               unsigned int operand;
+              printBits(1, &converted.raw);
               operand = operandExtract(current);
-              DEBUG_PRINT("%i :> ", operand);
-              if (opcode == DT){
-                converted.operand.pause = operand;
-              } else if (opcode == PEN) {
-                converted.operand.pen = operand;
-              }
+              DEBUG_PRINT("%i (=%i):> ", operand, (unsigned int) operand);
+              converted.operand.pause = operand;
             }
           } else {
             DEBUG_PRINT("ERROR! ");
@@ -381,6 +381,9 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
           converted.raw = extendedInstructionBuffer[0];
           converted.opcode = extendedOpcode;
           switch(converted.opcode){
+            case DT:
+              DEBUG_PRINT("\nWTF \n");
+              break;
             case PEN:
               converted.operand.pen = true;
               break;
@@ -420,6 +423,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
 
         // TODO: combine all the data from the buffer and put into converted
         if(extendedInstructionBytesTotal > 1){
+          DEBUG_PRINT("EXTENDED\n");
           signed int operand;
           operand = operandExtractFromExtendedBuffer(extendedInstructionBuffer, extendedInstructionBytesTotal);
 
@@ -494,7 +498,7 @@ int performDT (Instruction input, State *state){
   if (input.opcode != DT) {
     DEBUG_PRINT("performDT FAIL: opcode is %i\n", input.opcode);
   } else {
-    // DEBUG_PRINT("performDT\n");
+    DEBUG_PRINT("performDT %i\n");
     pause(state->d, input.operand.pause);
   }
   return 0;
@@ -569,20 +573,20 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
     switch(instruction.opcode){
       case DX:
         // DEBUG_PRINT("DX");
-        sprintf(operandStr, "%i", instruction.operand.move);
         DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.move, opcodeStringify(instruction.opcode), operandStr);
+        sprintf(operandStr, "%i", instruction.operand.move);
         performDX(instruction, statePtr);
         break;
       case DY:
         // DEBUG_PRINT("DY");
-        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.move, opcodeStringify(instruction.opcode), operandStr);
         sprintf(operandStr, "%i", instruction.operand.move);
+        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.move, opcodeStringify(instruction.opcode), operandStr);
         performDY(instruction, statePtr);
         break;
       case DT:
         // DEBUG_PRINT("DT");
-        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.pause, opcodeStringify(instruction.opcode), operandStr);
         sprintf(operandStr, "%i", instruction.operand.pause);
+        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.pause, opcodeStringify(instruction.opcode), operandStr);
         performDT(instruction, statePtr);
         break;
       case PEN:
