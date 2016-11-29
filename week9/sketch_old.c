@@ -288,89 +288,62 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
   DEBUG_PRINT("Converting into instruction objects... \n\n");
   int numInstructions = 0;
   int i = 0;
-  _Bool extendedProcessing = false; // currently processing extended instruction data
-  int instructionBytesRemaining = 0; // how many bytes we need to fetch
-  int instructionBytesTotal = 1; // how many bytes there are in total (default 1)
-  Byte extendedInstructionBuffer = []; // to store the extended instruction bytes
+  _Bool extendedProcessing = false; // if true then we are currently processing an extended instruction?
+  int extendedToFetch = 0; // how many bytes we need to fetch
+  Byte extendedInstructionBuffer = []; // contains the bytes
 
   while(i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0' && instructions[i] != 0){
     Byte current = instructions[i];
 
-    if (extendedProcessing == false) { // we are processing a new instruction
+    if (extendedProcessing == true) { // we are still processing an extended instruction
+      if (extendedToFetch > 0) {
+        
+
+        extendedToFetch--;
+      }
+      /*code*/
+
+      extendedProcessing = false;
+    } else { // we are processing a new instruction
       // determine instruction type
       int opcode = opcodeExtract(current);
       DEBUG_PRINT("%s ", opcodeStringify(opcode));
 
-      if(opcode < 3){ // byte is not extended
-          Instruction converted;
-          converted.raw = current;
-          converted.opcode = opcode;
+      if(opcode >= 3){
+        DEBUG_PRINT("EXTENDED: opcode %i size %i\n", extractLastFourBits(current), extractSizeBits(current));
+        // TODO: set extendedToFetch
+      }
 
-          if(opcode == DX || opcode == DY || opcode == DT){
-            if(opcode == DX || opcode == DY){
-              signed int operand;
-              operand = moveOperandExtract(current);
-              DEBUG_PRINT("%i :> ", operand);
-              converted.operand.move = operand;
-            } else if (opcode == DT || opcode == PEN){
-              unsigned int operand;
-              operand = operandExtract(current);
-              DEBUG_PRINT("%i :> ", operand);
-              if (opcode == DT){
-                converted.operand.pause = operand;
-              } else if (opcode == PEN) {
-                converted.operand.pen = operand;
-              }
-            }
-          } else {
-            DEBUG_PRINT("ERROR! ");
+      Instruction converted;
+      converted.raw = current;
+      converted.opcode = opcode;
+
+      if(opcode == DX || opcode == DY || opcode == DT || opcode == PEN || opcode == CLEAR || opcode == KEY || opcode == COL){
+        if(opcode == DX || opcode == DY){
+          signed int operand;
+          operand = moveOperandExtract(current);
+          DEBUG_PRINT("%i :> ", operand);
+          converted.operand.move = operand;
+        } else if (opcode == DT || opcode == PEN){
+          unsigned int operand;
+          operand = operandExtract(current);
+          DEBUG_PRINT("%i :> ", operand);
+          if (opcode == DT){
+            converted.operand.pause = operand;
+          } else if (opcode == PEN) {
+            converted.operand.pen = operand;
           }
-          numInstructions++;
-          output[numInstructions] = converted;
-      } else { // byte is extended
-        DEBUG_PRINT("EXTENDED: opcode size %i\n", extractSizeBits(current));
-        extendedProcessing = true;
-
-        // TODO: set instructionBytesRemaining
-        instructionBytesRemaining = 
-        // TODO: push byte to buffer
-
-      }
-    } else { // we are still processing an extended instruction
-      if (instructionBytesRemaining > 0) { // we need to fetch more data
-
-        instructionBytesRemaining--;
-      } else { // we have all the data we need
-        int extendedOpcode = extractLastFourBits(extendedInstructionBuffer[0]);
-        int extendedInstructionBytesTotal = extractSizeBits(extendedInstructionBuffer[0]) + 1;
-        DEBUG_PRINT("EXTENDED: opcode size %i\n", extendedInstructionBuffer);
-
-        Instruction converted;
-        converted.raw = extendedInstructionBuffer[0];
-        converted.opcode = extendedOpcode;
-
-        // TODO: combine all the data from the buffer and put into converted
-        if(extendedInstructionBytesTotal > 0){
-          unsigned int operand = operandExtractFromExtended(extendedInstructionBuffer);
-        } else {
-          unsigned int operand = operandExtract(extendedInstructionBuffer[0]);
         }
-        // reset state variables and reset buffer
-        extendedProcessing = false;
-        // TODO: clear buffer
-
-        output[numInstructions] = converted;
-        numInstructions++;
-
+      } else {
+        DEBUG_PRINT("ERROR! ");
       }
+      output[i] = converted;
+      numInstructions++;
+      i++;
     }
-
-    i++;
-
-  }
-  DEBUG_PRINT("END\n\n%i bytes converted.\n\n", numInstructions);
-  return numInstructions;
-
+    DEBUG_PRINT("END\n\n%i bytes converted.\n\n", numInstructions);
+    return numInstructions;
+    }
 }
 
 int drawLine (State *state){
@@ -433,8 +406,8 @@ int performCLEAR (Instruction input, State *state){
   if (input.opcode != DT) {
     DEBUG_PRINT("performCLEAR FAIL: opcode is %i\n", input.opcode);
   } else {
-    DEBUG_PRINT("ERROR: performCLEAR NOT YET IMPLEMENTED!!!\n");
-    // pause(state->d, input.operand.pause);
+    // DEBUG_PRINT("performCLEAR\n");
+    pause(state->d, input.operand.pause);
   }
   return 0;
 }
@@ -443,8 +416,8 @@ int performKEY (Instruction input, State *state){
   if (input.opcode != DT) {
     DEBUG_PRINT("performKEY FAIL: opcode is %i\n", input.opcode);
   } else {
-    DEBUG_PRINT("ERROR: performKEY NOT YET IMPLEMENTED!!!\n");
-    // pause(state->d, input.operand.pause);
+    // DEBUG_PRINT("performKEY\n");
+    pause(state->d, input.operand.pause);
   }
   return 0;
 }
@@ -453,8 +426,8 @@ int performCOL (Instruction input, State *state){
   if (input.opcode != DT) {
     DEBUG_PRINT("performCOL FAIL: opcode is %i\n", input.opcode);
   } else {
-    DEBUG_PRINT("ERROR: performCOL NOT YET IMPLEMENTED!!!\n");
-    // pause(state->d, input.operand.pause);
+    // DEBUG_PRINT("performCOL\n");
+    pause(state->d, input.operand.pause);
   }
   return 0;
 }
