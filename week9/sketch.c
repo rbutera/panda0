@@ -318,8 +318,8 @@ char *concatenateStrings(char *dest, const char *src){
 
 signed int operandExtractFromExtendedBuffer (Byte extendedInstruction[5], int totalBytes){
   DEBUG_PRINT("operandExtractFromExtendedBuffer: extendedInstruction is of size %i\n", totalBytes);
-  int result;
-  int resultSizeInBits = (8 * (totalBytes - 1)) + 1;
+  signed int result;
+  signed int resultSizeInBits = (8 * (totalBytes - 1)) + 999; //TODO: check actual size
   char resultAsString[resultSizeInBits];
   char* resultPtr = resultAsString;
 
@@ -616,7 +616,7 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
   DEBUG_PRINT("START\n");
   printState(statePtr);
 
-  char operandStr[5];
+  char operandStr[33];
   while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
     DEBUG_PRINT("%i: ", i);
     Instruction instruction = instructions[i];
