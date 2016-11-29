@@ -278,11 +278,22 @@ int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte output
   return 0;
 }
 
-unsigned int operandExtractFromExtended (Byte extendedInstruction[]){
-  int instructionSize = sizeof(extendedInstruction);
-  DEBUG_PRINT("operandExtractFromExtended: extendedInstruction is of size %i\n", instructionSize);
-  return 420;
+unsigned int operandExtractFromExtended (Byte extendedInstruction[], int totalBytes){
+  DEBUG_PRINT("operandExtractFromExtended: extendedInstruction is of size %i\n", totalBytes);
+  Byte operand[totalBytes - 1];
+  unsigned int result;
+  for (size_t i = 1; i < totalBytes; i++) {
+    operand[i - 1] = extendedInstruction[i];
+  }
+
+  DEBUG_PRINT("eOperand = \n");
+  for (size_t j = 0; j < totalBytes - 1; j++) {
+    printBits(1, &operand[i]);
+  }
+  return result;
 }
+
+const int possibleExtendedSizes[4] = {1,2,3,5};
 
 int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
   DEBUG_PRINT("Converting into instruction objects... \n\n");
@@ -328,30 +339,34 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
           numInstructions++;
           output[numInstructions] = converted;
       } else { // byte is extended
-        DEBUG_PRINT("EXTENDED: opcode size %i\n", extractSizeBits(current));
-        extendedProcessing = true;
-
-        // TODO: set instructionBytesRemaining
-        instructionBytesRemaining = 
         // TODO: push byte to buffer
-
+        extendedInstructionBuffer[0] = current;
+        int totalSize = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
+        DEBUG_PRINT("extended instruction (size i) begin processing!\n", totalSize);
+        extendedProcessing = true;
+        // TODO: set instructionBytesRemaining
+        instructionBytesRemaining = totalSize - 1;
       }
     } else { // we are still processing an extended instruction
       if (instructionBytesRemaining > 0) { // we need to fetch more data
-
+        int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
+        int index = extendedInstructionBytesTotal - instructionBytesRemaining;
+        extendedInstructionBuffer[index] = current;
         instructionBytesRemaining--;
       } else { // we have all the data we need
         int extendedOpcode = extractLastFourBits(extendedInstructionBuffer[0]);
-        int extendedInstructionBytesTotal = extractSizeBits(extendedInstructionBuffer[0]) + 1;
-        DEBUG_PRINT("EXTENDED: opcode size %i\n", extendedInstructionBuffer);
+        int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
+        DEBUG_PRINT("operand size %i\n", extendedInstructionBytesTotal - 1);
+
+
 
         Instruction converted;
         converted.raw = extendedInstructionBuffer[0];
         converted.opcode = extendedOpcode;
 
         // TODO: combine all the data from the buffer and put into converted
-        if(extendedInstructionBytesTotal > 0){
-          unsigned int operand = operandExtractFromExtended(extendedInstructionBuffer);
+        if(extendedInstructionBytesTotal > 1){
+          unsigned int operand = operandExtractFromExtended(extendedInstructionBuffer, extendedInstructionBytesTotal);
         } else {
           unsigned int operand = operandExtract(extendedInstructionBuffer[0]);
         }
