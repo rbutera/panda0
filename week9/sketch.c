@@ -80,7 +80,7 @@ signed int byteToDecimal (Byte input){
   return (signed int) input;
 }
 
-char *decimalToBstring(signed int input, char *outputStream){
+char *decimalToBinaryString(signed int input, char *outputStream){
   int bitOffset, bit, outputIndex;
   for (bitOffset = 31; bitOffset >= 0; bitOffset--)
   {
@@ -96,12 +96,12 @@ char *decimalToBstring(signed int input, char *outputStream){
 }
 
 // TODO: from http://cboard.cprogramming.com/c-programming/114077-converting-binary-string-decimal.html
-int bstringToDecimal(const char * str)
+int binaryStringToDecimal(const char * str)
 {
     int val = 0;
 
     while (*str != '\0')
-        val = 2 * val + (*str++ - '0');
+    val = 2 * val + (*str++ - '0');
     return val;
 }
 
@@ -275,7 +275,7 @@ int getInstructions(FILE *in, display *d, int *buffer) {
 
   DEBUG_PRINT("\nReading...\n\n");
 
-  while (input != EOF && input != '\0' && numInstructions < IMPORT_MAX_INSTRUCTIONS) {
+  while (input != EOF && numInstructions < IMPORT_MAX_INSTRUCTIONS) {
     buffer[numInstructions++] = input;
     DEBUG_PRINT(HEXIDECIMAL_FORMAT, (Byte) input);
     DEBUG_PRINT(" ");
