@@ -336,7 +336,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
   int instructionBytesRemaining = 0; // how many bytes we need to fetch
   Byte extendedInstructionBuffer[5]; // to store the extended instruction bytes
 
-  while(i < IMPORT_MAX_INSTRUCTIONS){
+  while(i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0'){
     Byte current = instructions[i];
     if (extendedProcessing == false) { // we are processing a new instruction
       // determine instruction type
