@@ -229,6 +229,14 @@ Byte extractLastFourBits (Byte input){
   return output;
 }
 
+int opcodeFromExtendedBuffer (Byte* buffer){
+  int result = 0;
+
+  result = (int) extractLastFourBits(buffer[0]);
+
+  return result;
+}
+
 char *opcodeStringify (int code) {
   char *result;
 
@@ -300,6 +308,7 @@ int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte output
       outputStream[i] = (Byte) input;
     }
   }
+  DEBUG_PRINT("\n ...done\n");
 
   return 0;
 }
@@ -307,7 +316,7 @@ int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte output
 signed int operandExtractFromExtendedBuffer (Byte extendedInstruction[], int totalBytes){
   DEBUG_PRINT("operandExtractFromExtendedBuffer: extendedInstruction is of size %i\n", totalBytes);
   Byte operand[totalBytes - 1];
-  unsigned int result;
+  int result;
   for (size_t i = 1; i < totalBytes; i++) {
     operand[i - 1] = extendedInstruction[i];
   }
@@ -323,16 +332,22 @@ signed int operandExtractFromExtendedBuffer (Byte extendedInstruction[], int tot
 const int possibleExtendedSizes[4] = {1,2,3,5};
 
 int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction output[IMPORT_MAX_INSTRUCTIONS]){
-  DEBUG_PRINT("Converting into instruction objects... \n\n");
+  DEBUG_PRINT("\nConverting into instruction objects... \n\n");
   int numInstructions = 0;
   int i = 0;
-  _Bool extendedProcessing = false; // currently processing extended instruction data
   int instructionBytesRemaining = 0; // how many bytes we need to fetch
+  int extendedProcessing = (instructionBytesRemaining > 0) ? 1 : 0; // currently processing extended instruction data
   Byte extendedInstructionBuffer[5]; // to store the extended instruction bytes
 
-  while(i < IMPORT_MAX_INSTRUCTIONS && instructions[i] != '\0'){
+  while(i < IMPORT_MAX_INSTRUCTIONS){
     Byte current = instructions[i];
-    if (extendedProcessing == false) { // we are processing a new instruction
+    DEBUG_PRINT("%i: ", i);
+    DEBUG_PRINT(HEXIDECIMAL_FORMAT, current);
+    if(extendedProcessing == 1){
+      DEBUG_PRINT(" --processing extended--\n");
+    }
+    DEBUG_PRINT("\n");
+    if (extendedProcessing == 0) { // we are processing a new instruction
       // determine instruction type
       int opcode = opcodeExtract(current);
       DEBUG_PRINT("%s ", opcodeStringify(opcode));
@@ -364,19 +379,20 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
         // TODO: push byte to buffer
         extendedInstructionBuffer[0] = current;
         int totalSize = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
-        int extendedOpcode = (int) extractLastFourBits(extendedInstructionBuffer[0]);
-        // DEBUG_PRINT("extended %s instruction (size %i) begin processing!\n", opcodeStringify(extendedOpcode), totalSize);
+        int extendedOpcode = opcodeFromExtendedBuffer(extendedInstructionBuffer);
 
         // TODO: set instructionBytesRemaining
         instructionBytesRemaining = totalSize - 1;
+        DEBUG_PRINT("extended %s instruction (size %i) begin processing! %i bytes remain\n", opcodeStringify(extendedOpcode), totalSize, instructionBytesRemaining);
         if (totalSize == 1){
-          // DEBUG_PRINT("single-byte extended instruction. no operand necessary\n");
+          DEBUG_PRINT("single-byte extended instruction. no operand necessary\n");
           Instruction converted;
           converted.raw = extendedInstructionBuffer[0];
           converted.opcode = extendedOpcode;
           switch(converted.opcode){
             case DT:
-              DEBUG_PRINT("\nWTF \n");
+              // DEBUG_PRINT("\nWTF \n");
+              converted.operand.pause = 0;
               break;
             case PEN:
               converted.operand.pen = true;
@@ -391,12 +407,16 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
               DEBUG_PRINT("#### ERROR: treating %s as single-byte (should be multi-byte!) ####\n", opcodeStringify(converted.opcode));
             break;
           }
-          DEBUG_PRINT("[%i]?:> ",converted.opcode);
           output[numInstructions] = converted;
           numInstructions++;
+          extendedProcessing = 0;
+        } else {
+          DEBUG_PRINT("first pass complete");
+          extendedProcessing = 1;
         }
       }
     } else { // we are still processing an extended instruction
+      DEBUG_PRINT("still processing\n");
       if (instructionBytesRemaining > 0) { // we need to fetch more data
         DEBUG_PRINT("%i bytes remain\n", instructionBytesRemaining);
         int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
@@ -405,11 +425,8 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
         instructionBytesRemaining--;
       } else { // we have all the data we need
         DEBUG_PRINT("completing processing\n");
-        int extendedOpcode = (int) extractLastFourBits(extendedInstructionBuffer[0]);
+        int extendedOpcode = opcodeFromExtendedBuffer(extendedInstructionBuffer);
         int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
-        // DEBUG_PRINT("operand size %i\n", extendedInstructionBytesTotal - 1);
-
-
 
         Instruction converted;
         converted.raw = extendedInstructionBuffer[0];
@@ -440,7 +457,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
           DEBUG_PRINT("#### ERROR: treating %s as SINGLE-BYTE!?\n", opcodeStringify(converted.opcode));
         }
         // reset state variables and reset buffer
-        extendedProcessing = false;
+        extendedProcessing = 0;
         // TODO: clear buffer
         numInstructions++;
         int outputIndex = numInstructions - 1;
@@ -453,7 +470,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
     i++;
 
   }
-  DEBUG_PRINT("END\n\n%i bytes converted. %i instructions created.\n\n", i, numInstructions);
+  DEBUG_PRINT("\n...done\n\n%i bytes converted. %i instructions created.\n\n", i, numInstructions);
   return numInstructions;
 }
 
@@ -591,26 +608,26 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
     switch(instruction.opcode){
       case DX:
         // DEBUG_PRINT("DX");
-        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.move, opcodeStringify(instruction.opcode), operandStr);
+        DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.move);
         sprintf(operandStr, "%i", instruction.operand.move);
         performDX(instruction, statePtr);
         break;
       case DY:
         // DEBUG_PRINT("DY");
         sprintf(operandStr, "%i", instruction.operand.move);
-        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.move, opcodeStringify(instruction.opcode), operandStr);
+        DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.move);
         performDY(instruction, statePtr);
         break;
       case DT:
         // DEBUG_PRINT("DT");
         sprintf(operandStr, "%i", instruction.operand.pause);
-        DEBUG_PRINT("%s %i (%s %s)\n", opcodeStringify(instruction.opcode), instruction.operand.pause, opcodeStringify(instruction.opcode), operandStr);
+        DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.pause);
         performDT(instruction, statePtr);
         break;
       case PEN:
         // DEBUG_PRINT("PEN");
         performPEN(instruction, statePtr);
-        DEBUG_PRINT("%s (%s %s)\n", opcodeStringify(instruction.opcode), opcodeStringify(instruction.opcode), operandStr);
+        DEBUG_PRINT("%s\n", opcodeStringify(instruction.opcode));
         break;
       case CLEAR:
         // DEBUG_PRINT("CLEAR");
@@ -635,7 +652,7 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
     i++;
   }
 
-  DEBUG_PRINT("\n ...done.\n");
+  DEBUG_PRINT("\n ...done.\n\n");
   return 0;
 }
 
