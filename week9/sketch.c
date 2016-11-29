@@ -5,7 +5,7 @@
 #include <string.h> // TODO: check if this is OK
 
 #ifndef DEBUG
-  #define DEBUG 2
+  #define DEBUG
 #endif
 
 #ifndef IMPORT_MAX_INSTRUCTIONS
@@ -42,7 +42,7 @@ int largest (int a, int b, int c){
   sizes[1] = b;
   sizes[2] = c;
 
-  for (size_t i = 0; i < sizeof(sizes); i++) {
+  for (int i = 0; i < sizeof(sizes); i++) {
     largest = (largest > sizes[i]) ? largest : sizes[i];
   }
 
@@ -76,16 +76,37 @@ struct State {
   int downY;
 };
 
-signed int byteToDecimal (Byte input){
-  return (signed int) input;
+void printBits(size_t const size, void const* const toPrint){
+  //TODO: remove before submission
+  unsigned char *b = (unsigned char*) toPrint;
+  unsigned char byte;
+  int i, j;
+
+  for (i=size-1;i>=0;i--)
+  {
+    for (j=7;j>=0;j--)
+    {
+      byte = (b[i] >> j) & 1;
+      DEBUG_PRINT("%u", byte);
+    }
+  }
+  // puts("");
 }
 
-char *decimalToBinaryString(signed int input, char *outputStream){
+void printBitsNL (Byte toPrint){
+  printBits(1, &toPrint);
+  DEBUG_PRINT("\n");
+}
+
+
+char *cToBinaryString(Byte input, char outputStream[9]){
+  DEBUG_PRINT("expecting ");
+  printBits(1, &input);
   int bitOffset, bit, outputIndex;
-  for (bitOffset = 31; bitOffset >= 0; bitOffset--)
+  for (bitOffset = 7; bitOffset >= 0; bitOffset--)
   {
     bit = input >> bitOffset;
-    outputIndex = 31 - bitOffset;
+    outputIndex = 7 - bitOffset;
     if (bit & 1)
       outputStream[outputIndex] = '1';
     else
@@ -96,9 +117,9 @@ char *decimalToBinaryString(signed int input, char *outputStream){
 }
 
 // TODO: from http://cboard.cprogramming.com/c-programming/114077-converting-binary-string-decimal.html
-int binaryStringToDecimal(const char * str)
+signed int binaryStringToDecimal(const char * str)
 {
-    int val = 0;
+    signed int val = 0;
 
     while (*str != '\0')
     val = 2 * val + (*str++ - '0');
@@ -116,28 +137,6 @@ int printState(State *state){
   DEBUG_PRINT("state: (%i,%i) P: %s\n", state->x, state->y, penState);
 
   return 0;
-}
-
-void printBits(size_t const size, void const* const toPrint){
-  //TODO: remove before submission
-  unsigned char *b = (unsigned char*) toPrint;
-  unsigned char byte;
-  int i, j;
-
-  for (i=size-1;i>=0;i--)
-  {
-    for (j=7;j>=0;j--)
-    {
-      byte = (b[i] >> j) & 1;
-      printf("%u", byte);
-    }
-  }
-  puts("");
-}
-
-void printBitsNL (Byte toPrint){
-  printBits(1, &toPrint);
-  printf("\n");
 }
 
 /**
@@ -166,12 +165,6 @@ char operandPolarity (Byte x){
 
 signed int moveOperandExtract (Byte input){
   _Bool needsFlipping = !operandByteHasPositive(input); // need to flip negatives from two's complement form
-  /**
-    DEBUG_PRINT(HEXIDECIMAL_FORMAT, input);
-    DEBUG_PRINT("\n");
-    printBits(1, &input);
-  **/
-
   signed int converted;
 
   if (needsFlipping == true) {
@@ -313,19 +306,39 @@ int transformInstructions (int inputStream[IMPORT_MAX_INSTRUCTIONS], Byte output
   return 0;
 }
 
-signed int operandExtractFromExtendedBuffer (Byte extendedInstruction[], int totalBytes){
-  DEBUG_PRINT("operandExtractFromExtendedBuffer: extendedInstruction is of size %i\n", totalBytes);
-  Byte operand[totalBytes - 1];
-  int result;
-  for (size_t i = 1; i < totalBytes; i++) {
-    operand[i - 1] = extendedInstruction[i];
-  }
+char *concatenateStrings(char *dest, const char *src){
+    size_t i,j;
+    for (i = 0; dest[i] != '\0'; i++)
+        ;
+    for (j = 0; src[j] != '\0'; j++)
+        dest[i+j] = src[j];
+    dest[i+j] = '\0';
+    return dest;
+}
 
-  DEBUG_PRINT("eOperand = \n");
-  for (size_t j = 0; j < totalBytes - 1; j++) {
-    printBits(1, &operand[j]);
+signed int operandExtractFromExtendedBuffer (Byte extendedInstruction[5], int totalBytes){
+  DEBUG_PRINT("operandExtractFromExtendedBuffer: extendedInstruction is of size %i\n", totalBytes);
+  int result;
+  int resultSizeInBits = (8 * (totalBytes - 1)) + 1;
+  char resultAsString[resultSizeInBits];
+  char* resultPtr = resultAsString;
+
+  // DEBUG_PRINT("eOperand = \n");
+  for (int i = 0; i < totalBytes - 1; i++) {
+    // DEBUG_PRINT("i = %i\n", i);
+    char currentByte[9];
+    cToBinaryString(extendedInstruction[i + 1], currentByte);
+    // DEBUG_PRINT("+%s \n", currentByte);
+
+    if(i != 0){
+      concatenateStrings(resultPtr, currentByte);
+    } else {
+      strcpy(resultPtr, currentByte);
+    }
+
+    DEBUG_PRINT("=%s\n", resultPtr);
   }
-  result = 420;
+  result = binaryStringToDecimal(resultPtr);
   return result;
 }
 
@@ -339,12 +352,12 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
   int extendedProcessing = (instructionBytesRemaining > 0) ? 1 : 0; // currently processing extended instruction data
   Byte extendedInstructionBuffer[5]; // to store the extended instruction bytes
 
-  while(i < IMPORT_MAX_INSTRUCTIONS){
+  while(i < IMPORT_MAX_INSTRUCTIONS && !(extendedProcessing == 0 && instructions[i] == '\0')){
     Byte current = instructions[i];
     DEBUG_PRINT("%i: ", i);
     DEBUG_PRINT(HEXIDECIMAL_FORMAT, current);
-    if(extendedProcessing == 1){
-      DEBUG_PRINT(" --processing extended--\n");
+    if(extendedProcessing == 0){
+      DEBUG_PRINT(" --new--\n");
     }
     DEBUG_PRINT("\n");
     if (extendedProcessing == 0) { // we are processing a new instruction
@@ -375,6 +388,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
           }
           output[numInstructions] = converted;
           numInstructions++;
+          i++;
       } else { // byte is extended
         // TODO: push byte to buffer
         extendedInstructionBuffer[0] = current;
@@ -383,7 +397,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
 
         // TODO: set instructionBytesRemaining
         instructionBytesRemaining = totalSize - 1;
-        DEBUG_PRINT("extended %s instruction (size %i) begin processing! %i bytes remain\n", opcodeStringify(extendedOpcode), totalSize, instructionBytesRemaining);
+        DEBUG_PRINT("extended %s instruction (size %i) begin processing!\n %i bytes remain\n", opcodeStringify(extendedOpcode), totalSize, instructionBytesRemaining);
         if (totalSize == 1){
           DEBUG_PRINT("single-byte extended instruction. no operand necessary\n");
           Instruction converted;
@@ -411,18 +425,24 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
           numInstructions++;
           extendedProcessing = 0;
         } else {
-          DEBUG_PRINT("first pass complete");
+          DEBUG_PRINT("first byte stored + converted\n");
           extendedProcessing = 1;
         }
+        i++;
       }
     } else { // we are still processing an extended instruction
       DEBUG_PRINT("still processing\n");
       if (instructionBytesRemaining > 0) { // we need to fetch more data
-        DEBUG_PRINT("%i bytes remain\n", instructionBytesRemaining);
         int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
         int index = extendedInstructionBytesTotal - instructionBytesRemaining;
         extendedInstructionBuffer[index] = current;
         instructionBytesRemaining--;
+        DEBUG_PRINT("%i bytes remain\n", instructionBytesRemaining);
+        if(instructionBytesRemaining > 0){
+          i++;
+        } else {
+          DEBUG_PRINT("need to process current byte further");
+        }
       } else { // we have all the data we need
         DEBUG_PRINT("completing processing\n");
         int extendedOpcode = opcodeFromExtendedBuffer(extendedInstructionBuffer);
@@ -434,7 +454,6 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
 
         // TODO: combine all the data from the buffer and put into converted
         if(extendedInstructionBytesTotal > 1){
-          DEBUG_PRINT("EXTENDED\n");
           signed int operand;
           operand = operandExtractFromExtendedBuffer(extendedInstructionBuffer, extendedInstructionBytesTotal);
 
@@ -464,11 +483,9 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
         DEBUG_PRINT("outputIndex%i\n", outputIndex);
         output[outputIndex] = converted;
         DEBUG_PRINT(" :> ");
+        i++;
       }
     }
-
-    i++;
-
   }
   DEBUG_PRINT("\n...done\n\n%i bytes converted. %i instructions created.\n\n", i, numInstructions);
   return numInstructions;
@@ -603,7 +620,7 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
   while (i < n && i < IMPORT_MAX_INSTRUCTIONS) {
     DEBUG_PRINT("%i: ", i);
     Instruction instruction = instructions[i];
-    // printf("%i", instruction.opcode);
+    // DEBUG_PRINT("%i", instruction.opcode);
 
     switch(instruction.opcode){
       case DX:
@@ -643,7 +660,7 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
         performCOL(instruction, statePtr);
       break;
       default:
-        printf("interpretInstructions ERROR\n");
+        DEBUG_PRINT("interpretInstructions ERROR\n");
         break;
     }
     // DEBUG_PRINT("%s %s ", opcodeStringify(instruction.opcode), operandStr);
@@ -657,13 +674,13 @@ int interpretInstructions (int n, Instruction instructions[IMPORT_MAX_INSTRUCTIO
 }
 
 void initializeBuffer(int buffer[IMPORT_MAX_INSTRUCTIONS]){
-  for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+  for (int i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
     buffer[i] = 0;
   }
 }
 
 void initializeInstructionBytes (Byte instructions[IMPORT_MAX_INSTRUCTIONS]){
-    for (size_t i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
+    for (int i = 0; i < IMPORT_MAX_INSTRUCTIONS; i++) {
       instructions[i] = 0;
     }
 }
