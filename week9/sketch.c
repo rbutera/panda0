@@ -319,7 +319,7 @@ char *concatenateStrings(char *dest, const char *src){
 signed int operandExtractFromExtendedBuffer (Byte extendedInstruction[5], int totalBytes){
   DEBUG_PRINT("operandExtractFromExtendedBuffer: extendedInstruction is of size %i\n", totalBytes);
   signed int result;
-  signed int resultSizeInBits = (8 * (totalBytes - 1)) + 999; //TODO: check actual size
+  signed int resultSizeInBits = (8 * (totalBytes - 1)); //TODO: check actual size
   char resultAsString[resultSizeInBits];
   char* resultPtr = resultAsString;
 
