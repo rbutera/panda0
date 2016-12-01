@@ -5,10 +5,6 @@
 #include <string.h> // TODO: check if this is OK
 #include <stdint.h>
 
-#ifndef DEBUG
-#define DEBUG
-#endif
-
 #ifndef IMPORT_MAX_INSTRUCTIONS
 #define IMPORT_MAX_INSTRUCTIONS    1024
 #endif
@@ -83,6 +79,7 @@ struct State
     _Bool      p;
     signed int downX;
     signed int downY;
+    signed int col;
 };
 
 void printBits(size_t const size, void const *const toPrint)
@@ -113,9 +110,8 @@ void printBitsNL(Byte toPrint)
 
 char *cToBinaryString(Byte input, char outputStream[9])
 {
-    DEBUG_PRINT("expecting ");
-    printBits(1, &input);
     int bitOffset, bit, outputIndex;
+
     for (bitOffset = 7; bitOffset >= 0; bitOffset--)
     {
         bit         = input >> bitOffset;
@@ -137,10 +133,10 @@ char *cToBinaryString(Byte input, char outputStream[9])
 // TODO: from http://cboard.cprogramming.com/c-programming/114077-converting-binary-string-decimal.html
 signed int binaryStringToDecimal(char *str)
 {
-    char    *initialStr = &str[0];
-    int32_t result      = 0;
-    _Bool   negative    = *str == '1';
-    int32_t length      = 0;
+    //char    *initialStr = &str[0];
+    int32_t result   = 0;
+    _Bool   negative = *str == '1';
+    int32_t length   = 0;
 
 
     DEBUG_PRINT("#length :");
@@ -254,10 +250,6 @@ signed int moveOperandExtract(Byte input)
         input     = input & 0x3f;
         converted = (signed int)input;
     }
-
-
-    // printBits(1, &input);
-    // DEBUG_PRINT(" -> %d\n", converted);
 
     if ((converted < -32) || (converted > 32))
     {
@@ -450,9 +442,8 @@ signed int operandExtractFromExtendedBuffer(Byte extendedInstruction[5], int tot
         {
             strcpy(resultPtr, currentByte);
         }
-
-        DEBUG_PRINT("=%s\n", resultPtr);
     }
+    DEBUG_PRINT("=%s\n", resultPtr);
     result = binaryStringToDecimal(resultPtr);
     return result;
 }
@@ -636,8 +627,15 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
 
 int drawLine(State *state)
 {
-    DEBUG_PRINT("line call: %d %d %d %d\n", state->downX, state->downY, state->x, state->y);
-    line(state->d, state->downX, state->downY, state->x, state->y);
+    DEBUG_PRINT("LINE: (%d,%d) -> (%d,%d)\t\t color: %i\n", state->downX, state->downY, state->x, state->y, state->col);
+    if (state->col == 0x000000FF)
+    {
+        line(state->d, state->downX, state->downY, state->x, state->y);
+    }
+    else
+    {
+        cline(state->d, state->downX, state->downY, state->x, state->y, state->col);
+    }
     state->downX = state->x;
     state->downY = state->y;
     return 0;
@@ -769,37 +767,12 @@ int performKEY(Instruction input, State *state)
 }
 
 
-int performCOL(Instruction input, State *state)
-{
-    if (input.opcode != COL)
-    {
-        DEBUG_PRINT("performCOL FAIL: opcode is %i\n", input.opcode);
-    }
-    else
-    {
-        DEBUG_PRINT("ERROR: performCOL NOT YET IMPLEMENTED!!!\n");
-        // pause(state->d, input.operand.pause);
-    }
-    return 0;
-}
-
-
-int interpretInstructions(int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS], display *d)
+int interpretInstructions(int n, Instruction instructions[IMPORT_MAX_INSTRUCTIONS], display *d, State *state)
 {
     DEBUG_PRINT("Interpreting %i instructions...\n", n);
     int i = 0;
-
-    State state =
-    {
-        .x =     0,
-        .y =     0,
-        .p = false,
-        .d = d
-    };
-    State *statePtr = &state;
-
     DEBUG_PRINT("START\n");
-    printState(statePtr);
+    printState(state);
 
     char operandStr[33];
     while (i < n && i < IMPORT_MAX_INSTRUCTIONS)
@@ -814,43 +787,43 @@ int interpretInstructions(int n, Instruction instructions[IMPORT_MAX_INSTRUCTION
             // DEBUG_PRINT("DX");
             DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.move);
             sprintf(operandStr, "%i", instruction.operand.move);
-            performDX(instruction, statePtr);
+            performDX(instruction, state);
             break;
 
         case DY:
             // DEBUG_PRINT("DY");
             sprintf(operandStr, "%i", instruction.operand.move);
             DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.move);
-            performDY(instruction, statePtr);
+            performDY(instruction, state);
             break;
 
         case DT:
             // DEBUG_PRINT("DT");
             sprintf(operandStr, "%i", instruction.operand.pause);
             DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.pause);
-            performDT(instruction, statePtr);
+            performDT(instruction, state);
             break;
 
         case PEN:
             // DEBUG_PRINT("PEN");
-            performPEN(instruction, statePtr);
+            performPEN(instruction, state);
             DEBUG_PRINT("%s\n", opcodeStringify(instruction.opcode));
             break;
 
         case CLEAR:
             // DEBUG_PRINT("CLEAR");
-            performCLEAR(instruction, statePtr);
+            performCLEAR(instruction, state);
             break;
 
         case KEY:
             // DEBUG_PRINT("KEY");
-            performKEY(instruction, statePtr);
+            performKEY(instruction, state);
             break;
 
         case COL:
-            // DEBUG_PRINT("COL");
+            DEBUG_PRINT("\n\n\n#####COL %i", instruction.operand.col);
             sprintf(operandStr, "%i", instruction.operand.col);
-            performCOL(instruction, statePtr);
+            state->col = instruction.operand.col;
             break;
 
         default:
@@ -858,7 +831,7 @@ int interpretInstructions(int n, Instruction instructions[IMPORT_MAX_INSTRUCTION
             break;
         }
         // DEBUG_PRINT("%s %s ", opcodeStringify(instruction.opcode), operandStr);
-        printState(statePtr);
+        printState(state);
 
         i++;
     }
@@ -910,7 +883,18 @@ void run(char *filename, char *test[])
 
     Instruction instructions[IMPORT_MAX_INSTRUCTIONS];
     numInstructions = bytesToInstructions(instructionBytes, instructions);
-    interpretInstructions(numInstructions, instructions, d);
+
+    State state =
+    {
+        .x   =     0,
+        .y   =     0,
+        .p   = false,
+        .d   = d,
+        .col = 0x000000FF
+    };
+    State *statePtr = &state;
+
+    interpretInstructions(numInstructions, instructions, d, statePtr);
 
     end(d);
     fclose(in);
