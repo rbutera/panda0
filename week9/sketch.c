@@ -69,11 +69,11 @@ struct Instruction {
 typedef struct State State;
 struct State {
   display * d;
-  int x;
-  int y;
+  signed int x;
+  signed int y;
   _Bool p;
-  int downX;
-  int downY;
+  signed int downX;
+  signed int downY;
 };
 
 void printBits(size_t const size, void const* const toPrint){
@@ -117,12 +117,18 @@ char *cToBinaryString(Byte input, char outputStream[9]){
 }
 
 // TODO: from http://cboard.cprogramming.com/c-programming/114077-converting-binary-string-decimal.html
-signed int binaryStringToDecimal(const char * str)
+signed int binaryStringToDecimal(char * str)
 {
+    char *initial = &str;
+    DEBUG_PRINT("\n\t\tbstd> %s = ");
     signed int val = 0;
 
-    while (*str != '\0')
-    val = 2 * val + (*str++ - '0');
+    while (*str != '\0'){
+      val = 2 * val + (*str++ - '0');
+      DEBUG_PRINT(val);
+    }
+
+    DEBUG_PRINT("\n\t \t \t ################## -> %i? ####################  \n", val);
     return val;
 }
 
@@ -161,6 +167,10 @@ _Bool operandByteHasPositive (Byte instruction){
 
 char operandPolarity (Byte x){
   return (operandByteHasPositive(x) ? '+' : '-');
+}
+
+signed int twosComplement (){
+
 }
 
 signed int moveOperandExtract (Byte input){
@@ -354,7 +364,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
 
   while(i < IMPORT_MAX_INSTRUCTIONS && !(extendedProcessing == 0 && instructions[i] == '\0')){
     Byte current = instructions[i];
-    DEBUG_PRINT("%i: ", i);
+    DEBUG_PRINT("[%i] - %i: ", numInstructions, i);
     DEBUG_PRINT(HEXIDECIMAL_FORMAT, current);
     if(extendedProcessing == 0){
       DEBUG_PRINT(" --new--\n");
@@ -397,7 +407,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
 
         // TODO: set instructionBytesRemaining
         instructionBytesRemaining = totalSize - 1;
-        DEBUG_PRINT("extended %s instruction (size %i) begin processing!\n %i bytes remain\n", opcodeStringify(extendedOpcode), totalSize, instructionBytesRemaining);
+        DEBUG_PRINT("%s[%i]\n", opcodeStringify(extendedOpcode), totalSize);
         if (totalSize == 1){
           DEBUG_PRINT("single-byte extended instruction. no operand necessary\n");
           Instruction converted;
@@ -431,20 +441,18 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
         i++;
       }
     } else { // we are still processing an extended instruction
-      DEBUG_PRINT("still processing\n");
+      // DEBUG_PRINT("still processing\n");
       if (instructionBytesRemaining > 0) { // we need to fetch more data
         int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
         int index = extendedInstructionBytesTotal - instructionBytesRemaining;
         extendedInstructionBuffer[index] = current;
         instructionBytesRemaining--;
-        DEBUG_PRINT("%i bytes remain\n", instructionBytesRemaining);
+        //DEBUG_PRINT("%i bytes remain\n", instructionBytesRemaining);
         if(instructionBytesRemaining > 0){
           i++;
-        } else {
-          DEBUG_PRINT("need to process current byte further");
         }
       } else { // we have all the data we need
-        DEBUG_PRINT("completing processing\n");
+        // DEBUG_PRINT("completing processing\n");
         int extendedOpcode = opcodeFromExtendedBuffer(extendedInstructionBuffer);
         int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
 
@@ -460,7 +468,7 @@ int bytesToInstructions (Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction
           switch(converted.opcode){
             case DX:
             case DY:
-              converted.operand.move = operand;
+              converted.operand.move = (signed int) operand;
               break;
             case DT:
               converted.operand.pause = operand;
