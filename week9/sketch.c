@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "./display.h"
-#include <string.h> // TODO: check if this is OK
+#include <string.h>
 #include <stdint.h>
 
 #ifndef IMPORT_MAX_INSTRUCTIONS
 #define IMPORT_MAX_INSTRUCTIONS    1024
 #endif
-// TODO: upgrade the run function, adding functions to support it.
 
 #ifdef DEBUG
 #define DEBUG_PRINT    printf
@@ -18,7 +17,7 @@
 
 #define HEXIDECIMAL_FORMAT    "0x%02hhx"
 
-// constants representing possible opcodes (the first two bits of an instruction byte)
+// preprocessor aliases representing possible opcodes (the first two bits of an instruction byte)
 #define DX                    0
 #define DY                    1
 #define DT                    2
@@ -30,7 +29,6 @@
 // storing bytes as unsigned chars
 typedef unsigned char   Byte;
 
-// typedef enum {DX, DY, DT, PEN} OpCode; // TODO:  enumerated type representing an opcode
 int largest(int a, int b, int c)
 {
     int largest = 0;
@@ -55,8 +53,7 @@ typedef struct Instruction   Instruction;
 struct Instruction
 {
     Byte raw;    // store a copy of the uninterpreted raw instruction
-    // OpCode opcode; // instruction opcode (first 2 bits)
-    int  opcode; // instruction opcode (first 2 bits) TODO: change to enumerated type
+    int  opcode; // instruction opcode (first 2 bits)
     union
     {
         signed int   move;
@@ -84,20 +81,18 @@ struct State
 
 void printBits(size_t const size, void const *const toPrint)
 {
-    //TODO: remove before submission
-    unsigned char *b = (unsigned char *)toPrint;
-    unsigned char byte;
-    int           i, j;
+    Byte *bytePtr = (Byte *)toPrint;
+    Byte byte;
 
-    for (i = size - 1; i >= 0; i--)
+    for (int i = size - 1; i >= 0; i--)
     {
-        for (j = 7; j >= 0; j--)
+        for (int bitOffset = 7; bitOffset >= 0; bitOffset--)
         {
-            byte = (b[i] >> j) & 1;
+            byte = (bytePtr[i] >> bitOffset) & 1;
             DEBUG_PRINT("%u", byte);
         }
     }
-    // puts("");
+    DEBUG_PRINT("\n");
 }
 
 
@@ -130,10 +125,9 @@ char *cToBinaryString(Byte input, char outputStream[9])
 }
 
 
-// TODO: from http://cboard.cprogramming.com/c-programming/114077-converting-binary-string-decimal.html
+// from http://cboard.cprogramming.com/c-programming/114077-converting-binary-string-decimal.html
 signed int binaryStringToDecimal(char *str)
 {
-    //char    *initialStr = &str[0];
     int32_t result   = 0;
     _Bool   negative = *str == '1';
     int32_t length   = 0;
@@ -236,7 +230,7 @@ signed int moveOperandExtract(Byte input)
     {
         //DEBUG_PRINT("\n ###### flip! #####\n");
 
-        // DEBUG_PRINT(" operand needs flipping because it is %c\n", operandPolarity(input));
+
         input <<= 2;
         input   = ~input;
         input >>= 2;
@@ -422,17 +416,17 @@ signed int operandExtractFromExtendedBuffer(Byte extendedInstruction[5], int tot
 {
     DEBUG_PRINT("operandExtractFromExtendedBuffer: extendedInstruction is of size %i\n", totalBytes);
     signed int result;
-    signed int resultSizeInBits = (8 * (totalBytes - 1)); //TODO: check actual size
+    signed int resultSizeInBits = (8 * (totalBytes - 1));
     char       resultAsString[resultSizeInBits];
     char       *resultPtr = resultAsString;
+    int        i; // represents the byte index
 
-    // DEBUG_PRINT("eOperand = \n");
-    for (int i = 0; i < totalBytes - 1; i++)
+
+    for (i = 0; i < totalBytes - 1; i++)
     {
-        // DEBUG_PRINT("i = %i\n", i);
         char currentByte[9];
         cToBinaryString(extendedInstruction[i + 1], currentByte);
-        // DEBUG_PRINT("+%s \n", currentByte);
+
 
         if (i != 0)
         {
@@ -506,7 +500,7 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
                 i++;
             }
             else // byte is extended
-            {// TODO: push byte to buffer
+            {
                 extendedInstructionBuffer[0] = current;
                 int totalSize      = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
                 int extendedOpcode = opcodeFromExtendedBuffer(extendedInstructionBuffer);
@@ -523,7 +517,7 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
                     switch (converted.opcode)
                     {
                     case DT:
-                        // DEBUG_PRINT("\nWTF \n");
+
                         converted.operand.pause = 0;
                         break;
 
@@ -556,7 +550,7 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
             }
         }
         else                                   // we are still processing an extended instruction
-        {                                      // DEBUG_PRINT("still processing\n");
+        {
             if (instructionBytesRemaining > 0) // we need to fetch more data
             {
                 int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
@@ -570,7 +564,7 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
                 }
             }
             else // we have all the data we need
-            {// DEBUG_PRINT("completing processing\n");
+            {
                 int extendedOpcode = opcodeFromExtendedBuffer(extendedInstructionBuffer);
                 int extendedInstructionBytesTotal = possibleExtendedSizes[extractSizeBits(extendedInstructionBuffer[0])];
 
@@ -578,7 +572,7 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
                 converted.raw    = extendedInstructionBuffer[0];
                 converted.opcode = extendedOpcode;
 
-                // TODO: combine all the data from the buffer and put into converted
+                // combine all the data from the buffer and put into converted
                 if (extendedInstructionBytesTotal > 1)
                 {
                     signed int operand;
@@ -610,7 +604,7 @@ int bytesToInstructions(Byte instructions[IMPORT_MAX_INSTRUCTIONS], Instruction 
                 }
                 // reset state variables and reset buffer
                 extendedProcessing = 0;
-                // TODO: clear buffer
+                // clear buffers
                 numInstructions++;
                 int outputIndex = numInstructions - 1;
                 DEBUG_PRINT("outputIndex%i\n", outputIndex);
@@ -745,7 +739,6 @@ int performCLEAR(Instruction input, State *state)
     }
     else
     {
-        // DEBUG_PRINT("ERROR: performCLEAR NOT YET IMPLEMENTED!!!\n");
         clear(state->d);
     }
     return 0;
@@ -760,7 +753,6 @@ int performKEY(Instruction input, State *state)
     }
     else
     {
-        // DEBUG_PRINT("ERROR: performKEY NOT YET IMPLEMENTED!!!\n");
         key(state->d);
     }
     return 0;
@@ -779,44 +771,44 @@ int interpretInstructions(int n, Instruction instructions[IMPORT_MAX_INSTRUCTION
     {
         DEBUG_PRINT("%i: ", i);
         Instruction instruction = instructions[i];
-        // DEBUG_PRINT("%i", instruction.opcode);
+
 
         switch (instruction.opcode)
         {
         case DX:
-            // DEBUG_PRINT("DX");
+
             DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.move);
             sprintf(operandStr, "%i", instruction.operand.move);
             performDX(instruction, state);
             break;
 
         case DY:
-            // DEBUG_PRINT("DY");
+
             sprintf(operandStr, "%i", instruction.operand.move);
             DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.move);
             performDY(instruction, state);
             break;
 
         case DT:
-            // DEBUG_PRINT("DT");
+
             sprintf(operandStr, "%i", instruction.operand.pause);
             DEBUG_PRINT("%s %i\n", opcodeStringify(instruction.opcode), instruction.operand.pause);
             performDT(instruction, state);
             break;
 
         case PEN:
-            // DEBUG_PRINT("PEN");
+
             performPEN(instruction, state);
             DEBUG_PRINT("%s\n", opcodeStringify(instruction.opcode));
             break;
 
         case CLEAR:
-            // DEBUG_PRINT("CLEAR");
+
             performCLEAR(instruction, state);
             break;
 
         case KEY:
-            // DEBUG_PRINT("KEY");
+
             performKEY(instruction, state);
             break;
 
@@ -830,7 +822,7 @@ int interpretInstructions(int n, Instruction instructions[IMPORT_MAX_INSTRUCTION
             DEBUG_PRINT("interpretInstructions ERROR\n");
             break;
         }
-        // DEBUG_PRINT("%s %s ", opcodeStringify(instruction.opcode), operandStr);
+
         printState(state);
 
         i++;
