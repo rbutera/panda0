@@ -76,5 +76,3 @@ void deleteAfter(list *l);
 // Unit testing.  Test the module, returning the number of tests passed.  If a
 // test fails, print out a message and stop the program.
 int testLists();
-
-void *

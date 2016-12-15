@@ -20,4 +20,7 @@ struct list
 
 list *newList(int b)
 {
+    list *output = malloc(sizeof list);
+
+    return output;
 }

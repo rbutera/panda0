@@ -14,7 +14,7 @@ static char *test_check_testing_works()
 
 static char *test_newList()
 {
-    mu_assert("New list works", false);
+    mu_assert("New list does not work", 999 == 998);
     return 0;
 }
 
@@ -33,7 +33,7 @@ int testLists()
 
     if (result != 0)
     {
-        printf("TEST FAIL: %s\n", result);
+        printf("FAIL: %s\n", result);
     }
     else
     {
