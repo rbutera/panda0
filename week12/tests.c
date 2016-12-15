@@ -2,28 +2,27 @@
 #include "list.h"
 #include "minunit.h"
 
-int tests_run = 0;
-int foo       = 7;
-int bar       = 4;
+int tests_run    = 0;
+int tests_failed = 0;
 
-static char *test_foo()
+static char *test_check_testing_works()
 {
-    mu_assert("error, foo != 7", foo == 7);
+    mu_assert("Error, testing does not work", 7 == 7);
     return 0;
 }
 
 
-static char *test_bar()
+static char *test_newList()
 {
-    mu_assert("error, bar != 5", bar == 5);
+    mu_assert("Error, bar != 5", 4 == 5);
     return 0;
 }
 
 
 static char *all_tests()
 {
-    mu_run_test(test_foo);
-    mu_run_test(test_bar);
+    mu_run_test(test_check_testing_works);
+    mu_run_test(test_newList);
     return 0;
 }
 
@@ -40,7 +39,7 @@ int testLists()
     {
         printf("ALL TESTS PASSED\n");
     }
-    printf("Tests run: %d\n", tests_run);
+    printf("\nTests:\n\trun: %d\n\tpassed: %i\n\tfailed: %i\n", tests_run, tests_run - tests_failed, tests_failed);
 
     return result != 0;
 }
