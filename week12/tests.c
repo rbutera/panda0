@@ -7,14 +7,14 @@ int tests_failed = 0;
 
 static char *test_check_testing_works()
 {
-    mu_assert("Error, testing does not work", 7 == 7);
+    mu_assert("Testing does not work", 7 == 7);
     return 0;
 }
 
 
 static char *test_newList()
 {
-    mu_assert("Error, bar != 5", 4 == 5);
+    mu_assert("New list works", false);
     return 0;
 }
 
@@ -33,7 +33,7 @@ int testLists()
 
     if (result != 0)
     {
-        printf("%s\n", result);
+        printf("TEST FAIL: %s\n", result);
     }
     else
     {

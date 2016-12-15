@@ -29,6 +29,8 @@ The lists provided by this module are not thread safe.
 // The list type is opaque (declared here, and defined in list.c).
 struct list;
 typedef struct list list;
+struct node;
+typedef struct node   node;
 
 // Create a new empty list.  The argument is the size of an item in bytes.
 list *newList(int b);
@@ -74,3 +76,5 @@ void deleteAfter(list *l);
 // Unit testing.  Test the module, returning the number of tests passed.  If a
 // test fails, print out a message and stop the program.
 int testLists();
+
+void *
