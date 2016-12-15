@@ -21,6 +21,11 @@ struct list
 list *newList(int b)
 {
     list *output = malloc(sizeof list);
-
+    node startNode;
+    node endNode;
+    node *startNodePtr;
+    node *endNodePtr;
+    output->start = startNodePtr;
+    output->end = endNodePtr;
     return output;
 }
