@@ -1,0 +1,10 @@
+[
+  {
+    "files": "**/*.c",
+    "command": "gcc -std=c99 -pedantic -O3 -Wall ${srcFile} -o ${destFileWithoutExtension}"
+  },
+  {
+    "files": "*.c",
+    "command": "gcc -std=c99 -pedantic -O3 -Wall ${srcFile} -o ${destFileWithoutExtension}"
+  }
+]

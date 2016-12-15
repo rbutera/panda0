@@ -34,6 +34,7 @@ typedef struct node   node;
 
 // Create a new empty list.  The argument is the size of an item in bytes.
 list *newList(int b);
+int removeList(list *l);
 
 // Set the current position before the first item or after the last item, e.g.
 // to begin a forward or backward traversal.
