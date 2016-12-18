@@ -126,18 +126,6 @@ static char *test_newList()
     mu_assert("creates a startnode with isSentinel == true", exampleList->start->isSentinel == true);
     mu_assert("creates end node", exampleList->end != NULL);
     mu_assert("creates end node with isSentinel == true", exampleList->end->isSentinel == true);
-
-    /*
-     * DEBUG_PRINT("exampleList = %p\n", exampleList);
-     * DEBUG_PRINT("exampleList->start \t= %p\n", exampleList->start);
-     * DEBUG_PRINT("exampleList->current \t= %p\n", exampleList->current);
-     * DEBUG_PRINT("exampleList->start->prev\t= %p\n", exampleList->start->prev);
-     * DEBUG_PRINT("exampleList->start->next\t= %p\n", exampleList->start->next);
-     * DEBUG_PRINT("exampleList->end\t= %p\n", exampleList->end);
-     * DEBUG_PRINT("exampleList->end->prev\t= %p\n", exampleList->end->prev);
-     * DEBUG_PRINT("exampleList->end->next\t= %p\n", exampleList->end->next);
-     */
-    mu_assert("end node 'prev' points to start (exampleList->end->prev != exampleList->start)", exampleList->end->prev == exampleList->start);
     mu_assert("start node 'next' points to start (exampleList->start->next != exampleList->end)", exampleList->start->next == exampleList->end);
     mu_assert("current node is start node", exampleList->start == exampleList->current);
     return 0;
@@ -211,7 +199,7 @@ int testLists()
     }
     printf("-----------------------------------------------------\nTests:\n\trun: %d\n\tpassed: %i\n\tfailed: %i\n-----------------------------------------------------\n", tests_run, tests_run - tests_failed, tests_failed);
 
-    return result != 0;
+    return tests_run - tests_failed;
 }
 
 
