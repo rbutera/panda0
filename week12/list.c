@@ -204,12 +204,12 @@ void insertAfter(list *l, void *p)
 // error to call getBefore when at the start, or getAfter when at the end.
 void getBefore(list *l, void *p)
 {
-    printList(l);
+    // printList(l);
 
     if (!atStart(l))
     {
         memcpy(p, l->current->prev->data, l->itemSize);
-        DEBUG_PRINT("\ngetBefore:\nl->c->p->d = %s\nl->itemSize = %i", l->current->prev->data, l->itemSize);
+        // DEBUG_PRINT("\ngetBefore:\nl->c->p->d = %s\nl->itemSize = %i", l->current->prev->data, l->itemSize);
     }
     else
     {
@@ -220,7 +220,14 @@ void getBefore(list *l, void *p)
 
 void getAfter(list *l, void *p)
 {
-    DEBUG_PRINT("getAfter\n");
+    if (!atEnd(l))
+    {
+        memcpy(p, l->current->next->data, l->itemSize);
+    }
+    else
+    {
+        strcpy(p, "ERROR");
+    }
 }
 
 

@@ -282,7 +282,7 @@ static char *test_getBefore()
     list *edgeCase = scaffold();
     edgeCase->current = edgeCase->start->next;
     getBefore(edgeCase, edgeCaseBuffer);
-    DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+    // DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
     mu_assert("getBefore fails if used at start of list", edgeCaseBuffer[0] != "f");
     mu_assert("getBefore copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
     return 0;
