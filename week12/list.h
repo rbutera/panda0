@@ -28,8 +28,26 @@ The lists provided by this module are not thread safe.
 
 // The list type is opaque (declared here, and defined in list.c).
 struct list;
-typedef struct list list;
 struct node;
+
+struct node
+{
+    void *data;
+    node *prev;
+    node *next;
+    int  id;
+    bool isSentinel;
+};
+
+struct list
+{
+    int  itemSize;
+    node *current;
+    node *start;
+    node *end;
+};
+
+typedef struct list list;
 typedef struct node   node;
 
 // Create a new empty list.  The argument is the size of an item in bytes.
