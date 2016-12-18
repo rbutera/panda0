@@ -141,7 +141,16 @@ void backward(list *l)
 // item).  The second argument is a pointer to the item to be copied.
 void insertBefore(list *l, void *p)
 {
-    DEBUG_PRINT("insertBefore\n");
+    node *prevCopy = l->current->prev;
+    node *nextCopy = l->current->next;
+
+    // create new node, setting next to the encumbent current, and prev to the encumbent current's predecessor
+    node *created = newNode(p, prevCopy, l->current);
+
+    // update encumbent current's prev value to new node
+    l->current->prev = created;
+    // update the previous value's next pointer to the new node
+    l->current->next = created;
 }
 
 
