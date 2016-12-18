@@ -11,6 +11,8 @@
 #define DEBUG_PRINT(...)
 #endif
 
+int NUMBER_OF_NODES = 0;
+
 
 /********************************************************************************
 *  BEGIN IMPLEMENTATION CODE
@@ -21,6 +23,7 @@ struct node
     node *prev;
     node *next;
     int  wtf;
+    bool isSentinel;
 };
 
 struct list
@@ -31,6 +34,27 @@ struct list
     node *end;
 };
 
+node *newNode(int b, node *prev, node *next, void *data)
+{
+    node *output = malloc(sizeof(node));
+
+    output->wtf        = NUMBER_OF_NODES++;
+    output->data       = data;
+    output->prev       = prev;
+    output->next       = next;
+    output->isSentinel = false;
+    return output;
+}
+
+
+int *deleteNode(node *input)
+{
+    DEBUG_PRINT("deleting node\n");
+    free(input);
+    return 0;
+}
+
+
 /**
  * create a new list of items of a specified size
  * @param  b size of each item in bytes
@@ -39,12 +63,15 @@ struct list
 list *newList(int b)
 {
     // DEBUG_PRINT("creating list of size %i\n", b);
-    list *output    = malloc(sizeof(struct list) + 1);
-    node *startNode = malloc(sizeof(node) + 1);
-    node *endNode   = malloc(sizeof(node) + 1);
+    list *output    = malloc(sizeof(struct list));
+    node *startNode = malloc(sizeof(node));
+    node *endNode   = malloc(sizeof(node));
 
-    // startNode->next = endNode;
-    // endNode->prev   = startNode;
+    startNode->isSentinel = true;
+    startNode->next       = endNode;
+
+    endNode->isSentinel = true;
+    endNode->prev       = startNode;
 
     output->itemSize = b;
     output->start    = startNode;
@@ -84,7 +111,9 @@ static char *test_newList()
     mu_assert("New list works", 999 == 999);
     mu_assert("itemSize valid", exampleList->itemSize == exampleSize);
     mu_assert("creates start nodes", exampleList->start != NULL);
+    mu_assert("creates a startnode with isSentinel == true", exampleList->start->isSentinel == true);
     mu_assert("creates end node", exampleList->end != NULL);
+    mu_assert("creates end node with isSentinel == true", exampleList->end->isSentinel == true);
 
     /*
      * DEBUG_PRINT("exampleList = %p\n", exampleList);
