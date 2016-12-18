@@ -25,6 +25,8 @@ it may be convenient to define synonyms such as:
 The lists provided by this module are not thread safe.
 */
 #include <stdbool.h>
+#ifndef LIST_H_
+#define LIST_H_
 
 // The list type is opaque (declared here, and defined in list.c).
 struct list;
@@ -95,3 +97,5 @@ void deleteAfter(list *l);
 // Unit testing.  Test the module, returning the number of tests passed.  If a
 // test fails, print out a message and stop the program.
 int testLists();
+
+#endif
