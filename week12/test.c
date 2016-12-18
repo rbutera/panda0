@@ -154,116 +154,116 @@ static char *test_atStart()
 }
 
 
-// static char *test_atEnd()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("atEnd implemented", false);
-//     mu_assert("atEnd returns true if at end->prev", false);
-//     mu_assert("atEnd returns false if not at end->prev", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_forward()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("forward implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_backward()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("backward implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_insertBefore()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("insertBefore implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_insertAfter()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("insertAfter implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_getBefore()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("getBefore implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_getAfter()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("getAfter implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_setBefore()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("setBefore implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_setAfter()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("setAfter implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_deleteBefore()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("deleteBefore implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
-// static char *test_deleteAfter()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("deleteAfter implemented", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
+static char *test_atEnd()
+{
+    list *example = scaffold();
+
+    mu_assert("atEnd implemented", false);
+    mu_assert("atEnd returns true if at end->prev", false);
+    mu_assert("atEnd returns false if not at end->prev", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_forward()
+{
+    list *example = scaffold();
+
+    mu_assert("forward implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_backward()
+{
+    list *example = scaffold();
+
+    mu_assert("backward implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_insertBefore()
+{
+    list *example = scaffold();
+
+    mu_assert("insertBefore implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_insertAfter()
+{
+    list *example = scaffold();
+
+    mu_assert("insertAfter implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_getBefore()
+{
+    list *example = scaffold();
+
+    mu_assert("getBefore implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_getAfter()
+{
+    list *example = scaffold();
+
+    mu_assert("getAfter implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_setBefore()
+{
+    list *example = scaffold();
+
+    mu_assert("setBefore implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_setAfter()
+{
+    list *example = scaffold();
+
+    mu_assert("setAfter implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_deleteBefore()
+{
+    list *example = scaffold();
+
+    mu_assert("deleteBefore implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
+static char *test_deleteAfter()
+{
+    list *example = scaffold();
+
+    mu_assert("deleteAfter implemented", false);
+    // cleanupScaffold(example);
+    return 0;
+}
 
 
 static char *all_tests()
@@ -274,18 +274,18 @@ static char *all_tests()
     mu_run_suite(test_newNode);
     mu_run_suite(test_start);
     mu_run_suite(test_end);
-    // mu_run_suite(test_atStart);
-    // mu_run_suite(test_atEnd);
-    // mu_run_suite(test_forward);
-    // mu_run_suite(test_backward);
-    // mu_run_suite(test_insertBefore);
-    // mu_run_suite(test_insertAfter);
-    // mu_run_suite(test_getBefore);
-    // mu_run_suite(test_getAfter);
-    // mu_run_suite(test_setBefore);
-    // mu_run_suite(test_setAfter);
-    // mu_run_suite(test_deleteBefore);
-    // mu_run_suite(test_deleteAfter);
+    mu_run_suite(test_atStart);
+    mu_run_suite(test_atEnd);
+    mu_run_suite(test_forward);
+    mu_run_suite(test_backward);
+    mu_run_suite(test_insertBefore);
+    mu_run_suite(test_insertAfter);
+    mu_run_suite(test_getBefore);
+    mu_run_suite(test_getAfter);
+    mu_run_suite(test_setBefore);
+    mu_run_suite(test_setAfter);
+    mu_run_suite(test_deleteBefore);
+    mu_run_suite(test_deleteAfter);
     return 0;
 }
 

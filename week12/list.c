@@ -92,13 +92,13 @@ void end(list *l)
 // whether a traversal has finished.
 bool atStart(list *l)
 {
-    DEBUG_PRINT("atStart\n");
+    return false;
 }
 
 
 bool atEnd(list *l)
 {
-    DEBUG_PRINT("atEnd\n");
+    return false;
 }
 
 
