@@ -128,7 +128,7 @@ static char *test_end()
 
     example->current = example->start;
 
-    DEBUG_PRINT("%s\n", example->current->next->data);
+    // DEBUG_PRINT("%s\n", example->current->next->data);
 
     mu_assert("initial value of current incorrect for end", strcmp(example->current->next->data, "first") == 0);
     end(example);
@@ -139,20 +139,21 @@ static char *test_end()
 }
 
 
-//
-//
-// static char *test_atStart()
-// {
-//     list *example = scaffold();
-//
-//     mu_assert("atStart implemented", false);
-//     mu_assert("atStart returns true if at start->next", false);
-//     mu_assert("atStart returns true if not at start->next", false);
-//     // cleanupScaffold(example);
-//     return 0;
-// }
-//
-//
+static char *test_atStart()
+{
+    list *example = scaffold();
+
+    example->current = example->start->next;
+    mu_assert("atStart returns true if at start->next", atStart(example));
+    example->current = example->current->next;
+    mu_assert("atStart returns true if not at start->next", atStart(example));
+    example->current = example->current->next;
+    mu_assert("atStart returns true if not at start->next (again)", atStart(example));
+    // cleanupScaffold(example);
+    return 0;
+}
+
+
 // static char *test_atEnd()
 // {
 //     list *example = scaffold();
