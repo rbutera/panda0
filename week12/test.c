@@ -304,7 +304,7 @@ static char *test_getAfter()
     list *edgeCase = scaffold();
     edgeCase->current = edgeCase->end->prev;
     getAfter(edgeCase, edgeCaseBuffer);
-    DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+    // DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
     mu_assert("getAfter fails if used at start of list", edgeCaseBuffer[0] != "t");
     mu_assert("getAfter copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
     return 0;
@@ -313,42 +313,90 @@ static char *test_getAfter()
 
 static char *test_setBefore()
 {
-  list *example = scaffold();
-  char buffer[100]; // where we will copy test values to
+    list *example = scaffold();
+    char buffer[100]; // where we will copy test values to
 
-  // typical example. getting first value by getBefore the second value
-  example->current = example->start->next->next; // should be "second"
-  setBefore(example, "surprise");
-  getBefore(example, buffer);
-  mu_assert("getBefore can get the typical case", strcmp(buffer, "surprise") == 0);
+    // typical example. getting first value by getBefore the second value
+    example->current = example->start->next->next; // should be "second"
+    setBefore(example, "surprise");
+    getBefore(example, buffer);
+    mu_assert("getBefore can get the typical case", strcmp(buffer, "surprise") == 0);
 
-  // edge case: getBefore at start of list should not work
-  char edgeCaseBuffer[100];
-  list *edgeCase = scaffold();
-  edgeCase->current = edgeCase->start->next;
-  setBefore(example, "mofukka");
-  getBefore(edgeCase, edgeCaseBuffer);
-  // DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
-  mu_assert("getBefore fails if used at start of list", edgeCaseBuffer[0] != "m");
-  mu_assert("getBefore copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
-  return 0;
+    // edge case: getBefore at start of list should not work
+    char edgeCaseBuffer[100];
+    list *edgeCase = scaffold();
+    edgeCase->current = edgeCase->start->next;
+    setBefore(example, "mofukka");
+    getBefore(edgeCase, edgeCaseBuffer);
+    // DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+    mu_assert("getBefore fails if used at start of list", edgeCaseBuffer[0] != "m");
+    mu_assert("getBefore copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
+    return 0;
 }
 
 
 static char *test_setAfter()
 {
     list *example = scaffold();
+    char buffer[100]; // where we will copy test values to
 
-    mu_assert("setAfter implemented", false);
-    // cleanupScaffold(example);
+    // typical example. getting first value by setAfter the second value
+    example->current = example->start->next->next; // should be "second"
+    setAfter(example, "good luck");
+    getAfter(example, buffer);
+    mu_assert("setAfter can get the typical case", strcmp(buffer, "good luck") == 0);
+
+    // edge case: setAfter at start of list should not work
+    char edgeCaseBuffer[100];
+    list *edgeCase = scaffold();
+    edgeCase->current = edgeCase->end->prev;
+    setAfter(edgeCase, "have fun");
+    getAfter(edgeCase, edgeCaseBuffer);
+    // DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+    mu_assert("setAfter fails if used at start of list", edgeCaseBuffer[0] != "t");
+    mu_assert("setAfter copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
     return 0;
 }
 
 
 static char *test_deleteBefore()
 {
-    list *example = scaffold();
+    node *deletedPrev;
 
+    // deleteBefore at end
+    list *endExample = scaffold();
+
+    end(endExample);
+    deletedPrev = endExample->current->prev->prev;
+    deleteBefore(endExample);
+
+    // check current's prev is set to the deleted note's prev
+    mu_assert("deleteBefore end: current's prev is set to the deleted note's prev", endExample->current->prev == deletedPrev);
+    // check deleted note's prev points to to the current node
+    mu_assert("deleteBefore end: deleted note's prev points to to the current node", deletedPrev->next == endExample->current);
+
+    // deleteBefore in the middle
+    list *middleExample = scaffold();
+
+    start(middleExample);
+    forward(middleExample);
+    deletedPrev = endExample->current->prev->prev;
+    deleteBefore(middleExample);
+    mu_assert("deleteBefore middle: first element no longer exists #1", strcmp(middleExample->start->next->data, "first") == 1);
+    mu_assert("deleteBefore middle: first element no longer exists #2", strcmp(middleExample->start->next->data, "second") == 0);
+    // check current's prev is set to the deleted note's prev
+    mu_assert("deleteBefore middle: current's prev is set to the deleted note's prev", middleExample->current->prev == deletedPrev);
+    // check deleted note's prev points to to the current node
+    mu_assert("deleteBefore middle: deleted note's prev points to to the current node", deletedPrev->next == middleExample->current);
+
+    // deleteBefore at start - shouldn't work
+    list *startExample = scaffold();
+    start(startExample);
+    deleteBefore(startExample);
+    // check list still has 3 elements
+    mu_assert("deleteBefore edgecase: first element still exists", strcmp(startExample->start->next->data, "first") == 0);
+    mu_assert("deleteBefore edgecase: first element still exists", strcmp(startExample->start->next->next->data, "second") == 0);
+    mu_assert("deleteBefore edgecase: first element still exists", strcmp(startExample->start->next->next->data, "third") == 0);
     mu_assert("deleteBefore implemented", false);
     // cleanupScaffold(example);
     return 0;

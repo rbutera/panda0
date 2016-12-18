@@ -236,13 +236,27 @@ void getAfter(list *l, void *p)
 // call setBefore when at the start, or setAfter when at the end.
 void setBefore(list *l, void *p)
 {
-    DEBUG_PRINT("setBefore\n");
+    if (!atStart(l))
+    {
+        l->current->prev->data = p;
+    }
+    else
+    {
+        // DEBUG_PRINT("ERROR: setBefore used at start of a list!\n");
+    }
 }
 
 
 void setAfter(list *l, void *p)
 {
-    DEBUG_PRINT("setAfter\n");
+    if (!atEnd(l))
+    {
+        l->current->next->data = p;
+    }
+    else
+    {
+        // DEBUG_PRINT("ERROR: setAfter used at end of list!\n");
+    }
 }
 
 
