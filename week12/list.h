@@ -32,25 +32,22 @@ The lists provided by this module are not thread safe.
 struct list;
 struct node;
 
-struct node
+typedef struct node
 {
     void *data;
-    node *prev;
-    node *next;
+    struct node *prev;
+    struct node *next;
     int  id;
     bool isSentinel;
-};
+} Node;
 
-struct list
+typedef struct list
 {
     int  itemSize;
-    node *current;
-    node *start;
-    node *end;
-};
-
-typedef struct list list;
-typedef struct node   node;
+    struct node *current;
+    struct node *start;
+    struct node *end;
+} List;
 
 // Create a new empty list.  The argument is the size of an item in bytes.
 list *newList(int b);

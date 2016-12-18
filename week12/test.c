@@ -23,11 +23,11 @@ static char *test_newList()
     mu_assert("New list works", 999 == 999);
     mu_assert("itemSize valid", exampleList->itemSize == exampleSize);
     mu_assert("creates start nodes", exampleList->start != NULL);
-    mu_assert("creates a startnode with isSentinel == true", exampleList->start->isSentinel == true);
+    mu_assert("creates a startNode with isSentinel == true", exampleList->start->isSentinel == true);
     mu_assert("creates end node", exampleList->end != NULL);
-    mu_assert("creates end node with isSentinel == true", exampleList->end->isSentinel == true);
-    mu_assert("start node 'next' points to start (exampleList->start->next != exampleList->end)", exampleList->start->next == exampleList->end);
-    mu_assert("current node is start node", exampleList->start == exampleList->current);
+    mu_assert("creates end Node with isSentinel == true", exampleList->end->isSentinel == true);
+    mu_assert("start Node 'next' points to start (exampleList->start->next != exampleList->end)", exampleList->start->next == exampleList->end);
+    mu_assert("current Node is start node", exampleList->start == exampleList->current);
     return 0;
 }
 
@@ -44,16 +44,16 @@ static char *test_newNode()
     char *cData = malloc((sizeof(char) * 10) + 8);
     cData = "Raimondo";
 
-    node *a = newNode(aData, nodeless->start, nodeless->end);
-    node *b = newNode(bData, a, nodeless->end);
-    node *c = newNode(cData, b, nodeless->end);
+    Node *a = newNode(aData, nodeless->start, nodeless->end);
+    Node *b = newNode(bData, a, nodeless->end);
+    Node *c = newNode(cData, b, nodeless->end);
     a->next = b;
     b->next = c;
 
     mu_assert("newNode works", 999 == 999);
-    // DEBUG_PRINT("nodeless node ids: %i %i %i\n", nodeless->start->next->id, nodeless->start->next->next->id, nodeless->start->next->next->next->id);
-    // DEBUG_PRINT("node ids: %i %i %i", a->id, b->id, c->id);
-    mu_assert("newNode creates a node with an id", a->id == 0);
+    // DEBUG_PRINT("nodeless Node ids: %i %i %i\n", nodeless->start->next->id, nodeless->start->next->next->id, nodeless->start->next->next->next->id);
+    // DEBUG_PRINT("Node ids: %i %i %i", a->id, b->id, c->id);
+    mu_assert("newNode creates a Node with an id", a->id == 0);
     mu_assert("the id increments with each new node", b->id == 1 && c->id == 2);
     mu_assert("newNode sets isSentinel to false", a->isSentinel == false);
     mu_assert("newNode sets prev", a->prev == nodeless->start);
