@@ -313,11 +313,25 @@ static char *test_getAfter()
 
 static char *test_setBefore()
 {
-    list *example = scaffold();
+  list *example = scaffold();
+  char buffer[100]; // where we will copy test values to
 
-    mu_assert("setBefore implemented", false);
-    // cleanupScaffold(example);
-    return 0;
+  // typical example. getting first value by getBefore the second value
+  example->current = example->start->next->next; // should be "second"
+  setBefore(example, "surprise");
+  getBefore(example, buffer);
+  mu_assert("getBefore can get the typical case", strcmp(buffer, "surprise") == 0);
+
+  // edge case: getBefore at start of list should not work
+  char edgeCaseBuffer[100];
+  list *edgeCase = scaffold();
+  edgeCase->current = edgeCase->start->next;
+  setBefore(example, "mofukka");
+  getBefore(edgeCase, edgeCaseBuffer);
+  // DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+  mu_assert("getBefore fails if used at start of list", edgeCaseBuffer[0] != "m");
+  mu_assert("getBefore copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
+  return 0;
 }
 
 
