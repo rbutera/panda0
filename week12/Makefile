@@ -11,8 +11,8 @@ default: all
 all: list.o test.o
 	$(CC) $(CFLAGS) -o list list.o test.o
 
-list.o: list.h list.c
+list.o: raibutera.h minunit.h list.h list.c
 	$(CC) $(CFLAGS) -o list.o list.c -c
 
-test.o: list.h test.c
+test.o: raibutera.h minunit.h list.h test.c
 	$(CC) $(CFLAGS) -o test.o test.c -c

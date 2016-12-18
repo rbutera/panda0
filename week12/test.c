@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int tests_run    = 0;
-int tests_failed = 0;
+int tests_run     = 0;
+int tests_failed  = 0;
+int suites_run    = 0;
+int suites_failed = 0;
 
 static char *test_check_testing_works()
 {
@@ -76,124 +78,213 @@ static char *test_removeList()
 }
 
 
+/**
+ * Scaffold a mock list for testing - runs before each of the tests below
+ * @return [description]
+ */
+list *scaffold()
+{
+    list *nodeless = newList(99);
+
+    char *aData = malloc((sizeof(char) * 5) + 1);
+    char *bData = malloc((sizeof(char) * 6) + 1);
+    char *cData = malloc((sizeof(char) * 5) + 1);
+
+    aData = "first";
+    bData = "second";
+    cData = "third";
+
+    node *a = newNode(aData, nodeless->start, nodeless->end);
+    node *b = newNode(bData, a, nodeless->end);
+    node *c = newNode(cData, b, nodeless->end);
+
+    nodeless->start->next = a;
+    nodeless->end->prev   = c;
+    a->next = b;
+    b->next = c;
+
+    return nodeless;
+}
+
+
 static char *test_start()
 {
-    mu_assert("start implemented", false);
+    list *example = scaffold();
+
+    example->current = example->start->next->next;
+    DEBUG_PRINT("%s\n", example->current->data);
+    mu_assert("initial value of current incorrect for start", strcmp(example->current->data, "second") == 0);
+    start(example);
+    mu_assert("start sets list current to start->next", strcmp(example->current->data, "first") == 0);
+    mu_assert("start sets list current to start->next (checking data)", example->current == example->start->next);
+    // cleanupScaffold(example);
     return 0;
 }
 
 
 static char *test_end()
 {
-    mu_assert("end implemented", false);
+    list *example = scaffold();
+
+    example->current = example->start;
+
+    DEBUG_PRINT("%s\n", example->current->next->data);
+
+    mu_assert("initial value of current incorrect for end", strcmp(example->current->next->data, "first") == 0);
+    end(example);
+    mu_assert("end sets list current to end->prev", strcmp(example->current->data, "third") == 0);
+    mu_assert("end sets list current to end->prev (checking data)", example->current == example->end->prev);
+    // cleanupScaffold(example);
     return 0;
 }
 
 
-static char *test_atStart()
-{
-    mu_assert("atStart implemented", false);
-    return 0;
-}
-
-
-static char *test_atEnd()
-{
-    mu_assert("atEnd implemented", false);
-    return 0;
-}
-
-
-static char *test_forward()
-{
-    mu_assert("forward implemented", false);
-    return 0;
-}
-
-
-static char *test_backward()
-{
-    mu_assert("backward implemented", false);
-    return 0;
-}
-
-
-static char *test_insertBefore()
-{
-    mu_assert("insertBefore implemented", false);
-    return 0;
-}
-
-
-static char *test_insertAfter()
-{
-    mu_assert("insertAfter implemented", false);
-    return 0;
-}
-
-
-static char *test_getBefore()
-{
-    mu_assert("getBefore implemented", false);
-    return 0;
-}
-
-
-static char *test_getAfter()
-{
-    mu_assert("getAfter implemented", false);
-    return 0;
-}
-
-
-static char *test_setBefore()
-{
-    mu_assert("setBefore implemented", false);
-    return 0;
-}
-
-
-static char *test_setAfter()
-{
-    mu_assert("setAfter implemented", false);
-    return 0;
-}
-
-
-static char *test_deleteBefore()
-{
-    mu_assert("deleteBefore implemented", false);
-    return 0;
-}
-
-
-static char *test_deleteAfter()
-{
-    mu_assert("deleteAfter implemented", false);
-    return 0;
-}
+//
+//
+// static char *test_atStart()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("atStart implemented", false);
+//     mu_assert("atStart returns true if at start->next", false);
+//     mu_assert("atStart returns true if not at start->next", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_atEnd()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("atEnd implemented", false);
+//     mu_assert("atEnd returns true if at end->prev", false);
+//     mu_assert("atEnd returns false if not at end->prev", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_forward()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("forward implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_backward()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("backward implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_insertBefore()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("insertBefore implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_insertAfter()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("insertAfter implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_getBefore()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("getBefore implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_getAfter()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("getAfter implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_setBefore()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("setBefore implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_setAfter()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("setAfter implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_deleteBefore()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("deleteBefore implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
+//
+//
+// static char *test_deleteAfter()
+// {
+//     list *example = scaffold();
+//
+//     mu_assert("deleteAfter implemented", false);
+//     // cleanupScaffold(example);
+//     return 0;
+// }
 
 
 static char *all_tests()
 {
-    mu_run_test(test_check_testing_works);
-    mu_run_test(test_newList);
-    mu_run_test(test_removeList);
-    mu_run_test(test_newNode);
-    mu_run_test(test_start);
-    mu_run_test(test_end);
-    mu_run_test(test_atStart);
-    mu_run_test(test_atEnd);
-    mu_run_test(test_forward);
-    mu_run_test(test_backward);
-    mu_run_test(test_insertBefore);
-    mu_run_test(test_insertAfter);
-    mu_run_test(test_getBefore);
-    mu_run_test(test_getAfter);
-    mu_run_test(test_setBefore);
-    mu_run_test(test_setAfter);
-    mu_run_test(test_deleteBefore);
-    mu_run_test(test_deleteAfter);
+    mu_run_suite(test_check_testing_works);
+    mu_run_suite(test_newList);
+    mu_run_suite(test_removeList);
+    mu_run_suite(test_newNode);
+    mu_run_suite(test_start);
+    mu_run_suite(test_end);
+    // mu_run_suite(test_atStart);
+    // mu_run_suite(test_atEnd);
+    // mu_run_suite(test_forward);
+    // mu_run_suite(test_backward);
+    // mu_run_suite(test_insertBefore);
+    // mu_run_suite(test_insertAfter);
+    // mu_run_suite(test_getBefore);
+    // mu_run_suite(test_getAfter);
+    // mu_run_suite(test_setBefore);
+    // mu_run_suite(test_setAfter);
+    // mu_run_suite(test_deleteBefore);
+    // mu_run_suite(test_deleteAfter);
     return 0;
 }
 
@@ -210,7 +301,7 @@ int testLists()
     {
         printf("ALL TESTS PASSED\n");
     }
-    printf("-----------------------------------------------------\nTests:\n\trun: %d\n\tpassed: %i\n\tfailed: %i\n-----------------------------------------------------\n", tests_run, tests_run - tests_failed, tests_failed);
+    printf("%i tests passed.\n", tests_run - tests_failed);
 
     return tests_run - tests_failed;
 }
