@@ -292,9 +292,21 @@ static char *test_getBefore()
 static char *test_getAfter()
 {
     list *example = scaffold();
+    char buffer[100]; // where we will copy test values to
 
-    mu_assert("getAfter implemented", false);
-    // cleanupScaffold(example);
+    // typical example. getting first value by getAfter the second value
+    example->current = example->start->next->next; // should be "second"
+    getAfter(example, buffer);
+    mu_assert("getAfter can get the typical case", strcmp(buffer, "third") == 0);
+
+    // edge case: getAfter at start of list should not work
+    char edgeCaseBuffer[100];
+    list *edgeCase = scaffold();
+    edgeCase->current = edgeCase->end->prev;
+    getAfter(edgeCase, edgeCaseBuffer);
+    DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+    mu_assert("getAfter fails if used at start of list", edgeCaseBuffer[0] != "t");
+    mu_assert("getAfter copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
     return 0;
 }
 
