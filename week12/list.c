@@ -1,6 +1,7 @@
 #include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "minunit.h"
 
 #define DEBUG          1
@@ -22,7 +23,7 @@ struct node
     void *data;
     node *prev;
     node *next;
-    int  wtf;
+    int  id;
     bool isSentinel;
 };
 
@@ -34,15 +35,26 @@ struct list
     node *end;
 };
 
-node *newNode(int b, node *prev, node *next, void *data)
+node *newNode(void *data, node *prev, node *next)
 {
     node *output = malloc(sizeof(node));
 
-    output->wtf        = NUMBER_OF_NODES++;
-    output->data       = data;
-    output->prev       = prev;
-    output->next       = next;
+    output->id         = NUMBER_OF_NODES++;
     output->isSentinel = false;
+
+    if (data != NULL)
+    {
+        output->data = data;
+    }
+    if (prev != NULL)
+    {
+        output->prev = prev;
+    }
+    if (next != NULL)
+    {
+        output->next = next;
+    }
+
     return output;
 }
 
@@ -132,11 +144,45 @@ static char *test_newList()
 }
 
 
+static char *test_newNode()
+{
+    list *nodeless = newList(99);
+
+    char *aData = malloc((sizeof(char) * 3) + 1);
+
+    aData = "foo";
+    char *bData = malloc((sizeof(char) * 3) + 1);
+    bData = "bar";
+    char *cData = malloc((sizeof(char) * 10) + 8);
+    cData = "Raimondo";
+
+    node *a = newNode(aData, nodeless->start, nodeless->end);
+    node *b = newNode(bData, a, nodeless->end);
+    node *c = newNode(cData, b, nodeless->end);
+    a->next = b;
+    b->next = c;
+
+    mu_assert("newNode works", 999 == 999);
+    // DEBUG_PRINT("nodeless node ids: %i %i %i\n", nodeless->start->next->id, nodeless->start->next->next->id, nodeless->start->next->next->next->id);
+    // DEBUG_PRINT("node ids: %i %i %i", a->id, b->id, c->id);
+    mu_assert("newNode creates a node with an id", a->id == 0);
+    mu_assert("the id increments with each new node", b->id == 1 && c->id == 2);
+    mu_assert("newNode sets isSentinel to false", a->isSentinel == false);
+    mu_assert("newNode sets prev", a->prev == nodeless->start);
+    mu_assert("newNode sets next", c->next == nodeless->end);
+    mu_assert("newNode sets data (#1)", strcmp(a->data, "foo") == 0);
+    mu_assert("newNode sets data (#2)", strcmp(b->data, "bar") == 0);
+    mu_assert("newNode sets data (#3)", strcmp(c->data, "Raimondo") == 0);
+
+    return 0;
+}
+
+
 static char *test_removeList()
 {
     list *toRemove = newList(1024);
 
-    mu_assert("Remove list", removeList(toRemove) == 0);
+    mu_assert("Remove list returns 0", removeList(toRemove) == 0);
     return 0;
 }
 
@@ -146,6 +192,7 @@ static char *all_tests()
     mu_run_test(test_check_testing_works);
     mu_run_test(test_newList);
     mu_run_test(test_removeList);
+    mu_run_test(test_newNode);
     return 0;
 }
 
@@ -162,7 +209,7 @@ int testLists()
     {
         printf("ALL TESTS PASSED\n");
     }
-    printf("\nTests:\n\trun: %d\n\tpassed: %i\n\tfailed: %i\n", tests_run, tests_run - tests_failed, tests_failed);
+    printf("-----------------------------------------------------\nTests:\n\trun: %d\n\tpassed: %i\n\tfailed: %i\n-----------------------------------------------------\n", tests_run, tests_run - tests_failed, tests_failed);
 
     return result != 0;
 }
