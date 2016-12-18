@@ -112,7 +112,7 @@ static char *test_start()
     list *example = scaffold();
 
     example->current = example->start->next->next;
-    DEBUG_PRINT("%s\n", example->current->data);
+    // DEBUG_PRINT("%s\n", example->current->data);
     mu_assert("initial value of current incorrect for start", strcmp(example->current->data, "second") == 0);
     start(example);
     mu_assert("start sets list current to start->next", strcmp(example->current->data, "first") == 0);
@@ -146,9 +146,9 @@ static char *test_atStart()
     example->current = example->start->next;
     mu_assert("atStart returns true if at start->next", atStart(example));
     example->current = example->current->next;
-    mu_assert("atStart returns true if not at start->next", atStart(example));
+    mu_assert("atStart returns false if not at start->next", !atStart(example));
     example->current = example->current->next;
-    mu_assert("atStart returns true if not at start->next (again)", atStart(example));
+    mu_assert("atStart returns false if not at start->next (again)", !atStart(example));
     // cleanupScaffold(example);
     return 0;
 }
@@ -158,10 +158,12 @@ static char *test_atEnd()
 {
     list *example = scaffold();
 
-    mu_assert("atEnd implemented", false);
-    mu_assert("atEnd returns true if at end->prev", false);
-    mu_assert("atEnd returns false if not at end->prev", false);
-    // cleanupScaffold(example);
+    example->current = example->end->prev;
+    mu_assert("atEnd returns true if at end->prev", atEnd(example));
+    example->current = example->current->prev;
+    mu_assert("atEnd returns false if not at end->prev", !atEnd(example));
+    example->current = example->current->prev;
+    mu_assert("atEnd returns false if not at end->prev (again)", !atEnd(example));
     return 0;
 }
 
@@ -170,8 +172,13 @@ static char *test_forward()
 {
     list *example = scaffold();
 
-    mu_assert("forward implemented", false);
-    // cleanupScaffold(example);
+    example->current = example->start->next;
+    forward(example);
+    mu_assert("forward works once", strcmp(example->current->data, "second") == 0);
+    forward(example);
+    mu_assert("forward works twice", strcmp(example->current->data, "third") == 0);
+    forward(example);
+    mu_assert("forward does nothing if already at end", strcmp(example->current->data, "third") == 0);
     return 0;
 }
 
@@ -180,8 +187,15 @@ static char *test_backward()
 {
     list *example = scaffold();
 
-    mu_assert("backward implemented", false);
-    // cleanupScaffold(example);
+    example->current = example->end->prev;
+    mu_assert("backward test should not fail because of atStart", !(atStart(example)));
+    // DEBUG_PRINT("%s %s\n", example->current->data, example->current->prev->data);
+    backward(example);
+    mu_assert("backward works once", strcmp(example->current->data, "second") == 0);
+    backward(example);
+    mu_assert("backward works twice", strcmp(example->current->data, "first") == 0);
+    backward(example);
+    mu_assert("backward does nothing if already at end", strcmp(example->current->data, "first") == 0);
     return 0;
 }
 

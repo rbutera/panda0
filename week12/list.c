@@ -92,13 +92,27 @@ void end(list *l)
 // whether a traversal has finished.
 bool atStart(list *l)
 {
-    return false;
+    if (l && (l->current == l->start->next) && ((l->current->isSentinel == true) || (l->current->prev->isSentinel == true)))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 bool atEnd(list *l)
 {
-    return false;
+    if (l)
+    {
+        return l->current->next->isSentinel == true && l->current == l->end->prev;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
@@ -106,13 +120,19 @@ bool atEnd(list *l)
 // to call forward when at the end of the list, or backward when at the start.
 void forward(list *l)
 {
-    DEBUG_PRINT("forward\n");
+    if (!atEnd(l))
+    {
+        l->current = l->current->next;
+    }
 }
 
 
 void backward(list *l)
 {
-    DEBUG_PRINT("backward\n");
+    if (!atStart(l))
+    {
+        l->current = l->current->prev;
+    }
 }
 
 
