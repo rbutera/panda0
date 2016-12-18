@@ -8,6 +8,16 @@
 int NUMBER_OF_NODES = 0;
 int NUMBER_OF_LISTS = 0;
 
+int listDetails(list *input)
+{
+    DEBUG_PRINT("input->listId\t%i\n", input->listId);
+    DEBUG_PRINT("input->current->id\t%i\n", input->current->id);
+    DEBUG_PRINT("input->start->id\t%i\n", input->start->id);
+    DEBUG_PRINT("input->end->id\t%i\n", input->end->id);
+    return 0;
+}
+
+
 int printList(list *l)
 {
     node *itemPtr  = l->start;
@@ -80,7 +90,6 @@ int *deleteNode(node *input)
  */
 list *newList(int b)
 {
-    NUMBER_OF_LISTS++;
     list *output    = malloc(sizeof(list));
     node *startNode = malloc(sizeof(node));
     node *endNode   = malloc(sizeof(node));
@@ -91,6 +100,7 @@ list *newList(int b)
     endNode->isSentinel = true;
     endNode->prev       = startNode;
 
+    output->listId   = ++NUMBER_OF_LISTS;
     output->itemSize = b;
     output->start    = startNode;
     output->end      = endNode;

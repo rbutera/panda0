@@ -22,7 +22,7 @@ static char *test_newList()
     int  exampleSize  = 42;
     list *exampleList = newList(exampleSize);
 
-    mu_assert("New list works", 999 == 999);
+    mu_assert("Assigns listId", exampleList->listId > 0);
     mu_assert("itemSize valid", exampleList->itemSize == exampleSize);
     mu_assert("creates start nodes", exampleList->start != NULL);
     mu_assert("creates a startnode with isSentinel == true", exampleList->start->isSentinel == true);

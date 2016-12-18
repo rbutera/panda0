@@ -47,6 +47,7 @@ typedef struct List
     struct Node *current;
     struct Node *start;
     struct Node *end;
+    int listId;
 } list;
 
 // For Debugging purposes: prints a list
