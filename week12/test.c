@@ -280,6 +280,13 @@ static char *test_deleteAfter()
 }
 
 
+static char *testEverything()
+{
+    mu_assert("testing EVERYTHING with a realistic example", false);
+    return 0;
+}
+
+
 static char *all_tests()
 {
     mu_run_suite(test_check_testing_works);
@@ -300,6 +307,7 @@ static char *all_tests()
     mu_run_suite(test_setAfter);
     mu_run_suite(test_deleteBefore);
     mu_run_suite(test_deleteAfter);
+    mu_run_suite(testEverything);
     return 0;
 }
 
