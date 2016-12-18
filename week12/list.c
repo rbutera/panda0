@@ -47,7 +47,7 @@ int *deleteNode(node *input)
 list *newList(int b)
 {
     // DEBUG_PRINT("creating list of size %i\n", b);
-    list *output    = malloc(sizeof(struct list));
+    list *output    = malloc(sizeof(list));
     node *startNode = malloc(sizeof(node));
     node *endNode   = malloc(sizeof(node));
 

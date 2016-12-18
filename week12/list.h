@@ -32,25 +32,30 @@ The lists provided by this module are not thread safe.
 struct list;
 struct node;
 
-typedef struct node
+typedef struct Node
 {
     void *data;
-    struct node *prev;
-    struct node *next;
+    struct Node *prev;
+    struct Node *next;
     int  id;
     bool isSentinel;
-} Node;
+} node;
 
-typedef struct list
+typedef struct List
 {
     int  itemSize;
-    struct node *current;
-    struct node *start;
-    struct node *end;
-} List;
+    struct Node *current;
+    struct Node *start;
+    struct Node *end;
+} list;
+
+// Create a new node.
+node *newNode(void *data, node *prev, node *next);
 
 // Create a new empty list.  The argument is the size of an item in bytes.
 list *newList(int b);
+
+// Delete a list at a given address.
 int removeList(list *l);
 
 // Set the current position before the first item or after the last item, e.g.
