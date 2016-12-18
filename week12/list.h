@@ -49,6 +49,9 @@ typedef struct List
     struct Node *end;
 } list;
 
+// For Debugging purposes: prints a list
+int printList(list *l);
+
 // Create a new node.
 node *newNode(void *data, node *prev, node *next);
 

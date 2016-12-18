@@ -7,6 +7,38 @@
 
 int NUMBER_OF_NODES = 0;
 
+int printList(list *l)
+{
+    node *itemPtr  = l->start;
+    int  index     = 0;
+    bool searching = true;
+
+    while (searching)
+    {
+        if (itemPtr->isSentinel)
+        {
+            DEBUG_PRINT("l start\n");
+        }
+        else
+        {
+            if (l->current == itemPtr)
+            {
+                DEBUG_PRINT("> ");
+            }
+            DEBUG_PRINT("%i: %s\n", itemPtr->id, itemPtr->data);
+        }
+
+        if (itemPtr->next->isSentinel)
+        {
+            searching = false;
+            DEBUG_PRINT("end\n");
+        }
+        index++;
+        itemPtr = itemPtr->next;
+    }
+}
+
+
 node *newNode(void *data, node *prev, node *next)
 {
     node *output = malloc(sizeof(node));
@@ -172,7 +204,17 @@ void insertAfter(list *l, void *p)
 // error to call getBefore when at the start, or getAfter when at the end.
 void getBefore(list *l, void *p)
 {
-    DEBUG_PRINT("getBefore\n");
+    printList(l);
+
+    if (!atStart(l))
+    {
+        memcpy(p, l->current->prev->data, l->itemSize);
+        DEBUG_PRINT("\ngetBefore:\nl->c->p->d = %s\nl->itemSize = %i", l->current->prev->data, l->itemSize);
+    }
+    else
+    {
+        strcpy(p, "ERROR");
+    }
 }
 
 

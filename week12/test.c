@@ -10,34 +10,6 @@ int tests_failed  = 0;
 int suites_run    = 0;
 int suites_failed = 0;
 
-int printList(list *list)
-{
-    node *itemPtr  = list->start;
-    int  index     = 0;
-    bool searching = true;
-
-    while (searching)
-    {
-        if (itemPtr->isSentinel)
-        {
-            DEBUG_PRINT("list start\n");
-        }
-        else
-        {
-            DEBUG_PRINT("%i %s\n", index, itemPtr->data);
-        }
-
-        if (itemPtr->next->isSentinel)
-        {
-            searching = false;
-            DEBUG_PRINT("end\n");
-        }
-        index++;
-        itemPtr = itemPtr->next;
-    }
-}
-
-
 static char *test_check_testing_works()
 {
     mu_assert("Testing does not work", 7 == 7);
@@ -265,7 +237,7 @@ static char *test_insertAfter()
 {
     list *example = scaffold();
 
-    printList(example);
+    // printList(example);
     // test insertBefore at beginning of list
     char *dummyData = malloc(sizeof(char) * 9);
 
@@ -297,7 +269,23 @@ static char *test_insertAfter()
 
 static char *test_getBefore()
 {
-    mu_assert("getBefore", false);
+    list *example = scaffold();
+    char buffer[100]; // where we will copy test values to
+
+    // typical example. getting first value by getBefore the second value
+    example->current = example->start->next->next; // should be "second"
+    getBefore(example, buffer);
+    mu_assert("getBefore can get the typical case", strcmp(buffer, "first") == 0);
+
+    // edge case: getBefore at start of list should not work
+    char edgeCaseBuffer[100];
+    list *edgeCase = scaffold();
+    edgeCase->current = edgeCase->start->next;
+    getBefore(edgeCase, edgeCaseBuffer);
+    DEBUG_PRINT("EDGE CASE: %s\n strcmp results = %i and %i", edgeCaseBuffer, strcmp(edgeCaseBuffer, "first"), strcmp(edgeCaseBuffer, "first") == 1);
+    mu_assert("getBefore fails if used at start of list", edgeCaseBuffer[0] != "f");
+    mu_assert("getBefore copies ERROR if used at start of list", strcmp(edgeCaseBuffer, "ERROR") == 0);
+    return 0;
 }
 
 
