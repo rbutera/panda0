@@ -412,9 +412,50 @@ static char *test_deleteBefore()
 
 static char *test_deleteAfter()
 {
-    list *example = scaffold();
+    node *deletedNext;
 
-    mu_assert("deleteAfter implemented", false);
+    // deleteAfter at start
+    list *startExample = scaffold();
+
+    start(startExample);
+    deletedNext = startExample->current->prev->prev;
+    deleteAfter(startExample);
+    // printList(startExample);
+    // check current's prev is set to the deleted note's prev
+    mu_assert("deleteAfter start: current's next is set to the deleted note's next", startExample->current->next == deletedNext);
+    // check deleted note's prev points to to the current node
+    mu_assert("deleteAfter start: deleted note's next points back to to the current node", deletedNext->prev == startExample->current);
+
+    // deleteAfter in the middle
+    list *middleExample = scaffold();
+
+    start(middleExample);
+    forward(middleExample);
+    deletedNext = middleExample->current->next->next;
+    deleteAfter(middleExample);
+    // printList(middleExample);
+    node *firstNode = middleExample->start->next->data;
+    // DEBUG_PRINT("\nmiddleExample->start->next->data = %s\n", firstNode);
+    // DEBUG_PRINT("strcmp = %i", strcmp(firstNode, "first"));
+    mu_assert("deleteAfter middle: first element no longer exists #1", strcmp(middleExample->start->next->data, "first") != 0);
+    mu_assert("deleteAfter middle: first element no longer exists # 2 ", strcmp(middleExample->start->next->data, "second") == 0);
+    // check current's prev is set to the deleted note's prev
+    mu_assert("deleteAfter middle: current's next is set to the deleted note's next", middleExample->current->next == deletedNext);
+    // check deleted note's prev points to to the current node
+    mu_assert("deleteAfter middle: deleted note's next points back to to the current node", deletedNext->prev == middleExample->current);
+
+    // deleteAfter at start - shouldn't work
+    list *endExample = scaffold();
+    end(endExample);
+    deleteAfter(endExample);
+    printList(endExample);
+    // check list still has 3 elements
+    DEBUG_PRINT("endExample: %s\n", endExample->end->prev->data);
+    DEBUG_PRINT("strcmp first: %i\n", strcmp(endExample->end->prev->data, "first"));
+    mu_assert("deleteAfter edgecase: first element still exists", strcmp(endExample->end->prev->data, "third") == 0);
+    mu_assert("deleteAfter edgecase: second element still exists", strcmp(endExample->end->prev->prev->data, "second") == 0);
+    mu_assert("deleteAfter edgecase: third element still exists", strcmp(endExample->end->prev->prev->prev->data, "first") == 0);
+    mu_assert("deleteAfter implemented", true);
     // cleanupScaffold(example);
     return 0;
 }
