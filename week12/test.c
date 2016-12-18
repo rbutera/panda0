@@ -1,6 +1,6 @@
+#include "debugprint.h"
 #include "minunit.h"
 #include "list.h"
-#include "raibutera.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -204,8 +204,31 @@ static char *test_insertBefore()
 {
     list *example = scaffold();
 
-    mu_assert("insertBefore implemented", false);
-    // cleanupScaffold(example);
+    // test insertBefore at beginning of list
+    char *dummyData = malloc(sizeof(char) * 9);
+
+    dummyData = "12345678";
+    end(example);
+    insertBefore(example, dummyData);
+    mu_assert("insertBefore works at start of list", strcmp(example->start->next->data, "12345678") == 0);
+
+    // test insertBefore at end of list
+    char *moreDummyData = malloc(sizeof(char) * 5);
+    moreDummyData = "more";
+    end(example);
+    insertBefore(example, moreDummyData);
+    mu_assert("insertBefore works at end of list", strcmp(example->end->prev->prev->data, "more") == 0);
+
+
+    // test insertBefore in the middle of a list
+    char *malcom = malloc(sizeof(char) * 7);
+    malcom = "malcom"; // malcom in the middle, hehe
+    start(example);
+    forward(example);
+    forward(example);
+    insertBefore(example, malcom);
+    mu_assert("malcom is in the middle", strcmp(example->start->next->next->next->data, "malcom") == 0);
+
     return 0;
 }
 
