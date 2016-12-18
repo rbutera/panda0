@@ -50,7 +50,8 @@ typedef struct List
     int listId;
 } list;
 
-// For Debugging purposes: prints a list
+// For Debugging purposes
+int listDetails(list *input);
 int printList(list *l);
 
 // Create a new node.

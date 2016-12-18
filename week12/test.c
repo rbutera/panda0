@@ -275,7 +275,7 @@ static char *test_getBefore()
     // typical example. getting first value by getBefore the second value
     example->current = example->start->next->next; // should be "second"
     getBefore(example, buffer);
-    mu_assert("getBefore can get the typical case", strcmp(buffer, "first") == 0);
+    mu_assert("getBefore can handle a typical case", strcmp(buffer, "first") == 0);
 
     // edge case: getBefore at start of list should not work
     char edgeCaseBuffer[100];
@@ -297,7 +297,7 @@ static char *test_getAfter()
     // typical example. getting first value by getAfter the second value
     example->current = example->start->next->next; // should be "second"
     getAfter(example, buffer);
-    mu_assert("getAfter can get the typical case", strcmp(buffer, "third") == 0);
+    mu_assert("getAfter can handle a typical case", strcmp(buffer, "third") == 0);
 
     // edge case: getAfter at start of list should not work
     char edgeCaseBuffer[100];
@@ -320,7 +320,7 @@ static char *test_setBefore()
     example->current = example->start->next->next; // should be "second"
     setBefore(example, "surprise");
     getBefore(example, buffer);
-    mu_assert("getBefore can get the typical case", strcmp(buffer, "surprise") == 0);
+    mu_assert("getBefore can handle a typical case", strcmp(buffer, "surprise") == 0);
 
     // edge case: getBefore at start of list should not work
     char edgeCaseBuffer[100];
@@ -344,7 +344,7 @@ static char *test_setAfter()
     example->current = example->start->next->next; // should be "second"
     setAfter(example, "good luck");
     getAfter(example, buffer);
-    mu_assert("setAfter can get the typical case", strcmp(buffer, "good luck") == 0);
+    mu_assert("setAfter can handle a typical case", strcmp(buffer, "good luck") == 0);
 
     // edge case: setAfter at start of list should not work
     char edgeCaseBuffer[100];
@@ -369,7 +369,7 @@ static char *test_deleteBefore()
     end(endExample);
     deletedPrev = endExample->current->prev->prev;
     deleteBefore(endExample);
-    printList(endExample);
+    // printList(endExample);
     // check current's prev is set to the deleted note's prev
     mu_assert("deleteBefore end: current's prev is set to the deleted note's prev", endExample->current->prev == deletedPrev);
     // check deleted note's prev points to to the current node
@@ -380,11 +380,14 @@ static char *test_deleteBefore()
 
     start(middleExample);
     forward(middleExample);
-    deletedPrev = endExample->current->prev->prev;
+    deletedPrev = middleExample->current->prev->prev;
     deleteBefore(middleExample);
-    printList(middleExample);
-    mu_assert("deleteBefore middle: first element no longer exists #1", strcmp(middleExample->start->next->data, "first") == 1);
-    mu_assert("deleteBefore middle: first element no longer exists #2", strcmp(middleExample->start->next->data, "second") == 0);
+    // printList(middleExample);
+    node *firstNode = middleExample->start->next->data;
+    // DEBUG_PRINT("\nmiddleExample->start->next->data = %s\n", firstNode);
+    // DEBUG_PRINT("strcmp = %i", strcmp(firstNode, "first"));
+    mu_assert("deleteBefore middle: first element no longer exists #1", strcmp(middleExample->start->next->data, "first") != 0);
+    mu_assert("deleteBefore middle: first element no longer exists # 2 ", strcmp(middleExample->start->next->data, "second") == 0);
     // check current's prev is set to the deleted note's prev
     mu_assert("deleteBefore middle: current's prev is set to the deleted note's prev", middleExample->current->prev == deletedPrev);
     // check deleted note's prev points to to the current node
@@ -394,11 +397,14 @@ static char *test_deleteBefore()
     list *startExample = scaffold();
     start(startExample);
     deleteBefore(startExample);
+    printList(startExample);
     // check list still has 3 elements
+    DEBUG_PRINT("startExample: %s\n", startExample->start->next->data);
+    DEBUG_PRINT("strcmp first: %i\n", strcmp(startExample->start->next->data, "first"));
     mu_assert("deleteBefore edgecase: first element still exists", strcmp(startExample->start->next->data, "first") == 0);
-    mu_assert("deleteBefore edgecase: first element still exists", strcmp(startExample->start->next->next->data, "second") == 0);
-    mu_assert("deleteBefore edgecase: first element still exists", strcmp(startExample->start->next->next->data, "third") == 0);
-    mu_assert("deleteBefore implemented", false);
+    mu_assert("deleteBefore edgecase: second element still exists", strcmp(startExample->start->next->next->data, "second") == 0);
+    mu_assert("deleteBefore edgecase: third element still exists", strcmp(startExample->start->next->next->next->data, "third") == 0);
+    mu_assert("deleteBefore implemented", true);
     // cleanupScaffold(example);
     return 0;
 }

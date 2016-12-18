@@ -10,10 +10,10 @@ int NUMBER_OF_LISTS = 0;
 
 int listDetails(list *input)
 {
-    DEBUG_PRINT("input->listId\t%i\n", input->listId);
-    DEBUG_PRINT("input->current->id\t%i\n", input->current->id);
-    DEBUG_PRINT("input->start->id\t%i\n", input->start->id);
-    DEBUG_PRINT("input->end->id\t%i\n", input->end->id);
+    DEBUG_PRINT("\n====\tLIST\t%i\t====\n", input->listId);
+    DEBUG_PRINT("current\t%i\n", input->current->id);
+    DEBUG_PRINT("start\t%i -> %i\n", input->start->id, input->start->next->id);
+    DEBUG_PRINT("end\t%i <- %i\n", input->end->id, input->end->prev->id);
     return 0;
 }
 
@@ -24,6 +24,8 @@ int printList(list *l)
     int  index     = 0;
     bool searching = true;
 
+    listDetails(l);
+
     while (searching)
     {
         if (itemPtr->isSentinel)
@@ -32,6 +34,7 @@ int printList(list *l)
         }
         else
         {
+            index++;
             DEBUG_PRINT("\t[node %i]\t%s", itemPtr->id, itemPtr->data);
             if (l->current == itemPtr)
             {
@@ -43,9 +46,8 @@ int printList(list *l)
         if (itemPtr->next->isSentinel)
         {
             searching = false;
-            DEBUG_PRINT("\ntotal: %i items.\n", NUMBER_OF_LISTS);
+            DEBUG_PRINT("\ntotal: %i items.\n", index);
         }
-        index++;
         itemPtr = itemPtr->next;
     }
 }
@@ -280,7 +282,6 @@ void deleteBefore(list *l)
     if (!atStart(l))
     {
         node *deletedPrev = l->current->prev->prev;
-
         l->current->prev  = deletedPrev;
         deletedPrev->next = l->current;
     }
