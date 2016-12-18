@@ -6,6 +6,7 @@
 #include "minunit.h"
 
 int NUMBER_OF_NODES = 0;
+int NUMBER_OF_LISTS = 0;
 
 int printList(list *l)
 {
@@ -17,21 +18,22 @@ int printList(list *l)
     {
         if (itemPtr->isSentinel)
         {
-            DEBUG_PRINT("l start\n");
+            DEBUG_PRINT("Items (%i bytes each):\n", l->itemSize);
         }
         else
         {
+            DEBUG_PRINT("\t[node %i]\t%s", itemPtr->id, itemPtr->data);
             if (l->current == itemPtr)
             {
-                DEBUG_PRINT("> ");
+                DEBUG_PRINT("\t<-");
             }
-            DEBUG_PRINT("%i: %s\n", itemPtr->id, itemPtr->data);
+            DEBUG_PRINT("\n");
         }
 
         if (itemPtr->next->isSentinel)
         {
             searching = false;
-            DEBUG_PRINT("end\n");
+            DEBUG_PRINT("\ntotal: %i items.\n", NUMBER_OF_LISTS);
         }
         index++;
         itemPtr = itemPtr->next;
@@ -78,7 +80,7 @@ int *deleteNode(node *input)
  */
 list *newList(int b)
 {
-    // DEBUG_PRINT("creating list of size %i\n", b);
+    NUMBER_OF_LISTS++;
     list *output    = malloc(sizeof(list));
     node *startNode = malloc(sizeof(node));
     node *endNode   = malloc(sizeof(node));
@@ -101,6 +103,7 @@ list *newList(int b)
 int removeList(list *l)
 {
     // TODO: free nodes
+    NUMBER_OF_LISTS--;
     free(l);
     return 0;
 }
@@ -264,11 +267,28 @@ void setAfter(list *l, void *p)
 // deleteBefore when at the start, or deleteAfter when at the end.
 void deleteBefore(list *l)
 {
-    DEBUG_PRINT("deleteBefore\n");
+    if (!atStart(l))
+    {
+        node *deletedPrev = l->current->prev->prev;
+
+        l->current->prev  = deletedPrev;
+        deletedPrev->next = l->current;
+    }
+    else
+    {
+        DEBUG_PRINT("ERROR: deleteBefore used at start of a list!\n");
+    }
 }
 
 
 void deleteAfter(list *l)
 {
-    DEBUG_PRINT("deleteAfter\n");
+    if (!atEnd(l))
+    {
+        DEBUG_PRINT("deleteAfter not at end\n");
+    }
+    else
+    {
+        // DEBUG_PRINT("ERROR: deleteAfter used at end of list!\n");
+    }
 }

@@ -369,7 +369,7 @@ static char *test_deleteBefore()
     end(endExample);
     deletedPrev = endExample->current->prev->prev;
     deleteBefore(endExample);
-
+    printList(endExample);
     // check current's prev is set to the deleted note's prev
     mu_assert("deleteBefore end: current's prev is set to the deleted note's prev", endExample->current->prev == deletedPrev);
     // check deleted note's prev points to to the current node
@@ -382,6 +382,7 @@ static char *test_deleteBefore()
     forward(middleExample);
     deletedPrev = endExample->current->prev->prev;
     deleteBefore(middleExample);
+    printList(middleExample);
     mu_assert("deleteBefore middle: first element no longer exists #1", strcmp(middleExample->start->next->data, "first") == 1);
     mu_assert("deleteBefore middle: first element no longer exists #2", strcmp(middleExample->start->next->data, "second") == 0);
     // check current's prev is set to the deleted note's prev
