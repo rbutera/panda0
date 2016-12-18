@@ -10,6 +10,34 @@ int tests_failed  = 0;
 int suites_run    = 0;
 int suites_failed = 0;
 
+int printList(list *list)
+{
+    node *itemPtr  = list->start;
+    int  index     = 0;
+    bool searching = true;
+
+    while (searching)
+    {
+        if (itemPtr->isSentinel)
+        {
+            DEBUG_PRINT("list start\n");
+        }
+        else
+        {
+            DEBUG_PRINT("%i %s\n", index, itemPtr->data);
+        }
+
+        if (itemPtr->next->isSentinel)
+        {
+            searching = false;
+            DEBUG_PRINT("end\n");
+        }
+        index++;
+        itemPtr = itemPtr->next;
+    }
+}
+
+
 static char *test_check_testing_works()
 {
     mu_assert("Testing does not work", 7 == 7);
@@ -208,7 +236,7 @@ static char *test_insertBefore()
     char *dummyData = malloc(sizeof(char) * 9);
 
     dummyData = "12345678";
-    end(example);
+    start(example);
     insertBefore(example, dummyData);
     mu_assert("insertBefore works at start of list", strcmp(example->start->next->data, "12345678") == 0);
 
@@ -237,19 +265,39 @@ static char *test_insertAfter()
 {
     list *example = scaffold();
 
-    mu_assert("insertAfter implemented", false);
-    // cleanupScaffold(example);
+    printList(example);
+    // test insertBefore at beginning of list
+    char *dummyData = malloc(sizeof(char) * 9);
+
+    dummyData = "87654321";
+    start(example);
+    insertAfter(example, dummyData);
+    mu_assert("insertAfter works at start of list", strcmp(example->current->next->data, "87654321") == 0);
+
+    // test insertAfter at end of list
+    char *moreDummyData = malloc(sizeof(char) * 5);
+    moreDummyData = "erom";
+    end(example);
+    insertAfter(example, moreDummyData);
+    mu_assert("insertAfter works at end of list", strcmp(example->end->prev->data, "erom") == 0);
+
+
+    // test insertAfter in the middle of a list
+    char *malcom = malloc(sizeof(char) * 7);
+    malcom = "moclam"; // malcom in the middle, hehe
+    start(example);
+    forward(example);
+    forward(example);
+    insertAfter(example, malcom);
+    mu_assert("malcom is in the middle", strcmp(example->start->next->next->next->next->data, "moclam") == 0);
+
     return 0;
 }
 
 
 static char *test_getBefore()
 {
-    list *example = scaffold();
-
-    mu_assert("getBefore implemented", false);
-    // cleanupScaffold(example);
-    return 0;
+    mu_assert("getBefore", false);
 }
 
 

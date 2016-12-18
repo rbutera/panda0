@@ -142,7 +142,6 @@ void backward(list *l)
 void insertBefore(list *l, void *p)
 {
     node *prevCopy = l->current->prev;
-    node *nextCopy = l->current->next;
 
     // create new node, setting next to the encumbent current, and prev to the encumbent current's predecessor
     node *created = newNode(p, prevCopy, l->current);
@@ -150,13 +149,21 @@ void insertBefore(list *l, void *p)
     // update encumbent current's prev value to new node
     l->current->prev = created;
     // update the previous value's next pointer to the new node
-    l->current->next = created;
+    prevCopy->next = created;
 }
 
 
 void insertAfter(list *l, void *p)
 {
-    DEBUG_PRINT("insertAfter\n");
+    node *nextCopy = l->current->next;
+
+    // create new node, setting next to the encumbent current, and prev to the encumbent current's predecessor
+    node *created = newNode(p, l->current, nextCopy);
+
+    // update encumbent current's next value to new node
+    l->current->next = created;
+    // update the next value's prev pointer to the new node
+    nextCopy->prev = created;
 }
 
 
