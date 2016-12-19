@@ -287,7 +287,7 @@ void deleteBefore(list *l)
     }
     else
     {
-        DEBUG_PRINT("ERROR: deleteBefore used at start of a list!\n");
+        // DEBUG_PRINT("ERROR: deleteBefore used at start of a list!\n");
     }
 }
 
@@ -296,10 +296,12 @@ void deleteAfter(list *l)
 {
     if (!atEnd(l))
     {
-        DEBUG_PRINT("deleteAfter not at end\n");
+        node *deletedNext = l->current->next->next;
+        deletedNext->prev = l->current;
+        l->current->next  = deletedNext;
     }
     else
     {
-        // DEBUG_PRINT("ERROR: deleteAfter used at end of list!\n");
+        DEBUG_PRINT("ERROR: deleteAfter used at end of a list!\n");
     }
 }
