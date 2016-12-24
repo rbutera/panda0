@@ -6,7 +6,7 @@ Haskell's *folds*, `foldl` and `foldr` are used to recursively reduce data struc
 
 ## Recursion in Haskell
 Algorithms can be either *recursive* or *iterative*. An _iterative_ algorithm is composed of a series of steps, whereas a _recursive_ algorithm is composed of a function that calls a (smaller) instance of itself. Recursively defined functions exist in both the functional and imperative programming styles.
-Whilst recursive approaches are used in imperative languages, a non-recursively defined alternative is usually possible in imperative programming. Recursion is often used over iteration for the sake of elegance. For example, The following is a function that calculates the factorial of an input, programmed in the iterative style. It is written in JavaScript (a C-based language with support for both imperative and functional styles:
+Whilst recursive approaches are used in imperative languages, a non-recursively defined alternative is usually possible in imperative programming. Recursion is often used over iteration for the sake of elegance. For example, the following are two functions that calculates the factorial of an input, programmed in the iterative style (as `iFact`) and the recursive style (as `rFact`). The examples are written in JavaScript (a C-based language with support for both imperative and functional styles:
 
 ```js
 function iFact (n) {
@@ -19,11 +19,7 @@ function iFact (n) {
     return n;
   }
 }
-```
 
-the recursively defined counterpart:
-
-```js
 function rFact (n) {
   if (n <= 1) {
     return 1;
@@ -52,10 +48,9 @@ A function `sum` that calculates the sum of a list's members would be written in
 
 The type definition of Haskell's folds show that they both take three arguments: a function to apply to the list, an accumulator to hold the result, and a *Foldable* (usually a list).
 
-The definition of `foldr` is:
+The definition of `foldr` is[3]:
 
 ```Haskell
--- from https://wiki.haskell.org/Fold
 foldr f z []     = z
 foldr f z (x:xs) = f x (foldr f z xs)
 ```
@@ -66,16 +61,15 @@ Folds can be used whenever it is necessary to perform an action on individual me
 
 Using `foldr` sometimes has advantages over using `foldl`. If `foldr`'s accumulator can return a result without looking at the accumulated value then `foldr` can return the result immediately. In contrast,`foldl` must traverse the entire list every time before it can return a result. This 1) often makes `foldr` faster/less computationally expensive and 2) enables `foldr` to be used on infinite lists in contexts that do not require the entire infinite result.
 
-For example:
+For example[4]:
 
 ```haskell
--- from https://en.wikibooks.org/wiki/Haskell/Lists_III
 echoes = foldr (\ x xs -> (replicate x x) ++ xs) []
 take 10 (echoes [1..])     -- [1,2,2,3,3,3,4,4,4,4]
 ```
 The above Haskell code executes successfully because Haskell can lazily convert an infinite list into another lazy infinite data structure.
 
-However, using `foldr` on very large finite lists may cause a stack overflow exception. The [Haskell wiki][5] illustrates this problem: using `foldr` to find the sum of the list `[1..10000000]`, for example, creates a chain of addition operations which grows large enough to overflow the stack, due to the strict requirement of `(+)` that both arguments must be fully evaluated in order to return a result. The problem is solved by using `foldl'`, a version of `foldl` that forces the reduction of inner reducible expressions before outer ones.
+However, using `foldr` on very large finite lists may cause a stack overflow exception. The Haskell wiki[5] illustrates this problem: using `foldr` to find the sum of the list `[1..10000000]`, for example, creates a chain of addition operations which grows large enough to overflow the stack, due to the strict requirement of `(+)` that both arguments must be fully evaluated in order to return a result. The problem is solved by using `foldl'`, a version of `foldl` that forces the reduction of inner reducible expressions before outer ones.
 
 ## Summary
 Haskell's folds, `foldl` and `foldr`, encapsulate a common programming pattern: reducing a list to a single value. They are implemented recursively due to the purely functional nature of the Haskell. One of the folds, `foldr`, has a broader range of uses than its counterpart `foldl`; it is often faster and works on infinite lists.
@@ -85,6 +79,5 @@ Haskell's folds, `foldl` and `foldr`, encapsulate a common programming pattern: 
 - [1] https://www.haskell.org/hoogle/?hoogle=foldl
 - [2] https://www.haskell.org/hoogle/?hoogle=foldr
 - [3] https://wiki.haskell.org/Fold
-- [4] http://learnyouahaskell.com/higher-order-functions#folds
-- [5] https://en.wikibooks.org/wiki/Haskell/Lists_III
-- [6] https://wiki.haskell.org/Foldr_Foldl_Foldl%27
+- [4] https://en.wikibooks.org/wiki/Haskell/Lists_III
+- [5] https://wiki.haskell.org/Foldr_Foldl_Foldl%27
