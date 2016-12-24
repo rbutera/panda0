@@ -29,7 +29,7 @@ function rFact (n) {
 }
 ```
 
-Haskell, unlike JavaScript, is a purely functional programming language and uses a declarative programming paradigm where all data is immutable. It follows that there are no looping constructs in Haskell, and a problem requiring multiple steps to solvecan only, therefore, be solved recursively in Haskell:
+Haskell, unlike JavaScript, is a purely functional programming language and uses a declarative programming paradigm where all data is immutable. It follows that there are no looping constructs in Haskell, and a problem requiring multiple steps to solve can only, therefore, be solved recursively in Haskell:
 
 ```haskell
 factorial :: a -> a
